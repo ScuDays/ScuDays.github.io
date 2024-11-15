@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Caching I&#x2F;O  核心：对缓存数组的操作 维护一个数组  缓****存数组：   分为新数据块和旧数据块    缓存数组分配方式  Seek 后：  **旧数据块大小 &#x3D; 旧数据块中最高改变地址  - 最低改变地址 **  ** 新数据块大小**  若旧数据块大小大于缓存数组大小的一半——新数据块太小，所以直接把旧数据块内容写入文件，新数据块大小 &#x3D; 缓存数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/11/15/Design%20document/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Caching I&#x2F;O  核心：对缓存数组的操作 维护一个数组  缓****存数组：   分为新数据块和旧数据块    缓存数组分配方式  Seek 后：  **旧数据块大小 &#x3D; 旧数据块中最高改变地址  - 最低改变地址 **  ** 新数据块大小**  若旧数据块大小大于缓存数组大小的一半——新数据块太小，所以直接把旧数据块内容写入文件，新数据块大小 &#x3D; 缓存数">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-15T11:31:36.448Z">
+<meta property="article:modified_time" content="2024-10-13T04:28:11.712Z">
+<meta property="article:author" content="Dong Yang">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/11/15/Design%20document/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/11/15/Design%20document/","path":"2024/11/15/Design document/","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#function%EF%BC%88%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">function（）</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dong Yang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/11/15/Design%20document/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dong Yang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-15 19:31:36" itemprop="dateCreated datePublished" datetime="2024-11-15T19:31:36+08:00">2024-11-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-13 12:28:11" itemprop="dateModified" datetime="2024-10-13T12:28:11+08:00">2024-10-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><strong>Caching I&#x2F;O</strong></li>
+</ul>
+<p><strong>核心：对缓存数组的操作</strong></p>
+<p><strong>维护一个数组</strong></p>
+<ul>
+<li><strong>缓****存数组：</strong></li>
+</ul>
+<ol>
+<li><strong>分为新数据块和旧数据块</strong></li>
+</ol>
+<hr>
+<ul>
+<li><strong>缓存数组分配方式</strong></li>
+</ul>
+<p><strong>Seek 后：</strong></p>
+<ol>
+<li>**旧数据块大小 &#x3D; 旧数据块中最高改变地址  - 最低改变地址 **</li>
+</ol>
+<p>** 新数据块大小**</p>
+<ol>
+<li><strong>若旧数据块大小大于缓存数组大小的一半——新数据块太小，所以直接把旧数据块内容写入文件，新数据块大小 &#x3D; 缓存数据大小</strong></li>
+<li>** 若旧数据块大小小于缓存数组大小的一半——新数据块适中, 新数据块大小 &#x3D; 缓存数据大小 - 旧数据块大小**</li>
+</ol>
+<p><em><strong>目的：有可能可以防止一次多余的系统调用写入</strong></em></p>
+<p><em>****</em></p>
+<ul>
+<li><em><strong>readc()</strong></em></li>
+</ul>
+<ol>
+<li><strong>若超过新数据块的长度</strong></li>
+</ol>
+<p><strong>在新数据块中 read，则将整个旧缓存数组存入文件，并读入新的缓存。</strong></p>
+<ol start="2">
+<li><strong>若未超过</strong></li>
+</ol>
+<p><strong>则用一个指针来维护读取的便宜量</strong></p>
+<hr>
+<ul>
+<li><em><strong>writec()</strong></em></li>
+</ul>
+<p><strong>当缓存区域内有更改过的数据并且缓存需要刷新的时候，写入文件。</strong></p>
+<hr>
+<h5 id="function（）"><a href="#function（）" class="headerlink" title="function（）"></a>function（）</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">io300_file</span>;</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Allocate and initialize a new io300_file struct that will wrap the given</span></span><br><span class="line"><span class="comment">    file path. In addition, give the file a description for debugging purposes.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> io300_file *<span class="title function_">io300_open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *<span class="type">const</span> path, <span class="type">char</span> *description)</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> io300_file *<span class="title function_">io300_open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">char</span> *description)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Close and cleanup the given io300_file. Remember that when a file is</span></span><br><span class="line"><span class="comment">    closed, you need to write any cached data that resides in RAM to disk.</span></span><br><span class="line"><span class="comment">    This probably means calling flush().</span></span><br><span class="line"><span class="comment">    Return 0 on success, -1 on failure.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_close</span><span class="params">(<span class="keyword">struct</span> io300_file *f)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Return the number of bytes in the file or -1 if this</span></span><br><span class="line"><span class="comment">    computation is not possible.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_seek</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">off_t</span> pos)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    readc() reads a single byte from the file and returns it.</span></span><br><span class="line"><span class="comment">    Return -1 on failure or if the end of the file has been reached.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_readc</span><span class="params">(<span class="keyword">struct</span> io300_file *f)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    writec() writes a single byte to the file.</span></span><br><span class="line"><span class="comment">    Return the byte that was written upon success and -1 on failure.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_writec</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">int</span> ch)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Read `nbytes` from the file into `buff`. Assume that the buffer is large enough.</span></span><br><span class="line"><span class="comment">    On failure, return -1. On success, return the number of bytes that were</span></span><br><span class="line"><span class="comment">    placed into the provided buffer.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">io300_read</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">char</span> *buff, <span class="type">size_t</span> nbytes)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Write `nbytes` from the start of `buff` into the file. Assume that the buffer</span></span><br><span class="line"><span class="comment">    is large enough.</span></span><br><span class="line"><span class="comment">    On failure, return -1. On success, return the number of bytes that were</span></span><br><span class="line"><span class="comment">    written to the file.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">io300_write</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">const</span> <span class="type">char</span> *buff, <span class="type">size_t</span> nbytes)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_flush</span><span class="params">(<span class="keyword">struct</span> io300_file *<span class="type">const</span> f)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<ul>
+<li><p><strong>流程</strong></p>
+</li>
+<li><p><strong>open the file 的时候先读满缓存，从低到高</strong></p>
+</li>
+<li><p><strong>结构体中存在一个数据来维护偏移量</strong></p>
+</li>
+<li><p><strong>读的情况：正常读取，若读取到结尾，看缓存中是否有写入（写入用两个数据来维护，最），若有写入则</strong></p>
+</li>
+<li><p>当前缓存读取的偏移量</p>
+</li>
+</ul>
+<p><em>****</em></p>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/15/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" rel="prev" title="">
+                  <i class="fa fa-angle-left"></i> 
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/15/flush%E5%88%B7%E6%96%B0%E8%BE%93%E5%87%BA/" rel="next" title="">
+                   <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Dong Yang</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

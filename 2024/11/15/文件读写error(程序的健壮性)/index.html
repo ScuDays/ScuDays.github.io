@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1. 检查和处理错误返回值write() 函数在成功时返回写入的字节数，如果失败，则返回 -1 并设置全局变量 errno。你应该总是检查 write() 的返回值，并据此进行错误处理： 123456ssize_t bytes_written &#x3D; write(pipe_fd[1], &amp;data, sizeof(data));if (bytes_written &#x3D;&#x3D; -1) &#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/11/15/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error(%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. 检查和处理错误返回值write() 函数在成功时返回写入的字节数，如果失败，则返回 -1 并设置全局变量 errno。你应该总是检查 write() 的返回值，并据此进行错误处理： 123456ssize_t bytes_written &#x3D; write(pipe_fd[1], &amp;data, sizeof(data));if (bytes_written &#x3D;&#x3D; -1) &#123;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-15T11:31:36.381Z">
+<meta property="article:modified_time" content="2024-10-13T04:28:11.695Z">
+<meta property="article:author" content="Dong Yang">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/11/15/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error(%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7)/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/11/15/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error(%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7)/","path":"2024/11/15/文件读写error(程序的健壮性)/","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A3%80%E6%9F%A5%E5%92%8C%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">1.</span> <span class="nav-text">1. 检查和处理错误返回值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%90%86%E8%A7%A3%E9%94%99%E8%AF%AF%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">2. 理解错误原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%82%E5%BD%93%E5%A4%84%E7%90%86-EPIPE"><span class="nav-number">3.</span> <span class="nav-text">3. 适当处理 EPIPE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%87%8D%E6%96%B0%E5%B0%9D%E8%AF%95%E5%86%99%E5%85%A5%EF%BC%88%E5%A6%82%E6%9E%9C%E9%80%82%E7%94%A8%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">4. 重新尝试写入（如果适用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E4%BF%9D%E8%AF%81%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">5. 保证程序的健壮性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text"></span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dong Yang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/11/15/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error(%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dong Yang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-15 19:31:36" itemprop="dateCreated datePublished" datetime="2024-11-15T19:31:36+08:00">2024-11-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-13 12:28:11" itemprop="dateModified" datetime="2024-10-13T12:28:11+08:00">2024-10-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="1-检查和处理错误返回值"><a href="#1-检查和处理错误返回值" class="headerlink" title="1. 检查和处理错误返回值"></a><font style="color:rgb(13, 13, 13);">1. 检查和处理错误返回值</font></h3><p><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 函数在成功时返回写入的字节数，如果失败，则返回 </font><strong>-1</strong><font style="color:rgb(13, 13, 13);"> 并设置全局变量 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);">。你应该总是检查 </font><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 的返回值，并据此进行错误处理：</font></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> bytes_written = write(pipe_fd[<span class="number">1</span>], &amp;data, <span class="keyword">sizeof</span>(data));</span><br><span class="line"><span class="keyword">if</span> (bytes_written == <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="comment">// 处理错误情况</span></span><br><span class="line">    perror(<span class="string">&quot;write to pipe failed&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-理解错误原因"><a href="#2-理解错误原因" class="headerlink" title="2. 理解错误原因"></a><font style="color:rgb(13, 13, 13);">2. 理解错误原因</font></h3><p><font style="color:rgb(13, 13, 13);">通过查看 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值，你可以获取为什么 </font><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 失败的具体原因。一些常见的错误包括：</font></p>
+<ul>
+<li><strong>EPIPE</strong><font style="color:rgb(13, 13, 13);">: 管道的读端已关闭，写操作会产生 </font><strong>SIGPIPE</strong><font style="color:rgb(13, 13, 13);"> 信号。如果信号没有被捕获或忽略，进程会终止。</font></li>
+<li><strong>EBADF</strong><font style="color:rgb(13, 13, 13);">: 文件描述符不是有效的或不是写描述符。</font></li>
+<li><strong>EFAULT</strong><font style="color:rgb(13, 13, 13);">: 指针指向的内存区域对于进程是不可访问的。</font></li>
+<li><strong>EINTR</strong><font style="color:rgb(13, 13, 13);">: 调用在完成前被信号中断。</font></li>
+<li><strong>EINVAL</strong><font style="color:rgb(13, 13, 13);">: 文件描述符不支持写操作，或者参数不合法。</font></li>
+<li><strong>EIO</strong><font style="color:rgb(13, 13, 13);">: 出现底层输入&#x2F;输出错误。</font></li>
+</ul>
+<h3 id="3-适当处理-EPIPE"><a href="#3-适当处理-EPIPE" class="headerlink" title="3. 适当处理 EPIPE"></a><font style="color:rgb(13, 13, 13);">3. 适当处理 </font><strong>EPIPE</strong></h3><p><font style="color:rgb(13, 13, 13);">如果 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 返回 </font><strong>EPIPE</strong><font style="color:rgb(13, 13, 13);">，说明没有进程持有管道的读端。这时，可以考虑以下处理方式：</font></p>
+<ul>
+<li><font style="color:rgb(13, 13, 13);">检查和修改代码逻辑，确保在写入管道之前，管道的读端始终打开。</font></li>
+<li><font style="color:rgb(13, 13, 13);">捕获 </font><strong>SIGPIPE</strong><font style="color:rgb(13, 13, 13);"> 信号，并决定如何安全地处理或忽略它，以防止程序由于此信号而意外退出。</font></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">复制代码</span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line"></span><br><span class="line">void handle_sigpipe(int sig) &#123;</span><br><span class="line">    fprintf(stderr, &quot;SIGPIPE caught\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    signal(SIGPIPE, handle_sigpipe);</span><br><span class="line">    // 之后的管道写入逻辑</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-重新尝试写入（如果适用）"><a href="#4-重新尝试写入（如果适用）" class="headerlink" title="4. 重新尝试写入（如果适用）"></a><font style="color:rgb(13, 13, 13);">4. 重新尝试写入（如果适用）</font></h3><p><font style="color:rgb(13, 13, 13);">在某些情况下，如 </font><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 因为 </font><strong>EINTR</strong><font style="color:rgb(13, 13, 13);"> 被中断，你可能希望重新尝试写入操作。在这种情况下，你可以设置一个循环来重试：</font></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">复制代码</span><br><span class="line">ssize_t result;</span><br><span class="line">while ((result = write(pipe_fd[1], &amp;data, sizeof(data))) == -1 &amp;&amp; errno == EINTR) &#123;</span><br><span class="line">    continue; // 重新尝试</span><br><span class="line">&#125;</span><br><span class="line">if (result == -1) &#123;</span><br><span class="line">    perror(&quot;write to pipe failed&quot;);</span><br><span class="line">    exit(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-保证程序的健壮性"><a href="#5-保证程序的健壮性" class="headerlink" title="5. 保证程序的健壮性"></a><font style="color:rgb(13, 13, 13);">5. 保证程序的健壮性</font></h3><p><font style="color:rgb(13, 13, 13);">总的来说，编写健壮的管道通信代码需要对可能的错误情况有充分的考虑和准备。确保在编程时考虑各种异常情况，并采取适当的错误处理措施。</font></p>
+<p><font style="color:rgb(13, 13, 13);">通过这些策略，你可以有效地处理和应对在管道写入过程中可能遇到的错误，确保程序的稳健性和用户的良好体验。</font></p>
+<p><font style="color:rgb(13, 13, 13);">在 C 程序中，查看 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值可以帮助你诊断和理解发生在系统调用中的错误。</font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 是一个全局变量，定义在 </font><strong>&lt;errno.h&gt;</strong><font style="color:rgb(13, 13, 13);"> 头文件中，用于存储最近的错误代码。下面是如何查看 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值以及如何使用它来诊断错误的步骤：</font></p>
+<p><font style="color:rgb(13, 13, 13);">2. 检查错误并获取 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 值</font></p>
+<p><font style="color:rgb(13, 13, 13);">在执行系统调用如 </font><strong>read()</strong><font style="color:rgb(13, 13, 13);">, </font><strong>write()</strong><font style="color:rgb(13, 13, 13);">, </font><strong>open()</strong><font style="color:rgb(13, 13, 13);"> 等之后，如果调用返回错误（通常是 </font><strong>-1</strong><font style="color:rgb(13, 13, 13);">），则可以检查 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值来确定错误原因。</font></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">复制代码</span><br><span class="line">int ret = write(fd, buffer, size);</span><br><span class="line">if (ret == -1) &#123;</span><br><span class="line">    // 输出 errno 的值和对应的错误消息</span><br><span class="line">    printf(&quot;Error! errno = %d, message: %s\n&quot;, errno, strerror(errno));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/13/%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/" rel="prev" title="进程操作">
+                  <i class="fa fa-angle-left"></i> 进程操作
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/15/%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/" rel="next" title="">
+                   <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Dong Yang</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
