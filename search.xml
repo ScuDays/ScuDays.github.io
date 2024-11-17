@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title></title>
+    <url>/2024/11/15/Design%20document/</url>
+    <content><![CDATA[<ul>
+<li><strong>Caching I&#x2F;O</strong></li>
+</ul>
+<p><strong>核心：对缓存数组的操作</strong></p>
+<p><strong>维护一个数组</strong></p>
+<ul>
+<li><strong>缓****存数组：</strong></li>
+</ul>
+<ol>
+<li><strong>分为新数据块和旧数据块</strong></li>
+</ol>
+<hr>
+<ul>
+<li><strong>缓存数组分配方式</strong></li>
+</ul>
+<p><strong>Seek 后：</strong></p>
+<ol>
+<li>**旧数据块大小 &#x3D; 旧数据块中最高改变地址  - 最低改变地址 **</li>
+</ol>
+<p>** 新数据块大小**</p>
+<ol>
+<li><strong>若旧数据块大小大于缓存数组大小的一半——新数据块太小，所以直接把旧数据块内容写入文件，新数据块大小 &#x3D; 缓存数据大小</strong></li>
+<li>** 若旧数据块大小小于缓存数组大小的一半——新数据块适中, 新数据块大小 &#x3D; 缓存数据大小 - 旧数据块大小**</li>
+</ol>
+<p><em><strong>目的：有可能可以防止一次多余的系统调用写入</strong></em></p>
+<p><em>****</em></p>
+<ul>
+<li><em><strong>readc()</strong></em></li>
+</ul>
+<ol>
+<li><strong>若超过新数据块的长度</strong></li>
+</ol>
+<p><strong>在新数据块中 read，则将整个旧缓存数组存入文件，并读入新的缓存。</strong></p>
+<ol start="2">
+<li><strong>若未超过</strong></li>
+</ol>
+<p><strong>则用一个指针来维护读取的便宜量</strong></p>
+<hr>
+<ul>
+<li><em><strong>writec()</strong></em></li>
+</ul>
+<p><strong>当缓存区域内有更改过的数据并且缓存需要刷新的时候，写入文件。</strong></p>
+<hr>
+<h5 id="function（）"><a href="#function（）" class="headerlink" title="function（）"></a>function（）</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">io300_file</span>;</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Allocate and initialize a new io300_file struct that will wrap the given</span></span><br><span class="line"><span class="comment">    file path. In addition, give the file a description for debugging purposes.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> io300_file *<span class="title function_">io300_open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *<span class="type">const</span> path, <span class="type">char</span> *description)</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> io300_file *<span class="title function_">io300_open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">char</span> *description)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Close and cleanup the given io300_file. Remember that when a file is</span></span><br><span class="line"><span class="comment">    closed, you need to write any cached data that resides in RAM to disk.</span></span><br><span class="line"><span class="comment">    This probably means calling flush().</span></span><br><span class="line"><span class="comment">    Return 0 on success, -1 on failure.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_close</span><span class="params">(<span class="keyword">struct</span> io300_file *f)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Return the number of bytes in the file or -1 if this</span></span><br><span class="line"><span class="comment">    computation is not possible.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_seek</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">off_t</span> pos)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    readc() reads a single byte from the file and returns it.</span></span><br><span class="line"><span class="comment">    Return -1 on failure or if the end of the file has been reached.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_readc</span><span class="params">(<span class="keyword">struct</span> io300_file *f)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    writec() writes a single byte to the file.</span></span><br><span class="line"><span class="comment">    Return the byte that was written upon success and -1 on failure.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_writec</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">int</span> ch)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Read `nbytes` from the file into `buff`. Assume that the buffer is large enough.</span></span><br><span class="line"><span class="comment">    On failure, return -1. On success, return the number of bytes that were</span></span><br><span class="line"><span class="comment">    placed into the provided buffer.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">io300_read</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">char</span> *buff, <span class="type">size_t</span> nbytes)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Write `nbytes` from the start of `buff` into the file. Assume that the buffer</span></span><br><span class="line"><span class="comment">    is large enough.</span></span><br><span class="line"><span class="comment">    On failure, return -1. On success, return the number of bytes that were</span></span><br><span class="line"><span class="comment">    written to the file.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">io300_write</span><span class="params">(<span class="keyword">struct</span> io300_file *f, <span class="type">const</span> <span class="type">char</span> *buff, <span class="type">size_t</span> nbytes)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">io300_flush</span><span class="params">(<span class="keyword">struct</span> io300_file *<span class="type">const</span> f)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<ul>
+<li><p><strong>流程</strong></p>
+</li>
+<li><p><strong>open the file 的时候先读满缓存，从低到高</strong></p>
+</li>
+<li><p><strong>结构体中存在一个数据来维护偏移量</strong></p>
+</li>
+<li><p><strong>读的情况：正常读取，若读取到结尾，看缓存中是否有写入（写入用两个数据来维护，最），若有写入则</strong></p>
+</li>
+<li><p>当前缓存读取的偏移量</p>
+</li>
+</ul>
+<p><em>****</em></p>
+<hr>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/11/15/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/</url>
+    <content><![CDATA[<p>{“format”:”lakesheet”,”version”:”3.5.5”,”larkJson”:true,”sheet”:”xíOoÛÈ\u001d¿Ê\u000b,d@Ù\u001cIyå¤\r\u001aÃåM\u0017\b\u0005-Md6\u0014)\fIgµ\u000b\u0003ÛKÐC\u000bìa{)zè¹¢-ÐK?J¤_£CêGÞ¡Øïñ\u0005\fÒèyõ\u001bÎ3Òï¼,)&#x2F;òFJ×ötþfWYéEÁA¿í\u0015*Uã2É³Â¾«Oz9:ÎSs<del>«qsðf’6\u0017]©áªÝrï¬¹úº¹¬</del>ºëæj¶|n¿þW$ßÞÈ9U\u0015e&gt;\u001b­\u000fÆÕÂ\u000foµðCÓ&quot;¼iÑþv\u000bsàÚ4y¤¥ÒËWO²úÆ|»ï¡yéÒS5Tiºêe21¾üêç¹á3×yi,.&#x2F;^¶½I\Æw±|+Í\u0013_+VÞæ-Ü&#x2F;\noÓïÍáSÿÚ\SÛgÎTWzÜ&lt;Wg}Êlw­íµ½om÷­í\u0003k;ðíÀÞ\tí\u001diïØ&#x2F;\u001eØ¯\u001eØ&#x2F;\u001fØ¯\u001fØ\u001d\bì\u001ev\u000fB»\u0007¡ÝÐîAh÷ ¼éÁ\u001aòú)\u0015éÇC\u0011Dÿù³IY\u0017J\)}¨7&quot;Î&amp;â8\u001e_&amp;9¨§q|\u001b×±ÿ<del>ÿ£ù<em>¾Y¹\u0005VX¡\u001d\u000fópç\u0011:ò\bM\u001eO³Rçª)%Qæbè\u0002¿)\u0018áÖHÕ|ïVSæò¹HG.2\u0012§ya²hêcTê$\u0016¬\u0007òî8xw&quot;q¬f¹^35×ªPY¹\u001cÁiyf¦ù¸9ê¨@´ÂÜ8¦:ÍL\ÍÅUNÄy§\u0005«åéu\u001déu#1Ð:^lj¥jîö[å\u0012ZÀåÖ&#x3D;ÞÜÄ(</em>+ÑÇÚìîy\fd·@z@zÑ*¢-FÉ4S\u0013aî2jj3Gí¢u¤.ªéÔÔÍ\u001eã\u001eYì;²ØnGÐ6C923ÜÍÔÿäbQf\u0002·(&#x2F;×1¤\u001dBê;BêGÂÚÊgÄYª:¥¢P³t!ÅÙ´§Ê\u0015\u0011kdGü\u0007\u000eü\u0007\u0011aã\u001dÐwÐ\u000e|\u000b÷0¯õ#\u0015OÒü\u000by°&#x3D;\u00048:ëÙ\u0018Ç]³p\ny&#x3D;ñø5?î\u000fEìrì \!n\u001b\u0019xõJéféãù¼·Å°Y÷\u0012þCáK\u0017|cÒ\u001flÍ&lt;¥h­\u0007#N&lt;ïÅÞ%Õ±ê¹ÒÆ\f\u0016E©fhø(t\u000b\u0007FOur¤f®&#x2F;FÊ(m³fÑ^&#x2F;c.WÏo-cÜ1ã¿© ñôg’¼åîK\u0003cÇÏ\u0013]VqºÊ¤-NÍSÇ\u0017©r\trG´Ê©Wh¥TV,NF{K{ë|aúÄ&quot;ºGD.g\u000e4\u000f&amp;\u0013­Bë8+ÒU\r\u0018×\u0007Zýd%ð\u0019kg\u0010mB\u0013-3\u000eÎEð¨CmÞ9(7\u0007ýhçLX\u0016»Òvir&#96;&lt;¹^DÒ6ÌóÙ¬Ê.ßU\fv1\u0018\u0013uA\u0014¬¿ÌsuhÄú4×kGÇUZ&amp;óeJæÎÝ\u0016ç¦&lt;&amp;®»KW´Vªb¯¾\u001déR&lt;å&#x3D;å&gt;á¸L;4¦½\n¡ùâ,\u001e«zõc,Ãà(Õdlt64’3µþªÕ²k Îï¾k&#x2F;_dãK¯rÐ\u00162%cS@Í\u0017U©¾qÎÈ&gt;Z3,{e$]\u0019\u0019ù82%æÍòI^e\u00135Y-£8béÙC\u001døÔ$\2\u001fv¢ÑJ&lt;uÒØJ[ªÙ,®\u001d¦®ªLóÜ¹xk&amp;Ð\u001d4Ï9®´®¿\u001a¹VâóÏÅæüáÒeãñâiÌÓ$6Í</del>ù|Ù°u&lt;øJt{âÙàü±øÅÙ\u0013CÞZ&lt;ð­°|+,8wÄ¹eú¡³cö-8ïÀ¹eå«_]<del>øÓ_Þÿõw\u001f</del>ûÃG<del>Â¹&lt;ñîßoM£\u000føÛÿ</del>xû\u001ft.\u001b½ÿçßoZÈí\u0016ïþñû÷¿ùã»½å&#x2F;;ïJgKÅ9v&lt;\u0014ç\u0001q\u0002qJ88\u0003âDâ\f\u0013S\u0012’\u0012g88)YP&#x3D;âDâÜ’N$NZ\u0011\u0014’­\b³C+â¤\u0015AqÒ 8%q&quot;qÒ 8iEP´&quot;(NZ\u0011\u0014’­\bVÄÙ¥\u0015AqÒ 8iEP88iEP´&quot;(NZ\u0011\u0014’­\bV\u0004ÅI+BâìÑ 8iEP´&quot;(NIH´&quot;(NZ\u0011\u0014’­\bV\u0004ÅI+â¤\u0015!qîÓ 8iEP´&quot;(NIH´&quot;(NZ\u0011\u0014’­\bV\u0004ÅI+â¤\u0015!qöiEP´&quot;(NZ\u0011\u0014§$N$NZ\u0011\u0014’­\bV\u0004ÅI+â¤\u0015AqÒ8\u000fhEP´&quot;(NZ\u0011\u0014§$N$NZ\u0011\u0014’­\bV\u0004ÅI+â¤\u0015AqÒ8\u0003ZåI&#x2F;Âò¤\u0018ayJòò¤\u001aayÒ°&lt;)GX´#,Oê\u0011’ý\bÊ3 \u001fayÒ°&lt;éGX&lt;¡&lt;éGXô#,Oú\u0011’ý\bË<del>åI?ò\féGXô#,Oú\u0011§$O(Oú\u0011’ý\bË</del>åI?Âò¤\u001fayÒ &lt;%ý\bË<del>åI?Âòä\tåI?Âò¤\u001fayÒ°&lt;éGXô#,Oú\u0011g</del>åI?Âò¤\u001fayJòò¤\u001fayÒ°&lt;éGXô#,Oú\u0011’ý\bÊ³K?Âò¤\u001fayÒ°&lt;%yByÒ°&lt;éGXô#,Oú\u0011’ý\bË<del>\u0004åÙ£\u001fayÒ°&lt;éGX&lt;¡&lt;éGXô#,Oú\u0011’ý\bË</del>åI?òÜ§\u001fayÒ°&lt;éGX&lt;¡&lt;éGXô#,Oú\u0011’ý\bË<del>åI?òìÓ°&lt;éGXô#,OIPô#,Oú\u0011’ý\bË</del>åI?Âò¤\u001fAy\u001eÐ°&lt;éGXô#,OIPô#,Oú\u0011’ý\bË<del>ãiv¯Fe®Us¨\¤fã÷fßk__ø«Ç&#96;õ\u0018®\u001e¥÷²½lþõE&lt;</del>&#x3D;ÌÓ\×\u0017~¶ß9ìùu«ÏúþþQ½Õ\u001dú¾ìÕ[O\u000e\u001e}ïåõõËÿ\u0003\u0011áJ\u001e”,”calcChain”:[],”vessels”:{},”useUTC”:true,”useIndex”:true,”customColors”:[],”meta”:{“sort”:0,”shareFilter”:0},”formulaCalclated”:true,”versionId”:”EPM6N2HW1VGNw7KM”}</p>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/11/15/flush%E5%88%B7%E6%96%B0%E8%BE%93%E5%87%BA/</url>
+    <content><![CDATA[<p><font style="color:rgb(13, 13, 13);">这段描述指的是在C语言中使用 </font><strong>printf</strong><font style="color:rgb(13, 13, 13);"> 函数进行输出时，实际的输出并不总是立即发生。原因在于 </font><strong>printf</strong><font style="color:rgb(13, 13, 13);"> 通常使用缓冲（buffering）机制来提高程序的效率。缓冲的基本思想是，程序会将待输出的数据先存储在一个内存区域（即缓冲区）中，而不是直接发送到输出设备（比如屏幕或文件）。这样做可以减少系统调用的次数，因为每次系统调用都会带来一定的性能开销。</font></p>
+<p><font style="color:rgb(13, 13, 13);">在C标准库中，</font><strong>stdout</strong><font style="color:rgb(13, 13, 13);">（标准输出）的缓冲行为如下：</font></p>
+<ol>
+<li><strong>行缓冲（Line buffered）</strong><font style="color:rgb(13, 13, 13);">：当缓冲区满，或者当输出数据中包含换行符（</font><strong>\n</strong><font style="color:rgb(13, 13, 13);">）时，缓冲区的内容会被发送出去。这种情况通常适用于连接到终端（如命令行窗口）的输出。</font></li>
+<li><strong>全缓冲（Fully buffered）</strong><font style="color:rgb(13, 13, 13);">：仅当缓冲区满时，缓冲区的内容才被发送出去。这种情况常用于文件操作或输出不直接显示在终端的情况。</font></li>
+<li><strong>无缓冲（Unbuffered）</strong><font style="color:rgb(13, 13, 13);">：数据直接且立即发送到输出设备，不经过缓冲区。例如，</font><strong>stderr</strong><font style="color:rgb(13, 13, 13);">（标准错误输出）通常是无缓冲的，以便错误信息可以立即显示。</font></li>
+</ol>
+<p><font style="color:rgb(13, 13, 13);">如果程序在 </font><strong>printf</strong><font style="color:rgb(13, 13, 13);"> 后立即通过 </font><strong>exit(0)</strong><font style="color:rgb(13, 13, 13);"> 退出，且输出的数据还在行缓冲区中（例如，没有遇到换行符，或缓冲区未满），那么这部分数据可能永远不会被输出。因为进程一旦退出，所有内存资源（包括缓冲区中的数据）都将被操作系统回收，未刷新的缓冲区内容就会丢失。</font></p>
+<p><font style="color:rgb(13, 13, 13);">为了避免这种情况，在退出前使用 </font><strong>fflush(stdout);</strong><font style="color:rgb(13, 13, 13);"> 可以手动刷新标准输出的缓冲区，确保所有缓冲中的输出都被正确处理和显示。</font></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>管道操作</title>
+    <url>/2024/10/13/%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p>**pipe(int fd[2]) **</p>
+<ul>
+<li><strong>管道系统调用创建了一个单向通道，进程可以通过该通道共享数据。</strong></li>
+<li><strong>返回时，fd 参数将包含 2 个文件描述符（整数）。</strong><ul>
+<li><strong>fd[0]指的是可以从中读取数据的管道的一侧。</strong></li>
+<li><strong>fd[1]指的是可以写入数据的管道一侧。</strong></li>
+</ul>
+</li>
+<li><strong>数据写入到 fd[1]会被内核缓冲，直到从 fd[0]读取</strong></li>
+<li><strong>下面是使用 pipe()系统调用的两个示例：</strong></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*** Example 1 ***/</span></span><br><span class="line"><span class="type">int</span> fd[<span class="number">2</span>];</span><br><span class="line"><span class="comment">/* set up the pipe */</span></span><br><span class="line"><span class="keyword">if</span>(pipe(fd) == <span class="number">-1</span>)&#123;</span><br><span class="line">    perror(“pipe”);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!fork())&#123;</span><br><span class="line">    <span class="comment">/*child process*/</span></span><br><span class="line">    <span class="type">char</span> *message = “Hello World!”;</span><br><span class="line">    <span class="comment">/* the message is written to the</span></span><br><span class="line"><span class="comment">         * write end of the pipe */</span></span><br><span class="line">    write(fd[<span class="number">1</span>], data, <span class="built_in">strlen</span>(message));</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* close both ends of the pipe in</span></span><br><span class="line"><span class="comment">         * the child process */</span></span><br><span class="line">    close(fd[<span class="number">0</span>]);</span><br><span class="line">    close(fd[<span class="number">1</span>]);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">/*parent process*/</span></span><br><span class="line">    <span class="type">char</span> buf[<span class="number">256</span>];</span><br><span class="line">    <span class="comment">/* read the message written to </span></span><br><span class="line"><span class="comment">         * the pipe into the buffer */</span></span><br><span class="line">    <span class="type">int</span> loc = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(read(fd[<span class="number">0</span>], &amp;buf[loc], <span class="number">1</span>) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        loc++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, “%s\n”, buf);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* wait for the child to terminate */</span></span><br><span class="line">    wait(<span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* close both ends of the pipe in</span></span><br><span class="line"><span class="comment">         *  the parent process */</span></span><br><span class="line">    close(fd[<span class="number">0</span>]);</span><br><span class="line">    close(fd[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*** Example 2 ***/</span></span><br><span class="line"><span class="type">int</span> fd[<span class="number">2</span>];</span><br><span class="line"><span class="comment">/* set up the pipe */</span></span><br><span class="line"><span class="keyword">if</span>(pipe(fd) == <span class="number">-1</span>)&#123;</span><br><span class="line">    perror(“pipe”);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!fork())&#123;</span><br><span class="line">    <span class="comment">/*child process*/</span></span><br><span class="line">    <span class="type">char</span> *message = “Hello World!”;</span><br><span class="line">    <span class="type">int</span> len = <span class="built_in">strlen</span>(data);</span><br><span class="line">    <span class="comment">/* write the size of the message</span></span><br><span class="line"><span class="comment">         * that will be written to the pipe */</span></span><br><span class="line">    write(fd[<span class="number">1</span>], &amp;len, <span class="keyword">sizeof</span>(<span class="type">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* the message itself is written to </span></span><br><span class="line"><span class="comment">         * the write end of the pipe */</span></span><br><span class="line">    write(fd[<span class="number">1</span>], data, len);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* close both ends of the pipe in</span></span><br><span class="line"><span class="comment">         * the child process */</span></span><br><span class="line">    close(fd[<span class="number">0</span>]);</span><br><span class="line">    close(fd[<span class="number">1</span>]);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">/*parent process*/</span></span><br><span class="line">    <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">/* read from the pipe, the first item </span></span><br><span class="line"><span class="comment">         * read will be the size of the message </span></span><br><span class="line"><span class="comment">         * since data is read in the same order </span></span><br><span class="line"><span class="comment">         * as it is written */</span></span><br><span class="line">    read(fd[<span class="number">0</span>], &amp;size, <span class="keyword">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">    <span class="type">char</span> *buf = new <span class="type">char</span>[size];</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* read the message written to the</span></span><br><span class="line"><span class="comment">         * pipe into the buffer */</span></span><br><span class="line">    read(fd[<span class="number">0</span>], buf, size);</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, “%s\n”, buf);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* wait for the child to terminate */</span></span><br><span class="line">    wait(<span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* close both ends of the pipe in </span></span><br><span class="line"><span class="comment">         * the parent process */</span></span><br><span class="line">    close(fd[<span class="number">0</span>]);</span><br><span class="line">    close(fd[<span class="number">1</span>]);</span><br><span class="line">    delete[] buf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>**<br>****注意：第二个示例首先写入数据的大小，然后写入数据本身。由于您知道数据写入管道的顺序，如果您首先读取 sizeof(int) 字节，您将读取剩余数据（消息）的长度。然后，您就知道要读取多少数据，以便在再次调用读取时可以完整地读取整个消息。<br>**<strong>在第一个示例中，数据逐字节从管道中读取，直到读取返回 0（没有更多数据可读取为止）。在这个示例中，通过管道传递数据会产生 14 个系统调用，1 个写入管道，12 个读取以获取整个消息，以及 1 个读取以达到 EOF。相比之下，第二个示例通过管道传递数据只使用了 4 个系统调用：2 个写入和 2 个读取。系统调用是昂贵的，因为它们涉及将控制权交给操作系统。因此，如果减少系统调用，通常会发现程序更高效。</strong></p>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/11/15/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error(%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7)/</url>
+    <content><![CDATA[<h3 id="1-检查和处理错误返回值"><a href="#1-检查和处理错误返回值" class="headerlink" title="1. 检查和处理错误返回值"></a><font style="color:rgb(13, 13, 13);">1. 检查和处理错误返回值</font></h3><p><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 函数在成功时返回写入的字节数，如果失败，则返回 </font><strong>-1</strong><font style="color:rgb(13, 13, 13);"> 并设置全局变量 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);">。你应该总是检查 </font><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 的返回值，并据此进行错误处理：</font></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">ssize_t</span> bytes_written = write(pipe_fd[<span class="number">1</span>], &amp;data, <span class="keyword">sizeof</span>(data));</span><br><span class="line"><span class="keyword">if</span> (bytes_written == <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="comment">// 处理错误情况</span></span><br><span class="line">    perror(<span class="string">&quot;write to pipe failed&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-理解错误原因"><a href="#2-理解错误原因" class="headerlink" title="2. 理解错误原因"></a><font style="color:rgb(13, 13, 13);">2. 理解错误原因</font></h3><p><font style="color:rgb(13, 13, 13);">通过查看 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值，你可以获取为什么 </font><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 失败的具体原因。一些常见的错误包括：</font></p>
+<ul>
+<li><strong>EPIPE</strong><font style="color:rgb(13, 13, 13);">: 管道的读端已关闭，写操作会产生 </font><strong>SIGPIPE</strong><font style="color:rgb(13, 13, 13);"> 信号。如果信号没有被捕获或忽略，进程会终止。</font></li>
+<li><strong>EBADF</strong><font style="color:rgb(13, 13, 13);">: 文件描述符不是有效的或不是写描述符。</font></li>
+<li><strong>EFAULT</strong><font style="color:rgb(13, 13, 13);">: 指针指向的内存区域对于进程是不可访问的。</font></li>
+<li><strong>EINTR</strong><font style="color:rgb(13, 13, 13);">: 调用在完成前被信号中断。</font></li>
+<li><strong>EINVAL</strong><font style="color:rgb(13, 13, 13);">: 文件描述符不支持写操作，或者参数不合法。</font></li>
+<li><strong>EIO</strong><font style="color:rgb(13, 13, 13);">: 出现底层输入&#x2F;输出错误。</font></li>
+</ul>
+<h3 id="3-适当处理-EPIPE"><a href="#3-适当处理-EPIPE" class="headerlink" title="3. 适当处理 EPIPE"></a><font style="color:rgb(13, 13, 13);">3. 适当处理 </font><strong>EPIPE</strong></h3><p><font style="color:rgb(13, 13, 13);">如果 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 返回 </font><strong>EPIPE</strong><font style="color:rgb(13, 13, 13);">，说明没有进程持有管道的读端。这时，可以考虑以下处理方式：</font></p>
+<ul>
+<li><font style="color:rgb(13, 13, 13);">检查和修改代码逻辑，确保在写入管道之前，管道的读端始终打开。</font></li>
+<li><font style="color:rgb(13, 13, 13);">捕获 </font><strong>SIGPIPE</strong><font style="color:rgb(13, 13, 13);"> 信号，并决定如何安全地处理或忽略它，以防止程序由于此信号而意外退出。</font></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">c</span><br><span class="line">复制代码</span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line"></span><br><span class="line">void handle_sigpipe(int sig) &#123;</span><br><span class="line">    fprintf(stderr, &quot;SIGPIPE caught\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    signal(SIGPIPE, handle_sigpipe);</span><br><span class="line">    // 之后的管道写入逻辑</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-重新尝试写入（如果适用）"><a href="#4-重新尝试写入（如果适用）" class="headerlink" title="4. 重新尝试写入（如果适用）"></a><font style="color:rgb(13, 13, 13);">4. 重新尝试写入（如果适用）</font></h3><p><font style="color:rgb(13, 13, 13);">在某些情况下，如 </font><strong>write()</strong><font style="color:rgb(13, 13, 13);"> 因为 </font><strong>EINTR</strong><font style="color:rgb(13, 13, 13);"> 被中断，你可能希望重新尝试写入操作。在这种情况下，你可以设置一个循环来重试：</font></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">c</span><br><span class="line">复制代码</span><br><span class="line">ssize_t result;</span><br><span class="line">while ((result = write(pipe_fd[1], &amp;data, sizeof(data))) == -1 &amp;&amp; errno == EINTR) &#123;</span><br><span class="line">    continue; // 重新尝试</span><br><span class="line">&#125;</span><br><span class="line">if (result == -1) &#123;</span><br><span class="line">    perror(&quot;write to pipe failed&quot;);</span><br><span class="line">    exit(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-保证程序的健壮性"><a href="#5-保证程序的健壮性" class="headerlink" title="5. 保证程序的健壮性"></a><font style="color:rgb(13, 13, 13);">5. 保证程序的健壮性</font></h3><p><font style="color:rgb(13, 13, 13);">总的来说，编写健壮的管道通信代码需要对可能的错误情况有充分的考虑和准备。确保在编程时考虑各种异常情况，并采取适当的错误处理措施。</font></p>
+<p><font style="color:rgb(13, 13, 13);">通过这些策略，你可以有效地处理和应对在管道写入过程中可能遇到的错误，确保程序的稳健性和用户的良好体验。</font></p>
+<p><font style="color:rgb(13, 13, 13);">在 C 程序中，查看 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值可以帮助你诊断和理解发生在系统调用中的错误。</font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 是一个全局变量，定义在 </font><strong>&lt;errno.h&gt;</strong><font style="color:rgb(13, 13, 13);"> 头文件中，用于存储最近的错误代码。下面是如何查看 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值以及如何使用它来诊断错误的步骤：</font></p>
+<p><font style="color:rgb(13, 13, 13);">2. 检查错误并获取 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 值</font></p>
+<p><font style="color:rgb(13, 13, 13);">在执行系统调用如 </font><strong>read()</strong><font style="color:rgb(13, 13, 13);">, </font><strong>write()</strong><font style="color:rgb(13, 13, 13);">, </font><strong>open()</strong><font style="color:rgb(13, 13, 13);"> 等之后，如果调用返回错误（通常是 </font><strong>-1</strong><font style="color:rgb(13, 13, 13);">），则可以检查 </font><strong>errno</strong><font style="color:rgb(13, 13, 13);"> 的值来确定错误原因。</font></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">c</span><br><span class="line">复制代码</span><br><span class="line">int ret = write(fd, buffer, size);</span><br><span class="line">if (ret == -1) &#123;</span><br><span class="line">    // 输出 errno 的值和对应的错误消息</span><br><span class="line">    printf(&quot;Error! errno = %d, message: %s\n&quot;, errno, strerror(errno));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
+  </entry>
+  <entry>
+    <title>进程操作</title>
+    <url>/2024/10/13/%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p>tags: []<br>categories: []<br>date: 2024-10-13 12:30:00</p>
+<p><strong>fork() 分叉()</strong></p>
+<ul>
+<li><strong>fork 系统调用用于创建一个新的进程。它不接受任何参数，并返回一个 pid_t （一个整数值）。</strong></li>
+<li><strong>从子进程的角度来看，fork()返回 0</strong></li>
+<li><strong>从父进程的角度来看，fork()返回新创建的子进程的进程 ID</strong></li>
+<li><strong>请记住，新的子进程的地址空间在调用 execv 之前与父进程完全相同。除此之外，这意味着子进程在调用 fork()之前拥有父进程设置的所有变量的副本！</strong></li>
+<li><strong>使用 fork 的一个例子如下：</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int pid;</span><br><span class="line">   if((pid = fork()) == 0)&#123;</span><br><span class="line">       /* this is the child */</span><br><span class="line">   &#125;else&#123;</span><br><span class="line">       /* this is the parent */</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/11/15/%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><strong>std::thread</strong></p>
+<ul>
+<li><strong>std::thread(func, args…)</strong>** **<ul>
+<li><strong>std::thread 构造函数生成一个新的线程，该线程开始运行函数 func ，并使用指定的参数</strong></li>
+<li><strong>参数：</strong><ul>
+<li><strong>func 由新线程执行的函数。</strong></li>
+<li><strong>args 根据指定的函数需要，可以使用任意数量的参数</strong></li>
+</ul>
+</li>
+<li><strong>返回值：一个线程句柄，您可以使用它来加入线程（参见 join() ）。</strong></li>
+<li><strong>以下是标准 std::thread 使用的示例：</strong></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">some_func</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    …</span><br><span class="line">    &#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">create_threads</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="comment">// create and run the thread</span></span><br><span class="line">    <span class="built_in">std</span>::thread t = thread(some_func, <span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="comment">// wait for it to complete</span></span><br><span class="line">    t.join();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>**std::thread::join **</p>
+<ul>
+<li><strong>join()</strong></li>
+<li>** 函数等待线程执行完成。调用 t.join() 将阻塞调用线程，直到线程 t 完成。（如果线程已经完成， join 将立即返回。）**</li>
+</ul>
+]]></content>
+  </entry>
+</search>
