@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/">
+        <link rel="prev" href="../Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/">
       
       
-        <link rel="next" href="../Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/">
+        <link rel="next" href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Lecture 15：特权分离，内存保护 - days'blog</title>
+        <title>Lecture 24：条件变量、总结 - days'blog</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lecture-15特权分离内存保护" class="md-skip">
+        <a href="#lecture-24条件变量总结" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lecture 15：特权分离，内存保护
+              Lecture 24：条件变量、总结
             
           </span>
         </div>
@@ -977,19 +977,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -998,7 +989,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1176,10 +1166,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1188,6 +1187,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1559,99 +1559,71 @@
                   
 
 
-<h1 id="lecture-15特权分离内存保护">Lecture 15：特权分离，内存保护<a class="headerlink" href="#lecture-15特权分离内存保护" title="Permanent link">&para;</a></h1>
+<h1 id="lecture-24条件变量总结">Lecture 24：条件变量、总结<a class="headerlink" href="#lecture-24条件变量总结" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p><strong><font style="color:rgb(33, 37, 41);">对操作系统内核如何与硬件协同工作并建立特权概念有了更好的理解：内核在特权模式（</font></strong><em><strong><font style="color:rgb(33, 37, 41);">privileged</font></strong></em><strong><font style="color:rgb(33, 37, 41);"> mode）下使用处理器，而用户空间进程则不是。当用户空间进程尝试执行需要特权的操作时，会发生中断并将控制权交还给内核。通常情况下，内核会终止违规的进程！</font></strong></p>
-<p><strong><font style="color:rgb(33, 37, 41);">研究了硬件机制和操作系统内核如何协同工作，以确保即使程序出现问题，我们的计算机也能稳定运行。特别是，我们发现只有内核才能执行特权操作，如果用户空间进程试图执行这些操作，会导致故障(trap)并将CPU的控制交还给内核。这使得操作系统内核能够防止任何试图接管CPU的攻击，并确保用户空间进程以较弱权限运行。</font></strong>
+<p><strong><font style="color:rgb(33, 37, 41);">条件变量使得线程能够在条件满足时实现阻塞。这提高了有界缓冲区程序的效率，因为线程不再自旋；对于其他需要线程等待的程序，为确保程序的正确性条件变量是必需的。</font></strong></p>
+<p><strong><font style="color:rgb(33, 37, 41);">为了等待资源，线程在持有互斥锁的情况下调用条件变量的 </font></strong><strong><font style="color:rgb(232, 62, 140);">wait()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。如果条件不成立，互斥锁将被释放，线程将被阻塞。通过从另一个线程调用 </font></strong><strong><font style="color:rgb(232, 62, 140);">notify_all</font></strong><strong><font style="color:rgb(33, 37, 41);"> （或 </font></strong><strong><font style="color:rgb(232, 62, 140);">notify_one</font></strong><strong><font style="color:rgb(33, 37, 41);"> ），可以解除这个线程对条件变量的等待。</font></strong></p>
+<p><strong><font style="color:rgb(33, 37, 41);">我们通过考虑条件变量 API 的两个细节来结束我们对线程同步的讨论：为什么需要原子释放锁并阻塞调用线程，以及为什么需要将对其的调用包装在循环中。对于这两个选择，事实证明，如果没有它们，条件变量允许在多个线程以最不理想的方式交错时出现微妙的错误执行。</font></strong>
 </p>
 </blockquote>
-<ul>
-<li><strong><font style="color:rgb(33, 37, 41);">Userspace/Kernel Privilege Separation 用户空间/内核特权分离</font></strong></li>
-</ul>
-<p><strong><font style="color:rgb(6, 6, 7);">共享硬件资源</font></strong><font style="color:rgb(6, 6, 7);">：大多数计算机硬件资源是共享的，内核通过时间分片（time-sharing）来管理这些资源的使用，即不同程序轮流使用处理器等资源。</font></p>
-<ul>
-<li><strong><font style="color:rgb(6, 6, 7);">Representing Privilege 表示特权：</font></strong></li>
-</ul>
-<p><strong><font style="color:rgb(6, 6, 7);">内核如何获得特权，并确保它比用户空间进程保持更高的特权？再次，硬件和操作系统之间的相互作用在这里起着关键作用。</font></strong></p>
+<h1 id="条件变量">条件变量<a class="headerlink" href="#条件变量" title="Permanent link">&para;</a></h1>
+<p><strong><font style="color:rgb(33, 37, 41);">条件变量是另一种同步对象。当程序中的一个线程持有锁但无法继续执行，持续等待某个资源成为真才能继续执行时，条件变量就非常有用。例如，即工作线程必须等待客户端处理线程插入工作或非满。</font></strong></p>
+<p><strong><font style="color:rgb(33, 37, 41);">重要的是，等待线程必须放弃其持有的锁，以便其他线程可以更改条件。这就是条件变量的作用。它支持以下操作：</font></strong></p>
 <ol>
-<li><strong><font style="color:rgb(33, 37, 41);">内核是计算机启动时运行的第一个程序。当计算机启动（&rdquo;引导&rdquo;）时，它以完全特权（</font></strong><em><strong><font style="color:rgb(33, 37, 41);">full privileged</font></strong></em><strong><font style="color:rgb(33, 37, 41);"> ）运行 -  换句话说，第一个运行的程序可以访问所有硬件，并读写任何内存位置。因此，第一个运行的程序最好是内核！然后，内核可以以受限特权启动其他程序。</font></strong></li>
-<li><strong><font style="color:rgb(33, 37, 41);">x86-64 计算机表示特权的一种方式是通过一个特殊的寄存器，即 </font></strong><strong><font style="color:rgb(232, 62, 140);">%cs</font></strong><strong><font style="color:rgb(33, 37, 41);"> 寄存器。该寄存器可以存储值 0 或 3。0 表示处理器正在特权模式下运行（实际上意味着它正在运行内核），而 3 表示它在非特权模式下运行（通常是用户空间程序）。处理器的特权模式控制着当前进程是否可以执行关闭中断等操作。</font></strong></li>
-<li><strong><font style="color:rgb(33, 37, 41);">x86-64指令 </font></strong><strong><font style="color:rgb(232, 62, 140);">cli</font></strong><strong><font style="color:rgb(33, 37, 41);"> （&rdquo;清除中断&rdquo;）的效果是关闭处理器中的所有中断处理。因此，如果一个进程能够运行这个指令，它可以忽略定时器中断。Eve可能会在她的进程中使用类似 </font></strong><strong><font style="color:rgb(232, 62, 140);">asm volatile (&ldquo;cli&rdquo;);</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的代码来尝试实现这一点，但是假设内核在启动用户空间进程时正确限制了权限，Eve尝试运行这个指令将导致异常（&rdquo;fault&rdquo;，更具体地说是x86-64术语中的一般保护故障），从而导致内核接管控制。</font></strong></li>
+<li><strong><font style="color:rgb(232, 62, 140);">wait(std::unique_lock&amp; lock)</font></strong><strong><font style="color:rgb(33, 37, 41);"> ：在一个原子步骤中，它解锁所持有的锁，并阻塞，直到另一个线程调用 </font></strong><strong><font style="color:rgb(232, 62, 140);">notify_all()</font></strong><strong>来唤醒它</strong><strong> </strong><strong><font style="color:rgb(33, 37, 41);">。在被返回（唤醒）时，它还会尝试重新去锁定锁。</font></strong></li>
+<li>
+<p><strong><font style="color:rgb(232, 62, 140);">notify_all()</font></strong><strong><font style="color:rgb(33, 37, 41);"> ：唤醒所有被调用 </font></strong><strong><font style="color:rgb(232, 62, 140);">wait()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 阻塞的线程。</font></strong></p>
+</li>
+<li>
+<p><strong>来看例子：</strong></p>
+</li>
 </ol>
-<p><font style="color:rgb(33, 37, 41);">当Eve试图执行特权指令时，内核应该做什么？由编写操作系统内核的程序员决定采用什么策略。</font></p>
-<p><font style="color:rgb(33, 37, 41);">例如，内核可以简单地忽略非法指令，并继续执行Eve的进程从下一条指令开始。或者内核可以试图惩罚Eve试图违反规则，并终止她的进程。以下代码添加到WeensyOS内核的异常处理程序中会终止Eve的进程。</font></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">exception</span><span class="p">(</span><span class="n">regstate</span><span class="o">*</span><span class="w"> </span><span class="n">regs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// [...]</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">INT_GP</span><span class="p">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">regs</span><span class="o">-&gt;</span><span class="n">reg_cs</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="c1">// Userspace fault, kill the process</span>
-<span class="w">          </span><span class="n">current</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">P_BROKEN</span><span class="p">;</span>
-<span class="w">          </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="k">goto</span><span class="w"> </span><span class="n">unhandled</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="c1">// [...]</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>在 WeensyOS 内核中， current 始终指向进入内核之前运行的最后一个用户空间进程的进程描述符（包含有关该进程的信息的结构）。</strong></p>
-<p><strong>因此， current-&gt;state 指的是当前进程的状态，并将其设置为 P_BROKEN 会将该进程标记为不可行，并阻止内核再次运行它。</strong></p>
-<hr />
+<p><strong><font style="color:rgb(33, 37, 41);">从逻辑上讲，当有界缓冲区变满时，写入者应该阻塞，并在缓冲区再次变为非满时解除阻塞。</font></strong></p>
 <ul>
-<li><strong><font style="color:rgb(33, 37, 41);">Memory Protection 内存保护</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">让我们在互斥锁下方的有界缓冲区中创建一个条件变量，称为 </font></strong><strong><font style="color:rgb(232, 62, 140);">nonfull_</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。请注意，我们方便地将条件变量命名为函数应解除阻塞的条件。这将使代码在以后更容易阅读。 </font></strong><strong><font style="color:rgb(232, 62, 140);">write()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 方法实现阻塞的是 </font></strong><strong><font style="color:rgb(232, 62, 140);">bbuffer-cond.cc</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。</font></strong></li>
 </ul>
-<p><strong><font style="color:rgb(6, 6, 7);">内核需要保护内存（RAM）免受用户空间进程的攻击，因为这些进程可能会修改内核代码以获得对计算机的控制。</font></strong></p>
-<p><font style="color:rgb(33, 37, 41);">例如：如果允许Eve的进程写入内核内存，她可以通过修改内核代码内存将自己的无限循环移入内核。Eve可以用序列 </font><font style="color:rgb(232, 62, 140);">0xEB 0xFE</font><font style="color:rgb(33, 37, 41);"> 替换两个指令字节，这在x86-64机器码中是一个两字节的指令，表示无条件的相对跳转，跳转距离为负两个字节。换句话说，这个指令将永远跳回自身，形成一个无限循环。此时 Eve 就可以垄断整个处理器，如何解决？</font></p>
-<ul>
-<li><strong><font style="color:rgb(33, 37, 41);">解决方案：受限权限的内存映射</font></strong></li>
-</ul>
-<p><font style="color:rgb(33, 37, 41);">幸运的是，我们计算机的硬件提供了一种机制，可以限制对内存不同区域的访问权限。这些权限是以每页来进行设置的：具体来说，每个内存页（回想一下，一个页是4 KB = 4096 字节的内存）可以设置多个访问位：</font></p>
-<ul>
-<li><strong><font style="color:rgb(33, 37, 41);">PTE_P</font></strong><font style="color:rgb(33, 37, 41);">: 当前。表示页面正在使用中。</font></li>
-<li><strong><font style="color:rgb(33, 37, 41);">PTE_W</font></strong><font style="color:rgb(33, 37, 41);">: 可写。表示页面可以读取和写入。</font></li>
-<li><strong><font style="color:rgb(33, 37, 41);">PTE_U</font></strong><font style="color:rgb(33, 37, 41);">: 用户空间。表示页面可以被用户空间进程访问（即，如果 </font><font style="color:rgb(232, 62, 140);">%cs</font><font style="color:rgb(33, 37, 41);"> 设置为 3）。</font></li>
-</ul>
-<blockquote>
-<p><strong><font style="color:rgb(33, 37, 41);">权限位存储在哪里？</font></strong><font style="color:rgb(33, 37, 41);"><br />
-</font><font style="color:rgb(33, 37, 41);">页面权限位存储在一个称为页面表的数据结构中。</font>
-</p>
-</blockquote>
-<p><font style="color:rgb(33, 37, 41);">在 WeensyOS 内核中，内存权限在内核启动后的 </font><font style="color:rgb(232, 62, 140);">kernel()</font><font style="color:rgb(33, 37, 41);"> 函数中设置。所有操作都在这个循环中完成：</font></p>
-<div class="highlight"><pre><span></span><code><span class="c1">// (re-)initalize kernel page table:</span>
-<span class="c1">// all of physical memory is accessible except `nullptr`</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">vmiter</span><span class="w"> </span><span class="n">it</span><span class="p">(</span><span class="n">kernel_pagetable</span><span class="p">);</span>
-<span class="w">         </span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">MEMSIZE_PHYSICAL</span><span class="p">;</span>
-<span class="w">         </span><span class="n">it</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">PAGESIZE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">it</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">(),</span><span class="w"> </span><span class="n">PTE_P</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_W</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_U</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">it</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="kt">ssize_t</span><span class="w"> </span><span class="nf">bbuffer::write</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">sz</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="w"> </span><span class="n">guard</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mutex_</span><span class="p">);</span><span class="w">    </span><span class="c1">//C++互斥模式 RAII</span>
+<span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">write_closed_</span><span class="p">);</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">blen_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">bcapacity</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// #1</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">nonfull_</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">guard</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-<span class="n">循环体做两件事情</span>
-<span class="mf">1.</span><span class="n">如果我们不处理地址</span><span class="w"> </span><span class="mh">0x0</span><span class="err">（</span><span class="n">空指针</span><span class="err">！），</span><span class="n">则在该地址上设置页面的所有权限</span><span class="err">。</span>
-<span class="mf">2.</span><span class="n">如果我们处理空指针</span><span class="err">，</span><span class="n">清除所有权限</span><span class="err">，</span><span class="n">以便对页面的任何访问都会导致内核中的故障</span><span class="err">。（</span><span class="n">这对于捕获程序中的空指针解引用非常有帮助</span><span class="err">！）</span>
-</code></pre></div>
-<p><strong><font style="color:rgb(33, 37, 41);">这个循环使用 C++ 迭代器语法来遍历存储在称为 &ldquo;内核页表&rdquo; 的东西中的内存映射。C++ 迭代器是一个方便的概念，用于遍历不支持简单整数索引访问的数据结构。该循环表示，对于一个新的内存迭代器 </font></strong><strong><font style="color:rgb(232, 62, 140);">it</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，类型为 </font></strong><strong><font style="color:rgb(232, 62, 140);">vmiter</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，在 </font></strong><strong><font style="color:rgb(232, 62, 140);">kernel_pagetable</font></strong><strong><font style="color:rgb(33, 37, 41);"> 上，我们希望迭代直到当前地址（ </font></strong><strong><font style="color:rgb(232, 62, 140);">it.va()</font></strong><strong><font style="color:rgb(33, 37, 41);"> ）为 </font></strong><strong><font style="color:rgb(232, 62, 140);">MEMSIZE_PHYSICAL</font></strong><strong><font style="color:rgb(33, 37, 41);"> （在 WeensyOS 中为 0x20&lsquo;0000），并且我们希望以 </font></strong><strong><font style="color:rgb(232, 62, 140);">PAGESIZE</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的步长（4096 字节）跳转。（注意， </font></strong><strong><font style="color:rgb(232, 62, 140);">vmiter</font></strong><strong><font style="color:rgb(33, 37, 41);"> 隐式地从地址 0 开始迭代； </font></strong><strong><font style="color:rgb(232, 62, 140);">vmiter</font></strong><strong><font style="color:rgb(33, 37, 41);"> 类的构造函数的另一种语法是 </font></strong><strong><font style="color:rgb(232, 62, 140);">vmiter it(kernel_pagetable, 0)</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。）</font></strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">但是这里的内核内存权限太开放了</span><span class="err">！</span><span class="n">特别是在内核内存页面上设置</span><span class="w"> </span><span class="n">PTE_U</span><span class="w"> </span><span class="n">是危险的</span><span class="err">。</span>
-<span class="n">让我们将这个循环改为使内核内存对用户空间进程不可用</span><span class="err">，</span><span class="n">同时保持用户空间内存在</span><span class="w"> </span><span class="n">PROC_START_ADDR</span><span class="w"> </span><span class="n">以上对它们可用</span><span class="err">：</span>
-<span class="c1">// (re-)initalize kernel page table:</span>
-<span class="c1">// all of physical memory is accessible except `nullptr`</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">vmiter</span><span class="w"> </span><span class="n">it</span><span class="p">(</span><span class="n">kernel_pagetable</span><span class="p">);</span>
-<span class="w">         </span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">MEMSIZE_PHYSICAL</span><span class="p">;</span>
-<span class="w">         </span><span class="n">it</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">PAGESIZE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">PROC_START_ADDR</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CONSOLE_ADDR</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// process memory, console (for memory-mapped I/O) accessible to userspace</span>
-<span class="w">            </span><span class="n">it</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">(),</span><span class="w"> </span><span class="n">PTE_P</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_W</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_U</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// kernel memory, NOT accessible to userspace</span>
-<span class="w">            </span><span class="n">it</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">(),</span><span class="w"> </span><span class="n">PTE_P</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// null page (for null pointer derefs) mapped with no permissions</span>
-<span class="w">            </span><span class="n">it</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">va</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">blen_</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">bcapacity</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bindex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bpos_</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">blen_</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">bcapacity</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bbuf_</span><span class="p">[</span><span class="n">bindex</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="n">pos</span><span class="p">];</span>
+<span class="w">        </span><span class="o">++</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">blen_</span><span class="p">;</span>
+<span class="w">        </span><span class="o">++</span><span class="n">pos</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<p><strong><font style="color:rgb(33, 37, 41);">随着对内核的这个更改，Eve再也无法访问内核内存，我们达到了保护内存的目的。</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(33, 37, 41);">当我们所做的一些更改可能使得解除阻塞条件时，应该调用 </font></strong><strong><font style="color:rgb(232, 62, 140);">notify_all()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。在我们的场景中，这意味着我们必须在 </font></strong><strong><font style="color:rgb(232, 62, 140);">read()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 方法中调用 </font></strong><strong><font style="color:rgb(232, 62, 140);">notify_all()</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，该方法从缓冲区中取出字符并有可能解除写入器的阻塞。</font></strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kt">ssize_t</span><span class="w"> </span><span class="nf">bbuffer::read</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">sz</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="w"> </span><span class="n">guard</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mutex_</span><span class="p">);</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">blen_</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">buf</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bbuf_</span><span class="p">[</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bpos_</span><span class="p">];</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bpos_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bpos_</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">bcapacity</span><span class="p">;</span>
+<span class="w">        </span><span class="o">--</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">blen_</span><span class="p">;</span>
+<span class="w">        </span><span class="o">++</span><span class="n">pos</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">                   </span><span class="c1">// #2</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">nonfull_</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>:::tips
+<strong><font style="color:rgb(33, 37, 41);">使用条件变量，我们的有界缓冲程序运行效率显著提高：不再进行数百万次 </font></strong><strong><font style="color:rgb(232, 62, 140);">read</font></strong><strong><font style="color:rgb(33, 37, 41);"> 和 </font></strong><strong><font style="color:rgb(232, 62, 140);">write</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的调用，而是进行约 10 万次 </font></strong><strong><font style="color:rgb(232, 62, 140);">read</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的调用和约 100 万次 </font></strong><strong><font style="color:rgb(232, 62, 140);">write</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的调用，因为线程在缓冲区满（写入）或空（读取）时被阻塞。</font></strong></p>
+<p>:::</p>
+<ul>
+<li><strong><font style="color:rgb(33, 37, 41);">为什么要在 </font></strong><strong><font style="color:rgb(232, 62, 140);">wait()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 周围使用 </font></strong><strong><font style="color:rgb(232, 62, 140);">while</font></strong><strong><font style="color:rgb(33, 37, 41);"> 循环？</font></strong></li>
+</ul>
+<p><strong><font style="color:rgb(33, 37, 41);">由于被称为虚假唤醒（</font></strong><em><strong><font style="color:rgb(33, 37, 41);">spurious</font></strong></em><strong><font style="color:rgb(33, 37, 41);"> wakeups）的原因，我们总是在循环中使用 </font></strong><strong><font style="color:rgb(232, 62, 140);">wait()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。</font></strong></p>
+<ol>
+<li><strong><font style="color:rgb(33, 37, 41);">由于 </font></strong><strong><font style="color:rgb(232, 62, 140);">notify_all()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 唤醒了在某个 </font></strong><strong><font style="color:rgb(232, 62, 140);">wait()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 调用上阻塞的所有线程，</font></strong><strong><font style="color:rgb(33, 37, 41);background-color:#FBDE28;">因此当一个特定的阻塞线程锁定互斥锁并开始运行时，可能已经有其他阻塞线程解除了阻塞</font></strong><strong><font style="color:rgb(33, 37, 41);">，取得了一些进展，并将解除阻塞的条件改回了 false。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">因此，&rdquo;被唤醒&rdquo;的线程在继续之前</font></strong><strong><font style="color:rgb(33, 37, 41);background-color:#FBDE28;">必须重新验证解除阻塞的条件</font></strong><strong><font style="color:rgb(33, 37, 41);">，如果条件不满足，则必须返回阻塞状态。 </font></strong><strong><font style="color:rgb(232, 62, 140);">while</font></strong><strong><font style="color:rgb(33, 37, 41);"> 循环正是实现了这一点。</font></strong></li>
+</ol>
+<p><strong>否则，可能又会产生两个或多个线程被同时唤醒，并同时获取了互斥锁，访问了共享资源的情况，这是不符合我们设想的同步的。</strong></p>
 
 
 

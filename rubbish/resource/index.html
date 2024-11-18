@@ -9,25 +9,25 @@
       
       
       
-        <link rel="prev" href="../Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/">
+        <link rel="prev" href="../question/">
       
       
-        <link rel="next" href="../Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/">
+        <link rel="next" href="../%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error%28%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7%29/">
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
-        <title>Lecture 13：缓存 Caching - days'blog</title>
+        <title>Resource - days'blog</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -46,7 +46,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -69,11 +69,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#lecture-13缓存-caching" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -86,7 +81,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="days&#39;blog" class="md-header__button md-logo" aria-label="days'blog" data-md-component="logo">
+    <a href="../.." title="days&#39;blog" class="md-header__button md-logo" aria-label="days'blog" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -106,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lecture 13：缓存 Caching
+              Resource
             
           </span>
         </div>
@@ -171,7 +166,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../home/" class="md-tabs__link">
+        <a href="../../home/" class="md-tabs__link">
           
   
   Home
@@ -185,21 +180,17 @@
         
   
   
-    
-  
   
     
     
       
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
   
   CSCI0300
@@ -216,11 +207,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
   
   Rubbish
@@ -259,7 +252,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="days&#39;blog" class="md-nav__button md-logo" aria-label="days'blog" data-md-component="logo">
+    <a href="../.." title="days&#39;blog" class="md-nav__button md-logo" aria-label="days'blog" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -315,7 +308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
+      <a href="../../home/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -374,7 +367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+      <a href="../../home/test/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -407,28 +400,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -439,7 +427,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             CSCI0300
@@ -491,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%200%20%EF%BC%9ASetup/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -512,7 +500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -533,7 +521,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%202%20%EF%BC%9ADebugging/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%202%20%EF%BC%9ADebugging/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -554,7 +542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -575,7 +563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -596,7 +584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%205%20%EF%BC%9AProcesses/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%205%20%EF%BC%9AProcesses/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -617,7 +605,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%206%20%EF%BC%9AThreads/" class="md-nav__link">
+      <a href="../../CSCI0300/Lab/Lab%206%20%EF%BC%9AThreads/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -643,8 +631,6 @@
                 
   
   
-    
-  
   
   
     
@@ -654,11 +640,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -672,7 +658,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             Lecture
@@ -686,7 +672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -707,7 +693,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -728,7 +714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -749,7 +735,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -770,7 +756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -791,7 +777,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -812,7 +798,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -833,7 +819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -854,7 +840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -875,7 +861,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -896,7 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2011%EF%BC%9A%E6%A0%88/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -917,7 +903,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -935,30 +921,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Lecture 13：缓存 Caching
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -967,62 +933,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#measuring-actual-cache-performance-测量实际缓存性能" class="md-nav__link">
-    <span class="md-ellipsis">
-      Measuring Actual Cache Performance 测量实际缓存性能
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#caching-and-file-io-measuring-actual-cache-performance缓存和文件-io" class="md-nav__link">
-    <span class="md-ellipsis">
-      Caching and File I/O Measuring Actual Cache Performance缓存和文件 I/O
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#io-system-calls-io-系统调用" class="md-nav__link">
-    <span class="md-ellipsis">
-      I/O System Calls I/O 系统调用
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-io-磁盘-io" class="md-nav__link">
-    <span class="md-ellipsis">
-      Disk I/O 磁盘 I/O
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1035,7 +945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1056,7 +966,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1077,7 +987,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1098,7 +1008,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1119,7 +1029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1140,7 +1050,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1161,7 +1071,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1182,7 +1092,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1203,7 +1113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1224,7 +1134,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1245,7 +1155,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
+      <a href="../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1278,23 +1188,28 @@
       
   
   
+    
   
   
+  
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1305,7 +1220,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Rubbish
@@ -1319,7 +1234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-nav__link">
+      <a href="../CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1340,7 +1255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/Design%20document/" class="md-nav__link">
+      <a href="../Design%20document/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1361,7 +1276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/Project%201%21%20Snake/" class="md-nav__link">
+      <a href="../Project%201%21%20Snake/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1382,7 +1297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/Project%204%21%20WeensyOS/" class="md-nav__link">
+      <a href="../Project%204%21%20WeensyOS/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1403,7 +1318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/Project%205A%21%20Concurrent%20Store/" class="md-nav__link">
+      <a href="../Project%205A%21%20Concurrent%20Store/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1424,7 +1339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/Summarize/" class="md-nav__link">
+      <a href="../Summarize/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1445,7 +1360,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/flush%E5%88%B7%E6%96%B0%E8%BE%93%E5%87%BA/" class="md-nav__link">
+      <a href="../flush%E5%88%B7%E6%96%B0%E8%BE%93%E5%87%BA/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1466,7 +1381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/question/" class="md-nav__link">
+      <a href="../question/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1484,10 +1399,17 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../rubbish/resource/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1496,6 +1418,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1508,7 +1431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error%28%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7%29/" class="md-nav__link">
+      <a href="../%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error%28%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7%29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1529,7 +1452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+      <a href="../%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1550,7 +1473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+      <a href="../%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1571,7 +1494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rubbish/%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+      <a href="../%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1609,52 +1532,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#measuring-actual-cache-performance-测量实际缓存性能" class="md-nav__link">
-    <span class="md-ellipsis">
-      Measuring Actual Cache Performance 测量实际缓存性能
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#caching-and-file-io-measuring-actual-cache-performance缓存和文件-io" class="md-nav__link">
-    <span class="md-ellipsis">
-      Caching and File I/O Measuring Actual Cache Performance缓存和文件 I/O
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#io-system-calls-io-系统调用" class="md-nav__link">
-    <span class="md-ellipsis">
-      I/O System Calls I/O 系统调用
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-io-磁盘-io" class="md-nav__link">
-    <span class="md-ellipsis">
-      Disk I/O 磁盘 I/O
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -1669,23 +1546,10 @@
                   
 
 
-<h1 id="lecture-13缓存-caching">Lecture 13：缓存 Caching<a class="headerlink" href="#lecture-13缓存-caching" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p><strong><font style="color:rgb(33, 37, 41);">首先观察了缓存的运作，并测量了现实世界处理器缓存的命中率和未命中率。我们还讨论了缓存的概念如何再次出现在应用程序和磁盘文件之间，即I/O库将磁盘文件的内容缓存在RAM中。关于缓存还有很多要说的，当你完成第三个项目时，你将构建自己的缓存！</font></strong>
-</p>
-</blockquote>
-<h4 id="measuring-actual-cache-performance-测量实际缓存性能"><font style="color:rgb(33, 37, 41);">Measuring Actual Cache Performance </font><strong><font style="color:rgb(33, 37, 41);">测量实际缓存性能</font></strong><a class="headerlink" href="#measuring-actual-cache-performance-测量实际缓存性能" title="Permanent link">&para;</a></h4>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712632853411-a087e4d4-c705-45e8-830a-5971fb14b44b.png" /></p>
-<h4 id="caching-and-file-io-measuring-actual-cache-performance缓存和文件-io"><font style="color:rgb(33, 37, 41);">Caching and File I/O Measuring Actual Cache Performance</font><strong><font style="color:rgb(33, 37, 41);">缓存和文件 I/O</font></strong><a class="headerlink" href="#caching-and-file-io-measuring-actual-cache-performance缓存和文件-io" title="Permanent link">&para;</a></h4>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712632981987-d9ee948e-0d22-4ec1-8282-147c73055fef.png" /></p>
-<h4 id="io-system-calls-io-系统调用"><font style="color:rgb(33, 37, 41);">I/O System Calls I/O 系统调用</font><a class="headerlink" href="#io-system-calls-io-系统调用" title="Permanent link">&para;</a></h4>
-<ol>
-<li><strong><font style="color:rgb(33, 37, 41);">当程序想要操作系统代表它们进行 I/O 时，它们的选择机制是系统调用。系统调用类似于函数调用，但它们调用操作系统功能（我们将在稍后详细讨论）。 </font></strong><strong><font style="color:rgb(232, 62, 140);">read()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 和 </font></strong><strong><font style="color:rgb(232, 62, 140);">write()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 是系统调用的示例。</font></strong></li>
-<li><em><strong><font style="color:#D22D8D;">系统调用并不廉价</font></strong></em><strong><font style="color:rgb(33, 37, 41);">。与普通函数调用相比，它们要求处理器做出相当多的额外工作。系统调用还意味着程序可能会失去一些引用的局部性，因此在系统调用返回后可能会有更多的处理器缓存未命中。实际上，处理一个系统调用需要 1-2 微秒的时间。这可能看起来很小，但与 DRAM 访问（60 纳秒）相比，它是非常昂贵的-比内存访问的成本高出 20 倍以上。因此</font></strong><strong>，</strong><strong><font style="color:#D22D8D;">频繁的系统调用是程序性能不佳的一个主要原因</font></strong><strong><font style="color:rgb(33, 37, 41);">。尽量避免频繁进行系统调用！</font></strong></li>
-</ol>
-<h4 id="disk-io-磁盘-io"><font style="color:rgb(33, 37, 41);">Disk I/O 磁盘 I/O</font><a class="headerlink" href="#disk-io-磁盘-io" title="Permanent link">&para;</a></h4>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712633215865-290a7496-5891-44cc-8332-225eb29b81fa.png" /></p>
-<p><strong><font style="color:rgb(33, 37, 41);"></font></strong></p>
+  <h1>Resource</h1>
+
+<p>初始性能</p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712665242160-581bcf42-16f5-4796-9e3e-457333e98c6d.png" /><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712666392831-8310a665-7515-47dc-9ff5-ee92a12323f0.png" /></p>
 
 
 
@@ -1732,10 +1596,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
