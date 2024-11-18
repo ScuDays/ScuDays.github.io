@@ -9,23 +9,25 @@
       
       
       
+        <link rel="prev" href="../Lecture%2011%EF%BC%9A%E6%A0%88/">
       
-        <link rel="next" href="test/">
+      
+        <link rel="next" href="../Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
-        <title>Welcome to MkDocs - days'blog</title>
+        <title>Lecture 12：栈、缓冲区溢出和缓存 - days'blog</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,7 +46,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -68,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#base-pointers-and-the-rbp-register-基址指针和-rbp-寄存器" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +86,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="days&#39;blog" class="md-header__button md-logo" aria-label="days'blog" data-md-component="logo">
+    <a href="../../.." title="days&#39;blog" class="md-header__button md-logo" aria-label="days'blog" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -104,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Welcome to MkDocs
+              Lecture 12：栈、缓冲区溢出和缓存
             
           </span>
         </div>
@@ -167,7 +169,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../index copy.md" class="md-tabs__link">
+      <a href="../../../index copy.md" class="md-tabs__link">
         
   
     
@@ -182,13 +184,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../home/" class="md-tabs__link">
           
   
   test
@@ -202,17 +202,21 @@
         
   
   
+    
+  
   
     
     
       
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../CSCI0300/Lab/Lab%200%20%21%20Setup/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../Lab/Lab%200%20%21%20Setup/" class="md-tabs__link">
           
   
   CSCI0300
@@ -254,7 +258,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="days&#39;blog" class="md-nav__button md-logo" aria-label="days'blog" data-md-component="logo">
+    <a href="../../.." title="days&#39;blog" class="md-nav__button md-logo" aria-label="days'blog" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -272,7 +276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../index copy.md" class="md-nav__link">
+      <a href="../../../index copy.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -289,28 +293,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -321,7 +320,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             test
@@ -332,30 +331,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../home/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -364,44 +343,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      Project layout
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -452,7 +393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="test/" class="md-nav__link">
+      <a href="../../../home/test/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -485,23 +426,28 @@
       
   
   
+    
   
   
+  
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -512,7 +458,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             CSCI0300
@@ -564,7 +510,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%200%20%21%20Setup/" class="md-nav__link">
+      <a href="../../Lab/Lab%200%20%21%20Setup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -585,7 +531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%201%20%21%20C%20Programming%20and%20Build%20Tools/" class="md-nav__link">
+      <a href="../../Lab/Lab%201%20%21%20C%20Programming%20and%20Build%20Tools/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -606,7 +552,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%202%20%21%20Debugging/" class="md-nav__link">
+      <a href="../../Lab/Lab%202%20%21%20Debugging/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -627,7 +573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%203%20%21%20%20Assembly%20and%20Buffer%20Overflow/" class="md-nav__link">
+      <a href="../../Lab/Lab%203%20%21%20%20Assembly%20and%20Buffer%20Overflow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -648,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%204%20%21%20Getting%20Familiar%20with%20WeensyOS/" class="md-nav__link">
+      <a href="../../Lab/Lab%204%20%21%20Getting%20Familiar%20with%20WeensyOS/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -669,7 +615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%205%20%21%20Processes/" class="md-nav__link">
+      <a href="../../Lab/Lab%205%20%21%20Processes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -690,7 +636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lab/Lab%206%20%21%20Threads/" class="md-nav__link">
+      <a href="../../Lab/Lab%206%20%21%20Threads/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -716,6 +662,8 @@
                 
   
   
+    
+  
   
   
     
@@ -725,11 +673,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
         
           
           <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
@@ -743,7 +691,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             Lecture
@@ -757,7 +705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%20%208%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+      <a href="../Lecture%20%208%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -778,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%20%209%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+      <a href="../Lecture%20%209%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -799,7 +747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/" class="md-nav__link">
+      <a href="../Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -820,7 +768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/" class="md-nav__link">
+      <a href="../Lecture%2011%EF%BC%9A%E6%A0%88/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -838,10 +786,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Lecture 12：栈、缓冲区溢出和缓存
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -850,6 +816,51 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#base-pointers-and-the-rbp-register-基址指针和-rbp-寄存器" class="md-nav__link">
+    <span class="md-ellipsis">
+      Base Pointers and the %rbp Register 基址指针和 %rbp 寄存器
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buffer-overflow-attacks-缓冲区溢出攻击" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buffer overflow attacks 缓冲区溢出攻击
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-and-the-storage-hierarchy-缓存和存储层次结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caching and the Storage Hierarchy 缓存和存储层次结构
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -862,7 +873,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/" class="md-nav__link">
+      <a href="../Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -883,7 +894,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" class="md-nav__link">
+      <a href="../Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -904,7 +915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
+      <a href="../Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -925,7 +936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/" class="md-nav__link">
+      <a href="../Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -946,7 +957,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2017%21%20%20%20%20%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/" class="md-nav__link">
+      <a href="../Lecture%2017%21%20%20%20%20%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -967,7 +978,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2018%21%20%20%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/" class="md-nav__link">
+      <a href="../Lecture%2018%21%20%20%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -988,7 +999,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2019%21%20%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+      <a href="../Lecture%2019%21%20%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1009,7 +1020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%201%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/" class="md-nav__link">
+      <a href="../Lecture%201%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1030,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2020%21%20%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/" class="md-nav__link">
+      <a href="../Lecture%2020%21%20%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1051,7 +1062,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2021%21%20%20%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/" class="md-nav__link">
+      <a href="../Lecture%2021%21%20%20%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1072,7 +1083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2022%21%20%20%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/" class="md-nav__link">
+      <a href="../Lecture%2022%21%20%20%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1093,7 +1104,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2023%21%20%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/" class="md-nav__link">
+      <a href="../Lecture%2023%21%20%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1114,7 +1125,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%2024%21%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
+      <a href="../Lecture%2024%21%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1135,7 +1146,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%202%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" class="md-nav__link">
+      <a href="../Lecture%202%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1156,7 +1167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%203%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/" class="md-nav__link">
+      <a href="../Lecture%203%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1177,7 +1188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%204%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/" class="md-nav__link">
+      <a href="../Lecture%204%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1198,7 +1209,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%205%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="md-nav__link">
+      <a href="../Lecture%205%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1219,7 +1230,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%206%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/" class="md-nav__link">
+      <a href="../Lecture%206%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1240,7 +1251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CSCI0300/Lecture/Lecture%207%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/" class="md-nav__link">
+      <a href="../Lecture%207%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1286,8 +1297,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1296,18 +1305,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#base-pointers-and-the-rbp-register-基址指针和-rbp-寄存器" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands
+      Base Pointers and the %rbp Register 基址指针和 %rbp 寄存器
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#buffer-overflow-attacks-缓冲区溢出攻击" class="md-nav__link">
     <span class="md-ellipsis">
-      Project layout
+      Buffer overflow attacks 缓冲区溢出攻击
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-and-the-storage-hierarchy-缓存和存储层次结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caching and the Storage Hierarchy 缓存和存储层次结构
     </span>
   </a>
   
@@ -1328,30 +1346,50 @@
                   
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs<a class="headerlink" href="#welcome-to-mkdocs" title="Permanent link">&para;</a></h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+  <h1>Lecture 12：栈、缓冲区溢出和缓存</h1>
+
+<blockquote>
+<p><strong><font style="color:rgb(33, 37, 41);">学习基址指针，并看了一个缓冲区溢出的示例。我们还复习了栈的布局。</font></strong></p>
+<p><strong><font style="color:rgb(33, 37, 41);">然后我们讨论了缓存的概念作为一种高级性能优化；我们对缓存的理解进行了发展，了解为什么需要缓存以及为什么它们有助于性能。</font></strong></p>
+<p><strong><font style="color:rgb(33, 37, 41);">看到存储技术价格的差异并创建了一个存储层次结构：顶部是较小但更快的存储，底部是较慢但更大的存储。</font></strong></p>
+<p><strong><font style="color:rgb(33, 37, 41);">缓存是一种使底层存储看起来比实际更快的方法！</font></strong>
+</p>
+</blockquote>
+<h4 id="base-pointers-and-the-rbp-register-基址指针和-rbp-寄存器"><em><strong>Base Pointers and the %rbp Register 基址指针和 %rbp 寄存器</strong></em><a class="headerlink" href="#base-pointers-and-the-rbp-register-基址指针和-rbp-寄存器" title="Permanent link">&para;</a></h4>
+<p><strong><font style="color:rgb(33, 37, 41);">对于分配大量本地变量并以复杂方式修改堆栈的复杂函数，跟踪入口 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rsp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 可能会很棘手。对于这些情况，x86-64 Linux 调用约定允许使用另一个寄存器 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 作为特殊用途寄存器。</font></strong></p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 寄存器 ——</font></strong><em><strong> </strong></em><strong>基址指针</strong></li>
+<li><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 保存着当前栈帧的基地址：即指向仍然属于当前栈帧的最右边（最高地址）的地址。对应被调用者栈中对象的最右边的地址，或者说是不属于被调用者的参数或局部变量之一的第一个地址。 </font></strong></li>
 </ul>
-<h2 id="project-layout">Project layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre></div>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712629799558-6b48ce88-3f8a-4250-90a7-e0ba6178b3f7.png" /></p>
+<ol>
+<li><strong><font style="color:rgb(33, 37, 41);">它被称为基指针，因为该地址指向被调用者栈帧的“基”（如果 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rsp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 指向“顶部”， </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 指向“基”（=底部）。 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 寄存器在整个函数执行过程中维护这个值（即函数不能覆盖该寄存器中的值），即使 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rsp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 发生变化。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">此方案的优点是，当函数退出时，可以通过从 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rsp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 中加载来恢复其原始的入口。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">此外，它还便于调试，因为每个函数在其入口点将 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的旧值（调用者的</font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);">）存储到堆栈中。保存调用者的 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的 8 个字节是被调用者的栈帧做的 的第一件事情，它们位于调用者的堆栈帧中的返回地址的下方。这意味着保存的 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 形成了一个链条，允许每个函数定位其调用者的堆栈帧的基址，在那里它将找到“父调用者”的堆栈帧的 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rbp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 等。在 GDB 和 Address Sanitizer 错误消息中看到的回溯正是使用这个链条生成的！</font></strong><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712627161082-f4fd2e0d-9f8a-4872-8c6b-9fa19a05dc08.png" /></li>
+<li><em><strong><font style="color:#D22D8D;">有了基指针，函数的入口序列变为：</font></strong></em></li>
+</ol>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712630083601-7b3cff73-23e8-4afb-81d6-cd3e47d03962.png" /></p>
+<h4 id="buffer-overflow-attacks-缓冲区溢出攻击"><strong>Buffer overflow attacks 缓冲区溢出攻击</strong><a class="headerlink" href="#buffer-overflow-attacks-缓冲区溢出攻击" title="Permanent link">&para;</a></h4>
+<p><strong><font style="color:rgb(33, 37, 41);">我们了解调用约定和栈，让我们思考一下这个明确定义的内存布局的一些后果。</font></strong></p>
+<ol>
+<li><strong><font style="color:rgb(33, 37, 41);">虽然被调用者不应该访问其调用者的栈帧（除非它明确地传递了一个指向其中对象的指针），但在x86-64架构中没有原则性的机制来阻止这种访问。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">特别地，如果你能猜到栈上变量的地址（无论是当前函数中的局部变量还是当前函数的调用者中的局部变量/参数），你的程序可以直接向该地址写入数据并覆盖掉原有的内容。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">这可能是由于错误意外发生的，但若被恶意行为者故意利用，问题就会变得严重：用户可能提供输入，导致程序覆盖堆栈上的重要数据。这种攻击被称为缓冲区溢出攻击。</font></strong></li>
+</ol>
+<p><strong><font style="color:rgb(33, 37, 41);">例子：</font></strong></p>
+<ol>
+<li><strong><font style="color:rgb(33, 37, 41);">考虑 </font></strong><strong><font style="color:rgb(232, 62, 140);">checksummer.cc</font></strong><strong><font style="color:rgb(33, 37, 41);"> 中的代码。该程序计算作为命令行参数提供的字符串的校验和。请注意 </font></strong><strong><font style="color:rgb(232, 62, 140);">checksum()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 函数使用一个100字节的栈分配缓冲区（作为 </font></strong><strong><font style="color:rgb(232, 62, 140);">buf</font></strong><strong><font style="color:rgb(33, 37, 41);"> 联合的一部分）来保存输入字符串，并将其复制到该缓冲区中。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">但是，如果用户提供的输入字符串超过 399 个字符（请记住，我们还需要在缓冲区中添加零终止符），该函数将继续写入，并且将覆盖堆栈上 </font></strong><strong><font style="color:rgb(232, 62, 140);">buf</font></strong><strong><font style="color:rgb(33, 37, 41);"> 旁边的任何内容。</font></strong></li>
+<li><strong><font style="color:rgb(33, 37, 41);">我们知道 </font></strong><strong><font style="color:rgb(232, 62, 140);">buf</font></strong><strong><font style="color:rgb(33, 37, 41);"> 将在 </font></strong><strong><font style="color:rgb(232, 62, 140);">checksum</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的堆栈帧中，位于入口 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rsp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 下方。此外，直接在入口 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rsp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 上方是返回地址！在这种情况下，返回地址是 </font></strong><strong><font style="color:rgb(232, 62, 140);">main()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 中的一个地址。因此，如果 </font></strong><strong><font style="color:rgb(232, 62, 140);">checksum</font></strong><strong><font style="color:rgb(33, 37, 41);"> 写入 </font></strong><strong><font style="color:rgb(232, 62, 140);">buf</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的末尾之外，将会覆盖堆栈上的返回地址；如果继续向后写入，将会覆盖 </font></strong><strong><font style="color:rgb(232, 62, 140);">main</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的堆栈帧中的数据。</font></strong><strong><font style="color:#D22D8D;">错误！！！</font></strong></li>
+</ol>
+<h4 id="caching-and-the-storage-hierarchy-缓存和存储层次结构">Caching and the Storage Hierarchy 缓存和存储层次结构<a class="headerlink" href="#caching-and-the-storage-hierarchy-缓存和存储层次结构" title="Permanent link">&para;</a></h4>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712631654479-08ee3936-534f-47e7-a72d-dca66909e5d8.png" /></p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -1392,10 +1430,10 @@ docs/
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
