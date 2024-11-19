@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -202,6 +229,8 @@
         <a href="../../Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
   
+    
+  
   CSCI0300
 
         </a>
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../6S081/Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,50 +434,37 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
   
   
   
-  
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
     
     
       
@@ -480,6 +506,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -675,6 +717,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1300,6 +1392,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1338,6 +1438,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1375,11 +1493,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1396,11 +1514,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1417,11 +1535,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1438,11 +1556,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1459,11 +1577,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1480,11 +1598,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1501,11 +1619,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1522,11 +1640,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1551,6 +1669,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1593,7 +1737,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1614,7 +1758,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1635,7 +1779,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1656,7 +1800,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1677,7 +1821,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1698,7 +1842,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1719,7 +1863,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1740,7 +1884,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1761,7 +1905,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1782,7 +1926,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1803,7 +1947,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1824,7 +1968,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1849,6 +1993,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1923,6 +2071,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2323,29 +2499,29 @@
 <hr />
 <p><strong><font style="color:rgb(33, 37, 41);">答案是 </font></strong><strong><font style="color:rgb(232, 62, 140);">0xffff&rsquo;ffff</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，这是4字节中可表示的最大整数。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">计算机简单地丢弃了顶部携带的1，因为它超出了整数的4字节宽度   ，最终我们得到了零</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711613263499-17382479-f603-4864-a676-657bda92e334.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711613263499-17382479-f603-4864-a676-657bda92e334.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711613263499-17382479-f603-4864-a676-657bda92e334.png" /></a></p>
 <p><em><strong>换句话说</strong>__<strong><font style="color:rgb(33, 37, 41);">在二进制补码算术中，我们总是有-x + x = 0，因此一个负数加上它的正补码等于零。使这成为可能的原则是， </font></strong>__<strong><font style="color:rgb(232, 62, 140);">-x</font></strong>__<strong><font style="color:rgb(33, 37, 41);"> 对应于正的 </font></strong>__<strong><font style="color:rgb(232, 62, 140);">x</font></strong>__<strong><font style="color:rgb(33, 37, 41);"> ，所有位取反（写作 </font></strong>__<strong><font style="color:rgb(232, 62, 140);">~x</font></strong>__<strong><font style="color:rgb(33, 37, 41);"> ）并加1。换句话说，-x = ~x + 1。</font></strong></em></p>
 <p><em><strong><font style="color:rgb(33, 37, 41);"></font></strong></em></p>
 <ol>
 <li><strong><font style="color:rgb(33, 37, 41);">有符号数将其范围一分为二，一半表示负数，另一半表示0和正数。</font></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711613452600-f99bce6c-6434-4a5a-ad9f-f93bc45d2e21.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711613452600-f99bce6c-6434-4a5a-ad9f-f93bc45d2e21.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711613452600-f99bce6c-6434-4a5a-ad9f-f93bc45d2e21.png" /></a></p>
 <h2 id="integer-overflow-整数溢出"><em><strong>Integer overflow 整数溢出</strong></em><a class="headerlink" href="#integer-overflow-整数溢出" title="Permanent link">&para;</a></h2>
 <p><strong><font style="color:#D22D8D;">有符号整数的算术溢出是未定义的行为！对于未定义行为，我们允许编译器任意处理，这会产生意外！</font></strong></p>
 <p><strong>来看一个例子：</strong></p>
 <ol>
 <li><strong><font style="color:rgb(232, 62, 140);">我们把0x7fff ffff</font></strong><strong><font style="color:rgb(33, 37, 41);"> （最大的正符号</font></strong><strong><font style="color:rgb(232, 62, 140);">int</font></strong><strong><font style="color:rgb(33, 37, 41);"> ）传递给程序会发生什么。这个值加1后会将其变成 </font></strong><strong><font style="color:rgb(232, 62, 140);">0x8000&lsquo;0000</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，这是有符号整数中可表示的最小负数！所以在这种情况下，断言应该失败。但是下面终端中却没有显示断言失败。为什么？</font></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711614135891-8c78fbaa-f91f-4280-99a9-a2636b0bb50b.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711614135891-8c78fbaa-f91f-4280-99a9-a2636b0bb50b.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711614135891-8c78fbaa-f91f-4280-99a9-a2636b0bb50b.png" /></a></p>
 <p><strong><font style="color:rgb(33, 37, 41);">关闭编译器优化后，确实会发生这种情况。由于未定义行为允许编译器任意处理，优化器决定在代码的优化版本中删除断言！这是完全合法的，因为C编译器假设程序员从不编写触发未定义行为的代码，并且肯定程序员从不依赖于未定义行为的特定行为（毕竟它是未定义的）。</font></strong></p>
 <ol>
 <li><strong><font style="color:rgb(33, 37, 41);">但</font></strong><strong><font style="color:rgb(33, 37, 41);">无符号数的算术溢出并不构成未定义行为，令人费解。</font></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711615261959-11a5f769-e71c-4ac7-8be7-c0f0b6f0194f.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711615261959-11a5f769-e71c-4ac7-8be7-c0f0b6f0194f.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711615261959-11a5f769-e71c-4ac7-8be7-c0f0b6f0194f.png" /></a></p>
 <ol>
 <li><strong><u><font style="color:rgb(33, 37, 41);">有一个方便的消毒工具可以帮助您检测有符号数字的算术溢出等未定义行为。该工具称为 UBSan，您可以在编译时通过传递 </font></u></strong><strong><u><font style="color:rgb(232, 62, 140);">-fsanitize=undefined</font></u></strong><strong><u><font style="color:rgb(33, 37, 41);"> 标志将其添加到您的程序中。</font></u></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711615461232-acd9bdf8-15c3-4746-92d1-6121b291f197.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711615461232-acd9bdf8-15c3-4746-92d1-6121b291f197.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711615461232-acd9bdf8-15c3-4746-92d1-6121b291f197.png" /></a></p>
 <p><strong>同样是</strong><strong><font style="color:rgb(33, 37, 41);">无符号数的算术溢出问题，这里终端打印了消息提醒我们有整数溢出的问题。</font></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">check_signed_increment</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
@@ -2384,11 +2560,11 @@
 <li><strong>但进一步发现，计算机</strong><strong><font style="color:#D22D8D;">只能在内存中特定地址对齐的情况下高效地处理这些固定大小的数字</font></strong><strong>。这在处理结构体时尤为重要，因为结构体的大小可以根据其定义而任意变化，并且可能遵循结构体规则的奇怪内存布局。</strong></li>
 <li><strong><font style="color:rgb(33, 37, 41);">就像每种</font></strong><em><strong><font style="color:#D22D8D;">primitive type</font></strong></em><strong><font style="color:rgb(33, 37, 41);">都有一个大小一样，它也有一个对齐方式。对齐方式意味着该类型的所有对象必须从能被对齐方式整除的地址开始。换句话说，大小为4且对齐方式为4的整数必须始终从能被4整除的地址开始。（这与对象是否在集合（例如结构或数组）中无关。）下表显示了x86-64 Linux机器上原始类型的对齐限制。</font></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616347942-220da9de-26a9-4122-af69-571686b53623.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616347942-220da9de-26a9-4122-af69-571686b53623.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616347942-220da9de-26a9-4122-af69-571686b53623.png" /></a></p>
 <p><strong>为什么？</strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">这是因为硬件构造的方式：为了简化布线和逻辑，计算机通常会在固定数量的数据之间移动。特别是，当计算机的进程访问内存时，实际上并不直接访问 RAM（随机存取存储器，其芯片保存我们的字节）。</font></strong><strong><font style="color:#D22D8D;">相反，它访问一个包含 RAM 内容微小子集的快速内存块（这被称为“缓存”）。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">但是构建可以将 RAM 中任意字节地址的内存复制到这个较小内存中的逻辑将会非常复杂，因此硬件设计者将 RAM 分块为固定大小的“块”，以便高效地进行复制。这些块的大小在计算机之间有所不同，但它们的存在揭示了为什么需要对齐。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616623394-a15ef447-78bf-4c60-a044-4d188fcce9e6.png" /><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616633585-9f594ca8-c1f3-453f-b3c2-0f0950c629dc.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616623394-a15ef447-78bf-4c60-a044-4d188fcce9e6.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616623394-a15ef447-78bf-4c60-a044-4d188fcce9e6.png" /></a><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616633585-9f594ca8-c1f3-453f-b3c2-0f0950c629dc.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711616633585-9f594ca8-c1f3-453f-b3c2-0f0950c629dc.png" /></a></p>
 <blockquote>
 <p><strong><font style="color:rgb(33, 37, 41);">编译器、标准库和操作系统共同工作以强制执行对齐限制。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">如果您想在 C 程序中获取</font></strong><strong><font style="color:#D22D8D;">类型的对齐方式</font></strong><strong><font style="color:rgb(33, 37, 41);">，可以使用 </font></strong><strong><font style="color:rgb(232, 62, 140);">sizeof</font></strong><strong><font style="color:rgb(33, 37, 41);"> 操作符的兄弟 </font></strong><strong><font style="color:rgb(232, 62, 140);">alignof</font></strong><strong><font style="color:rgb(33, 37, 41);"> 。</font></strong></p>
@@ -2404,15 +2580,15 @@
 <li><strong><font style="color:rgb(33, 37, 41);">对齐约束也适用于编译器在栈上分配变量时。</font></strong></li>
 <li><strong><font style="color:rgb(33, 37, 41);">按顺序 | 4 | 4 | 4 | 1 | 1 | 1 |  共15字节内存。</font></strong></li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711617123169-8625ae00-e21e-4d87-a08f-ec518bb2a2a1.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711617123169-8625ae00-e21e-4d87-a08f-ec518bb2a2a1.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711617123169-8625ae00-e21e-4d87-a08f-ec518bb2a2a1.png" /></a></p>
 <ol>
 <li><strong>不按顺序，开编译器优化，</strong><strong><font style="color:rgb(33, 37, 41);"> 共15字节内存，编译器自动优化把c1、c2、c3的内存都放在一起。</font></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711617773339-75e08109-3972-4206-b18d-091697258940.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711617773339-75e08109-3972-4206-b18d-091697258940.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711617773339-75e08109-3972-4206-b18d-091697258940.png" /></a></p>
 <ol>
 <li><strong>不按顺序，关闭编译器优化，共21字节内存 | char ：1 | int：4 | char：4 | int：4| char 4 | int：4 | 为了字节对齐，后面的char虽然只花了一个字节，但是有三个字节的间隙。</strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711619542837-a9d31b64-4ad8-4bf5-939b-58b37d48fcf4.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711619542837-a9d31b64-4ad8-4bf5-939b-58b37d48fcf4.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711619542837-a9d31b64-4ad8-4bf5-939b-58b37d48fcf4.png" /></a></p>
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
@@ -2456,6 +2632,12 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -2482,11 +2664,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

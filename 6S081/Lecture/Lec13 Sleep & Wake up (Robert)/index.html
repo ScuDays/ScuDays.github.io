@@ -20,7 +20,7 @@
     
     
       
-        <title>Lec13 Sleep & Wake up (Robert) - days'blog</title>
+        <title>Lec13：Sleep & Wake up (Robert) - days'blog</title>
       
     
     
@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -70,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#回顾-线程调度" class="md-skip">
+        <a href="#lec13sleep--wake-up-robert" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lec13 Sleep & Wake up (Robert)
+              Lec13：Sleep &amp; Wake up (Robert)
             
           </span>
         </div>
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -197,6 +224,8 @@
       <li class="md-tabs__item">
         <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
+  
+    
   
   CSCI0300
 
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,48 +434,35 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
     
     
       
@@ -475,6 +501,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -668,6 +710,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1228,6 +1320,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
         
@@ -1269,6 +1369,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1306,11 +1424,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1327,11 +1445,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1348,11 +1466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1369,11 +1487,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1390,11 +1508,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1411,11 +1529,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1432,11 +1550,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1453,11 +1571,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1484,6 +1602,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1526,7 +1670,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1547,7 +1691,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1568,7 +1712,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1589,7 +1733,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1610,7 +1754,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1631,7 +1775,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1652,7 +1796,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1673,7 +1817,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1694,7 +1838,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1717,12 +1861,14 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1733,7 +1879,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1744,6 +1890,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1985,7 +2133,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -2006,7 +2154,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -2031,6 +2179,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -2105,6 +2257,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2433,6 +2613,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2668,8 +2850,7 @@
                   
 
 
-  <h1>Lec13 Sleep & Wake up (Robert)</h1>
-
+<h1 id="lec13sleep--wake-up-robert">Lec13：Sleep &amp; Wake up (Robert)<a class="headerlink" href="#lec13sleep--wake-up-robert" title="Permanent link">&para;</a></h1>
 <p><strong>介绍 OS调度中 </strong><code>**sleep**</code><strong> 与 </strong><code>**wakeup**</code><strong> 的机制，以及其他用到这个机制的系统调用，如 </strong><code>**kill**</code><strong> ，</strong><code>**exit**</code><strong> 和 </strong><code>**wait**</code><strong>。</strong></p>
 <h2 id="回顾-线程调度">回顾 线程调度<a class="headerlink" href="#回顾-线程调度" title="Permanent link">&para;</a></h2>
 <p><strong>重新回顾上节课的重点，一个线程开始让出 CPU 时，其 </strong><code>**p-&gt;lock**</code><strong> 保护 </strong><code>**p-&gt;state**</code><strong> 的过程是跨线程的，也就是跨 </strong><code>**swtch**</code><strong> 调用。 过程基本如下，</strong></p>
@@ -2974,7 +3155,7 @@
 <li>** 有些使用 <strong><code>**sleep**</code></strong> 等待的进程不会检查<strong><code>**p-&gt;killed**</code></strong> **</li>
 </ul>
 <p><strong>例如： </strong><code>**virtio_disk.c**</code><strong> 中相关函数，因为确实需要等待磁盘 IO 的完成。</strong><strong>这个过程涉及到多次读写磁盘。我们希望完成所有的文件系统操作，完成整个系统调用。之后再检查p-&gt;killed并退出。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1731067869389-ca64148c-090f-43ef-a928-731dbefe10c8.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/483945095ebcc7092c4a3d8251ec3e02.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/483945095ebcc7092c4a3d8251ec3e02.png" /></a></p>
 <p>:::color1
 <strong>所以</strong><code>**kill**</code><strong>系统调用并不是真正的立即停止进程的运行，而是继续完成现在的任务或者根据判断返回，但进程并未被停止，一直运行</strong><strong>直到 </strong><code>**usertrap()**</code><strong>函数中 检查 </strong><code>**p-&gt;killed**</code><strong> 后调用 </strong><code>**exit(-1)**</code><strong>才会停止。</strong></p>
 <p><strong>具体</strong><strong>：</strong></p>
@@ -3081,6 +3262,12 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -3107,11 +3294,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

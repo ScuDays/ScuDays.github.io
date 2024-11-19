@@ -20,7 +20,7 @@
     
     
       
-        <title>Lec03 OS Organization and System Calls (Frans) - days'blog</title>
+        <title>Lec03：OS Organization and System Calls (Frans) - days'blog</title>
       
     
     
@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -70,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#操作系统隔离性isolation和-防御性defensive" class="md-skip">
+        <a href="#lec03os-organization-and-system-calls-frans" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lec03 OS Organization and System Calls (Frans)
+              Lec03：OS Organization and System Calls (Frans)
             
           </span>
         </div>
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -197,6 +224,8 @@
       <li class="md-tabs__item">
         <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
+  
+    
   
   CSCI0300
 
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,48 +434,35 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
     
     
       
@@ -475,6 +501,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -668,6 +710,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1228,6 +1320,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
         
@@ -1269,6 +1369,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1306,11 +1424,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1327,11 +1445,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1348,11 +1466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1369,11 +1487,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1390,11 +1508,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1411,11 +1529,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1432,11 +1550,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1453,11 +1571,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1484,6 +1602,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1526,7 +1670,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1556,7 +1700,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1578,7 +1722,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1599,7 +1743,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1620,7 +1764,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1641,7 +1785,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1662,7 +1806,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1683,7 +1827,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1704,7 +1848,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1725,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1746,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1767,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1792,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1866,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2210,6 +2386,7 @@
                   
 
 
+<h1 id="lec03os-organization-and-system-calls-frans">Lec03：OS Organization and System Calls (Frans)<a class="headerlink" href="#lec03os-organization-and-system-calls-frans" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p><strong>主要讨论4个话题：</strong></p>
 <ul>
@@ -2256,16 +2433,16 @@
 <p><strong>特殊权限指令主要是一些直接操纵硬件的指令和设置保护的指令，例如设置page table寄存器、关闭时钟中断。在处理器上有各种各样的状态，操作系统会使用这些状态，但是只能通过特殊权限指令来变更这些状态。</strong></p>
 <p><strong>当一个应用程序尝试执行一条特殊权限指令，但由于在user mode 不允许执行特殊权限指令，处理器会拒绝执行这条指令。通常来说，这时会将控制权限从user mode切换到kernel mode，当操作系统拿到控制权之后，或许会杀掉进程，因为应用程序执行了不该执行的指令。</strong></p>
 <h1 id="userkernel-mode切换">User/Kernel mode切换<a class="headerlink" href="#userkernel-mode切换" title="Permanent link">&para;</a></h1>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1720686478824-ac3cf636-722f-4df9-8bc9-3f8d0ac65369.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/2d65f259dcb8d59dc44a6d9ab45247af.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/2d65f259dcb8d59dc44a6d9ab45247af.png" /></a></p>
 <p>:::color4
 <strong>当在用户态的应用程序想要调用系统调用时，是如何切换到内核态并执行系统调用呢？</strong></p>
 <p>:::</p>
 <p><strong>需要有一种方式能够让应用程序可以将控制权转移给内核（Entering Kernel）。</strong></p>
 <p><strong>在RISC-V中，有一个专门的指令用来实现这个功能，叫做ECALL。ECALL接收一个数字参数，当一个用户程序想要将程序执行的控制权转移到内核，它只需要执行ECALL指令，并传入一个数字。这里的数字参数代表了应用程序想要调用的System Call。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1720686598948-86c92355-064d-4958-9edf-87848f6b4014.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/ef317aead6996c187e95bbde72c2a13f.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/ef317aead6996c187e95bbde72c2a13f.jpeg" /></a></p>
 <p><strong>ECALL会跳转到内核中一个特定，由内核控制的位置。我们可以看到在XV6中存在一个唯一的系统调用接入点，每一次应用程序执行ECALL指令，应用程序都会通过这个接入点进入到内核中。举个例子，不论是Shell还是其他的应用程序，当它在用户空间执行fork时，它并不是直接调用操作系统中对应的函数，而是调用ECALL指令，并将fork对应的数字作为参数传给ECALL。之后再通过ECALL跳转到内核。</strong></p>
 <p><strong>下图中通过一根竖线来区分用户空间和内核空间，左边是用户空间，右边是内核空间。在内核侧，有一个位于syscall.c的函数syscall，每一个从应用程序发起的系统调用都会调用到这个syscall函数，syscall函数会检查ECALL的参数，通过这个参数内核可以知道需要调用的是fork（3.9会有相应的代码跟踪介绍）。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1720686672794-92023bce-d885-4d4a-b3de-7a1d0a436858.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/18e990743898636b74fa0ec105db9319.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/18e990743898636b74fa0ec105db9319.jpeg" /></a></p>
 <h1 id="宏内核-vs-微内核-monolithic-kernel-vs-micro-kernel">宏内核 vs 微内核 （Monolithic Kernel vs Micro Kernel）<a class="headerlink" href="#宏内核-vs-微内核-monolithic-kernel-vs-micro-kernel" title="Permanent link">&para;</a></h1>
 <p><strong>我们可以通过系统调用或者说ECALL指令，将控制权从应用程序转到操作系统中。</strong></p>
 <p><strong>之后内核负责实现具体的功能并检查参数以确保不会被一些坏的参数所欺骗。所以内核有时候也被称为</strong><strong><font style="background-color:#FBDE28;">可被信任的计算空间（Trusted Computing Base）TCB</font></strong></p>
@@ -2284,7 +2461,7 @@
 <li><strong>首先考虑Bug，这种方式不太好。在一个宏内核中，任何一个操作系统的Bug都有可能成为漏洞。因为我们现在内核中运行了一个巨大的操作系统，有许多行代码运行在内核中，出现Bug的可能性更大了。</strong><strong><font style="background-color:#FBDE28;">所以从安全的角度来说，在内核中有大量的代码是宏内核的缺点。</font></strong></li>
 <li><strong>另一方面，一个操作系统，它包含了各种各样的组成部分，比如说文件系统，虚拟内存，进程管理，这些都是操作系统内实现了特定功能的子模块。宏内核的优势在于，因为这些子模块现在都位于同一个程序中，它们可以紧密的集成在一起，这样的集成提供很好的性能。例如Linux，它就有很不错的性能。</strong></li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1720687010265-6d568965-7401-4bec-af61-aaad7ceadf86.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/4410dec79506c031178fb01c2a488c18.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/4410dec79506c031178fb01c2a488c18.png" /></a></p>
 <p>:::info
 + <strong>微内核</strong></p>
 <p>:::</p>
@@ -2300,7 +2477,7 @@
 </ol>
 </li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1720687181916-d5e0e681-8f39-446e-a3f2-60891a9264c2.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/80c9209ba6f85825e1a168ab97a5e0d3.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/80c9209ba6f85825e1a168ab97a5e0d3.png" /></a></p>
 
 
 
@@ -2320,6 +2497,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2347,11 +2530,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

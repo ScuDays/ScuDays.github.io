@@ -20,7 +20,7 @@
     
     
       
-        <title>总结： - days'blog</title>
+        <title>Lec11：Thread switching (Robert) - days'blog</title>
       
     
     
@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -70,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#总结" class="md-skip">
+        <a href="#lec11thread-switching-robert" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              总结：
+              Lec11：Thread switching (Robert)
             
           </span>
         </div>
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -197,6 +224,8 @@
       <li class="md-tabs__item">
         <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
+  
+    
   
   CSCI0300
 
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,48 +434,35 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
     
     
       
@@ -475,6 +501,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -668,6 +710,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1228,6 +1320,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
         
@@ -1269,6 +1369,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1306,11 +1424,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1327,11 +1445,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1348,11 +1466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1369,11 +1487,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1390,11 +1508,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1411,11 +1529,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1432,11 +1550,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1453,11 +1571,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1484,6 +1602,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1526,7 +1670,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1547,7 +1691,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1568,7 +1712,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1589,7 +1733,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1610,7 +1754,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1631,7 +1775,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1652,7 +1796,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1673,7 +1817,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1699,54 +1843,15 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    总结：
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#上下文切换" class="md-nav__link">
-    <span class="md-ellipsis">
-      上下文切换
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -1764,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1785,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1806,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1831,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1905,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2236,23 +2373,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#上下文切换" class="md-nav__link">
-    <span class="md-ellipsis">
-      上下文切换
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -2266,9 +2386,10 @@
                   
 
 
+<h1 id="lec11thread-switching-robert">Lec11：Thread switching (Robert)<a class="headerlink" href="#lec11thread-switching-robert" title="Permanent link">&para;</a></h1>
 <h1 id="总结">总结：<a class="headerlink" href="#总结" title="Permanent link">&para;</a></h1>
 <h2 id="上下文切换">上下文切换<a class="headerlink" href="#上下文切换" title="Permanent link">&para;</a></h2>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1730812862360-ad7e15ab-b785-4663-a9f1-d04cb0cc056d.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/a0130c8603bcdbd4e832c783c5186ac6.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/a0130c8603bcdbd4e832c783c5186ac6.png" /></a></p>
 <p><strong><font style="color:rgb(51, 51, 51);">图7.1概述了从一个用户进程（旧进程）切换到另一个用户进程（新进程）所涉及的步骤：一个到旧进程内核线程的用户-内核转换（系统调用或中断），一个到当前CPU调度程序线程的上下文切换，一个到新进程内核线程的上下文切换，以及一个返回到用户级进程的陷阱。调度程序在旧进程的内核栈上执行是不安全的：其他一些核心可能会唤醒进程并运行它，而在两个不同的核心上使用同一个栈将是一场灾难，因此xv6调度程序在每个CPU上都有一个专用线程（保存寄存器和栈）。</font></strong><font style="color:rgb(51, 51, 51);"></font></p>
 <p><strong><font style="color:rgb(51, 51, 51);">从一个线程切换到另一个线程需要保存旧线程的CPU寄存器，并恢复新线程先前保存的寄存器；栈指针和程序计数器被保存和恢复的事实意味着CPU将切换栈和执行中的代码。</font></strong></p>
 <p><strong><font style="color:rgb(51, 51, 51);">函数</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;swtch&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">为内核线程切换执行保存和恢复操作。</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;swtch&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">对线程没有直接的了解；它只是保存和恢复寄存器集，称为上下文（contexts）。当某个进程要放弃CPU时，该进程的内核线程调用</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;swtch&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">来保存自己的上下文并返回到调度程序的上下文。每个上下文都包含在一个</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct context&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">（</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/proc.h</font></strong></em><strong><font style="color:rgb(51, 51, 51);">:2）中，这个结构体本身包含在一个进程的</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct proc&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">或一个CPU的</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct cpu&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中。</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;Swtch&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">接受两个参数：</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct context *old&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">和</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct context *new&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">。它将当前寄存器保存在</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;old&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中，从</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;new&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中加载寄存器，然后返回。</font></strong></p>
@@ -2379,7 +2500,7 @@
 <li><strong>随后，CPU切换到内核栈继续执行，通常会进入到trampoline和usertrap处理逻辑。内核接着处理系统调用或中断。</strong></li>
 <li><strong>处理完成后，若需返回用户空间，则从trapframe恢复之前保存的状态，使得用户线程能够继续执行。</strong></li>
 </ol>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPas2O4FxEvLUjjQpZq%252F-MPdWVfsadOjtlVS_WV3%252Fimage.png%3Falt%3Dmedia%26token%3D89fd35b7-d4a9-4bc5-91f6-388c20d5dc47&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=fd0babf3&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPas2O4FxEvLUjjQpZq%252F-MPdWVfsadOjtlVS_WV3%252Fimage.png%3Falt%3Dmedia%26token%3D89fd35b7-d4a9-4bc5-91f6-388c20d5dc47&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=fd0babf3&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPas2O4FxEvLUjjQpZq%252F-MPdWVfsadOjtlVS_WV3%252Fimage.png%3Falt%3Dmedia%26token%3D89fd35b7-d4a9-4bc5-91f6-388c20d5dc47&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=fd0babf3&amp;sv=1" /></a></p>
 <p><strong>用户进程可能因CPU响应诸如定时器中断等事件而进入内核空间。</strong></p>
 <p><strong>正如先前所述，抢占式调度机制通过定时器中断实现从一个用户进程到另一个用户进程的切换。</strong></p>
 <p>:::success
@@ -2410,12 +2531,12 @@
 <li><strong>最后返回到第二个用户进程继续执行。</strong></li>
 </ol>
 <p><strong>这么曲折的一个线路。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPas2O4FxEvLUjjQpZq%252F-MPdb6wxbjfn3h1q5Kyl%252Fimage.png%3Falt%3Dmedia%26token%3D93fdc313-49d2-49e7-9b3a-f4ea54028b79&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=2ab1f801&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPas2O4FxEvLUjjQpZq%252F-MPdb6wxbjfn3h1q5Kyl%252Fimage.png%3Falt%3Dmedia%26token%3D93fdc313-49d2-49e7-9b3a-f4ea54028b79&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=2ab1f801&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPas2O4FxEvLUjjQpZq%252F-MPdb6wxbjfn3h1q5Kyl%252Fimage.png%3Falt%3Dmedia%26token%3D93fdc313-49d2-49e7-9b3a-f4ea54028b79&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=2ab1f801&amp;sv=1" /></a></p>
 <h1 id="114-线程切换二">11.4 线程切换（二）<a class="headerlink" href="#114-线程切换二" title="Permanent link">&para;</a></h1>
 <p><strong>实际的线程切换流程会复杂的多。</strong></p>
 <p><strong>假设我们进程 P1 正在运行，进程 P2 是 </strong><code>**RUNABLE**</code><strong> 当前并不在运行。</strong></p>
 <p><strong>假设在XV6中我们有2个CPU核&ndash;CPU0和CPU1。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPdcH_WBeBZJksnsmWf%252F-MPg-7FbYd7riEbBR_PH%252Fimage.png%3Falt%3Dmedia%26token%3D9e56bc98-db06-4d22-baa7-233d0d9a03a9&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=33ceca0d&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPdcH_WBeBZJksnsmWf%252F-MPg-7FbYd7riEbBR_PH%252Fimage.png%3Falt%3Dmedia%26token%3D9e56bc98-db06-4d22-baa7-233d0d9a03a9&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=33ceca0d&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPdcH_WBeBZJksnsmWf%252F-MPg-7FbYd7riEbBR_PH%252Fimage.png%3Falt%3Dmedia%26token%3D9e56bc98-db06-4d22-baa7-233d0d9a03a9&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=33ceca0d&amp;sv=1" /></a></p>
 <h2 id="swtch函数">swtch()函数<a class="headerlink" href="#swtch函数" title="Permanent link">&para;</a></h2>
 <p><strong>我们从一个正在运行的用户空间进程切换到另一个</strong><code>**RUNABLE**</code><strong>但还没有运行的用户空间进程的更完整的操作时：</strong></p>
 <ol>
@@ -2424,14 +2545,14 @@
 <li><strong>假设进程 P1 对应的内核线程决定让出 CPU，它会做很多工作，但是最后它会</strong><strong><font style="background-color:#FBDE28;">调用swtch函数</font></strong><strong>（译注：switch 是C 语言关键字，因此这个函数命名为swtch 来避免冲突），这是整个线程切换的核心函数之一；</strong></li>
 <li><strong>swtch 函数会保存用户进程P1对应内核线程的寄存器至 context 对象。所以目前为止有两类寄存器：用户寄存器存在 trapframe 中，内核线程的寄存器存在 context 中。</strong></li>
 </ol>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPilhv-4DUgPG371y1c%252Fimage.png%3Falt%3Dmedia%26token%3D4eb2bd8a-18ac-4826-ac57-34f2a256a403&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=17f45c0f&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPilhv-4DUgPG371y1c%252Fimage.png%3Falt%3Dmedia%26token%3D4eb2bd8a-18ac-4826-ac57-34f2a256a403&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=17f45c0f&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPilhv-4DUgPG371y1c%252Fimage.png%3Falt%3Dmedia%26token%3D4eb2bd8a-18ac-4826-ac57-34f2a256a403&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=17f45c0f&amp;sv=1" /></a></p>
 <h2 id="调度器线程">调度器线程<a class="headerlink" href="#调度器线程" title="Permanent link">&para;</a></h2>
 <p>:::success
 <strong>但是，实际上swtch函数并不是直接从一个内核线程切换到另一个内核线程。</strong></p>
 <p>:::</p>
 <p><strong><font style="background-color:#FBDE28;">XV6中，一个CPU上运行的内核线程可以直接切换到的是这个 CPU 对应的调度器线程。</font></strong></p>
 <p><strong>所以如果我们现在运行在 CPU0，swtch 函数会恢复成之前 CPU0 的调度器线程保存的寄存器和stack pointer，之后在调度器线程的 context 下执行 schedulder 函数中（注，后面代码分析有介绍）。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPilsY6BV0H692gJabX%252Fimage.png%3Falt%3Dmedia%26token%3Da70eb81f-ee2a-4532-98ed-18658bdaaa84&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=6441633c&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPilsY6BV0H692gJabX%252Fimage.png%3Falt%3Dmedia%26token%3Da70eb81f-ee2a-4532-98ed-18658bdaaa84&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=6441633c&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPilsY6BV0H692gJabX%252Fimage.png%3Falt%3Dmedia%26token%3Da70eb81f-ee2a-4532-98ed-18658bdaaa84&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=6441633c&amp;sv=1" /></a></p>
 <p><strong>在调度器线程执行的 schedulder 函数中会做一些清理工作</strong></p>
 <p><strong>例如将进程 P1 设置成 RUNABLE 状态。之后再通过进程表单找到下一个RUNABLE进程。</strong></p>
 <p><strong>假设找到的下一个进程是P2（虽然也有可能找到的还是P1），schedulder函数会再次调用swtch函数，完成下面步骤：</strong></p>
@@ -2442,10 +2563,10 @@
 <li><strong>不论是系统调用也好中断处理程序也好，在从用户空间进入到内核空间时会保存用户寄存器到 trapframe 对象。所以当内核程序执行完成之后， trapframe 中的用户寄存器会被恢复。</strong></li>
 <li><strong>最后用户进程P2就恢复运行了。</strong></li>
 </ol>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPioYHlKAiAlXZ3HiBR%252Fimage.png%3Falt%3Dmedia%26token%3D6124dd5c-0e08-43f7-9ef1-714e79aa9654&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=dc2f94b9&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPioYHlKAiAlXZ3HiBR%252Fimage.png%3Falt%3Dmedia%26token%3D6124dd5c-0e08-43f7-9ef1-714e79aa9654&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=dc2f94b9&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPioYHlKAiAlXZ3HiBR%252Fimage.png%3Falt%3Dmedia%26token%3D6124dd5c-0e08-43f7-9ef1-714e79aa9654&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=dc2f94b9&amp;sv=1" /></a></p>
 <p><strong>每一个CPU都有一个完全不同的调度器线程。调度器线程也是一种内核线程，它也有自己的context对象。</strong></p>
 <p><strong>任何运行在CPU1上的进程，当它决定出让CPU，它都会切换到CPU1对应的调度器线程，并由调度器线程切换到下一个进程。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPipIWU2WKegXEwqJn9%252Fimage.png%3Falt%3Dmedia%26token%3Dbe681ec4-2808-4cfa-a96f-6cba66d4c260&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a0b81a69&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPipIWU2WKegXEwqJn9%252Fimage.png%3Falt%3Dmedia%26token%3Dbe681ec4-2808-4cfa-a96f-6cba66d4c260&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a0b81a69&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPg0UEY8_oK6jPwEU3p%252F-MPipIWU2WKegXEwqJn9%252Fimage.png%3Falt%3Dmedia%26token%3Dbe681ec4-2808-4cfa-a96f-6cba66d4c260&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a0b81a69&amp;sv=1" /></a></p>
 <blockquote>
 <p><strong>学生提问：context保存在哪？</strong></p>
 <p><strong>Robert教授：每一个内核线程都有一个context对象。但是内核线程实际上有两类。每一个用户进程有一个对应的内核线程，它的context对象保存在用户进程对应的proc结构体中。</strong></p>
@@ -2477,7 +2598,7 @@
 <h1 id="115-进程切换示例程序">11.5 进程切换示例程序<a class="headerlink" href="#115-进程切换示例程序" title="Permanent link">&para;</a></h1>
 <h2 id="proc结构体">proc结构体<a class="headerlink" href="#proc结构体" title="Permanent link">&para;</a></h2>
 <p>接下来，我们切换到代码。我们先来看一下proc.h中的proc结构体，从结构体中我们可以看到很多之前介绍的内容。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnrlXVjhqSv55SaNaq%252Fimage.png%3Falt%3Dmedia%26token%3D11b1bceb-efc7-4bdb-8ef1-511e44f8b149&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ecdae2f9&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnrlXVjhqSv55SaNaq%252Fimage.png%3Falt%3Dmedia%26token%3D11b1bceb-efc7-4bdb-8ef1-511e44f8b149&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ecdae2f9&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnrlXVjhqSv55SaNaq%252Fimage.png%3Falt%3Dmedia%26token%3D11b1bceb-efc7-4bdb-8ef1-511e44f8b149&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ecdae2f9&amp;sv=1" /></a></p>
 <ul>
 <li>首先是保存了用户空间线程寄存器的<code>**trapframe**</code>字段</li>
 <li>其次是保存了内核线程寄存器的 <code>**context**</code> 字段</li>
@@ -2487,25 +2608,25 @@
 </ul>
 <h2 id="演示程序">演示程序<a class="headerlink" href="#演示程序" title="Permanent link">&para;</a></h2>
 <p>我接下来会运行一个简单的演示程序，在这个程序中我们会从一个进程切换到另一个。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPntE1YFDaXfM--9WoX%252Fimage.png%3Falt%3Dmedia%26token%3Dd67e55ae-f178-406a-8764-e59d4aac0070&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=7075160a&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPntE1YFDaXfM--9WoX%252Fimage.png%3Falt%3Dmedia%26token%3Dd67e55ae-f178-406a-8764-e59d4aac0070&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=7075160a&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPntE1YFDaXfM--9WoX%252Fimage.png%3Falt%3Dmedia%26token%3Dd67e55ae-f178-406a-8764-e59d4aac0070&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=7075160a&amp;sv=1" /></a></p>
 <p>这个程序创建了两个持续运行的进程。首先通过<code>fork</code>创建一个子进程，然后两个进程各自进入死循环，每隔100万个循环打印一次输出以表明仍在运行（注，每隔1000000次循环才打印一个输出）。由于没有使用<code>sleep</code>，这两个进程都是运算密集型的，并且将在同一个CPU核心上运行（因为我们使用的XV6系统只有一个CPU核）。为了使两个进程都能得到执行机会，需要实现进程间的切换。</p>
 <p>接下来让我运行spin程序，</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnuy4mDWPxvIeasDPU%252Fimage.png%3Falt%3Dmedia%26token%3D9ac397ce-0428-4f8d-b746-14679d05e509&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=bb3e1d20&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnuy4mDWPxvIeasDPU%252Fimage.png%3Falt%3Dmedia%26token%3D9ac397ce-0428-4f8d-b746-14679d05e509&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=bb3e1d20&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnuy4mDWPxvIeasDPU%252Fimage.png%3Falt%3Dmedia%26token%3D9ac397ce-0428-4f8d-b746-14679d05e509&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=bb3e1d20&amp;sv=1" /></a></p>
 <p>你可以看到一直有字符在输出，</p>
 <p>一个进程在输出“/”，另一个进程在输出&rdquo;"。</p>
 <p>从输出看，虽然现在XV6只有一个CPU核，但是每隔一会，XV6就在两个进程之间切换。“/”输出了一会之后，定时器中断将CPU切换到另一个进程运行然后又输出“\”一会。</p>
 <p><strong>所以在这里我们可以看到定时器中断在起作用。</strong></p>
 <p>接下来，我在trap.c的devintr函数中的207行设置一个断点，这一行会识别出当前是在响应定时器中断。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnwT_qm9C9EWyrFMgf%252Fimage.png%3Falt%3Dmedia%26token%3D367125c4-df7d-406b-a9a1-be34b373d806&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e685ad98&amp;sv=1" /></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnwZklQHgMWjNz0MeF%252Fimage.png%3Falt%3Dmedia%26token%3Db0bbedd0-d3bc-4321-98ad-263b2e51ea79&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=7d2bdc64&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnwT_qm9C9EWyrFMgf%252Fimage.png%3Falt%3Dmedia%26token%3D367125c4-df7d-406b-a9a1-be34b373d806&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e685ad98&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnwT_qm9C9EWyrFMgf%252Fimage.png%3Falt%3Dmedia%26token%3D367125c4-df7d-406b-a9a1-be34b373d806&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e685ad98&amp;sv=1" /></a></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnwZklQHgMWjNz0MeF%252Fimage.png%3Falt%3Dmedia%26token%3Db0bbedd0-d3bc-4321-98ad-263b2e51ea79&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=7d2bdc64&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPlA8TdJmidn6m4MngD%252F-MPnwZklQHgMWjNz0MeF%252Fimage.png%3Falt%3Dmedia%26token%3Db0bbedd0-d3bc-4321-98ad-263b2e51ea79&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=7d2bdc64&amp;sv=1" /></a></p>
 <p>之后在gdb中continue。立刻会停在中断的位置，因为定时器中断还是挺频繁的。</p>
 <p>现在我们可以确认我们在usertrap函数中，并且usertrap函数通过调用devintr函数来处理这里的中断（注，从下图的栈输出可以看出）。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPnxRkMhZ3GMdh9ezXe%252Fimage.png%3Falt%3Dmedia%26token%3Dedb86bb2-bb83-444b-bd47-abf9ae9bef11&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=b91c0e20&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPnxRkMhZ3GMdh9ezXe%252Fimage.png%3Falt%3Dmedia%26token%3Dedb86bb2-bb83-444b-bd47-abf9ae9bef11&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=b91c0e20&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPnxRkMhZ3GMdh9ezXe%252Fimage.png%3Falt%3Dmedia%26token%3Dedb86bb2-bb83-444b-bd47-abf9ae9bef11&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=b91c0e20&amp;sv=1" /></a></p>
 <p>因为devintr函数处理定时器中断的代码基本没有内容，接下来在gdb中输入finish来从devintr函数返回到 usertrap。</p>
 <p>当我们返回到usertrap函数时，虽然我们刚刚从devintr函数中返回，但是我们期望运行到下面的yield函数。所以我们期望devintr函数返回2。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPny5AZb3vpx0EjzWo8%252Fimage.png%3Falt%3Dmedia%26token%3D844e4b80-f2a0-4e31-95ab-4e808a3dd96e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=41f5f90d&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPny5AZb3vpx0EjzWo8%252Fimage.png%3Falt%3Dmedia%26token%3D844e4b80-f2a0-4e31-95ab-4e808a3dd96e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=41f5f90d&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPny5AZb3vpx0EjzWo8%252Fimage.png%3Falt%3Dmedia%26token%3D844e4b80-f2a0-4e31-95ab-4e808a3dd96e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=41f5f90d&amp;sv=1" /></a></p>
 <p>可以从gdb中看到devintr的确返回的是2。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPnySLE4WVY4O5qAGNM%252Fimage.png%3Falt%3Dmedia%26token%3Daf4920b0-9138-4126-ac22-344f2e920beb&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ecc08894&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPnySLE4WVY4O5qAGNM%252Fimage.png%3Falt%3Dmedia%26token%3Daf4920b0-9138-4126-ac22-344f2e920beb&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ecc08894&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPnySLE4WVY4O5qAGNM%252Fimage.png%3Falt%3Dmedia%26token%3Daf4920b0-9138-4126-ac22-344f2e920beb&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ecc08894&amp;sv=1" /></a></p>
 <p>在yield函数中，当前进程会出让CPU并让另一个进程运行。这个我们稍后再看。现在让我们看一下当定时器中断发生的时候，用户空间进程正在执行什么内容。我在gdb中输入print p来打印名称为p的变量。变量p包含了当前进程的proc结构体。</p>
 <blockquote>
 <p>学生提问：怎么区分不同进程的内核线程？</p>
@@ -2513,14 +2634,14 @@
 </p>
 </blockquote>
 <p>我首先会打印p-&gt;name来获取进程的名称，</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo1hHVuiWYh0wChpkM%252Fimage.png%3Falt%3Dmedia%26token%3Da17f5b64-5ba0-4269-ab29-326ad82cee2b&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=f57756eb&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo1hHVuiWYh0wChpkM%252Fimage.png%3Falt%3Dmedia%26token%3Da17f5b64-5ba0-4269-ab29-326ad82cee2b&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=f57756eb&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo1hHVuiWYh0wChpkM%252Fimage.png%3Falt%3Dmedia%26token%3Da17f5b64-5ba0-4269-ab29-326ad82cee2b&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=f57756eb&amp;sv=1" /></a></p>
 <p>当前进程是spin程序，如预期一样。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo1v8oxxLY4gMzOd_d%252Fimage.png%3Falt%3Dmedia%26token%3Da6351c1c-e937-4dc4-b97f-b384995b5714&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e9d3a6b6&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo1v8oxxLY4gMzOd_d%252Fimage.png%3Falt%3Dmedia%26token%3Da6351c1c-e937-4dc4-b97f-b384995b5714&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e9d3a6b6&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo1v8oxxLY4gMzOd_d%252Fimage.png%3Falt%3Dmedia%26token%3Da6351c1c-e937-4dc4-b97f-b384995b5714&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e9d3a6b6&amp;sv=1" /></a></p>
 <p>当前的进程ID是3，进程切换之后，我们预期进程ID会不一样。</p>
 <p>我们还可以通过打印变量p的trapframe字段获取表示用户空间状态的32个寄存器，这些都是我们在Lec06中学过的内容。这里面最有意思的可能是trapframe中保存的用户程序计数器。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo2jbQamsdEBV-Bkkz%252Fimage.png%3Falt%3Dmedia%26token%3D5263244f-fa00-4751-a04a-5c4feb5af987&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=42579443&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo2jbQamsdEBV-Bkkz%252Fimage.png%3Falt%3Dmedia%26token%3D5263244f-fa00-4751-a04a-5c4feb5af987&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=42579443&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo2jbQamsdEBV-Bkkz%252Fimage.png%3Falt%3Dmedia%26token%3D5263244f-fa00-4751-a04a-5c4feb5af987&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=42579443&amp;sv=1" /></a></p>
 <p>我们可以查看spin.asm文件来确定对应地址的指令。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo2ysO4rjmXvb02jja%252Fimage.png%3Falt%3Dmedia%26token%3Ddf9df6f6-dc43-42d1-8f29-e3ff32c6c708&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a5040b1e&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo2ysO4rjmXvb02jja%252Fimage.png%3Falt%3Dmedia%26token%3Ddf9df6f6-dc43-42d1-8f29-e3ff32c6c708&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a5040b1e&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPnwhbNBmp_ySz6aCiz%252F-MPo2ysO4rjmXvb02jja%252Fimage.png%3Falt%3Dmedia%26token%3Ddf9df6f6-dc43-42d1-8f29-e3ff32c6c708&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a5040b1e&amp;sv=1" /></a></p>
 <p>可以看到定时器中断触发时，用户进程正在执行死循环的加1，这符合我们的预期。</p>
 <p>（注，以下问答来自课程结束部分，因为相关就移过来了）</p>
 <blockquote>
@@ -2536,7 +2657,7 @@
 </blockquote>
 <h1 id="116-线程切换--yieldsched函数">11.6 线程切换 &mdash; yield/sched函数<a class="headerlink" href="#116-线程切换--yieldsched函数" title="Permanent link">&para;</a></h1>
 <p>回到devintr函数返回到usertrap函数的地方。在gdb里多输入几次“step”命令，直到你进入yield函数的调用。yield函数是线程切换的第一步，下面是它的具体内容：</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqDSuDUAjxhmKs3bRj%252Fimage.png%3Falt%3Dmedia%26token%3Da35fcd6d-48db-4d1f-9990-b18150ecada7&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d4fb02b3&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqDSuDUAjxhmKs3bRj%252Fimage.png%3Falt%3Dmedia%26token%3Da35fcd6d-48db-4d1f-9990-b18150ecada7&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d4fb02b3&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqDSuDUAjxhmKs3bRj%252Fimage.png%3Falt%3Dmedia%26token%3Da35fcd6d-48db-4d1f-9990-b18150ecada7&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d4fb02b3&amp;sv=1" /></a></p>
 <p><code>yield</code>函数主要执行了以下几个关键步骤。</p>
 <ol>
 <li><strong>首先，它会获取当前进程的锁。这一操作至关重要，因为在释放该锁之前，进程状态可能会出现不一致性。</strong></li>
@@ -2545,23 +2666,23 @@
 <li><strong>随后，</strong><code>**yield**</code><strong>函数正式更改当前进程的状态为</strong><code>**RUNNABLE**</code><strong>。这意味着当前进程主动放弃CPU资源，并准备交由调度器管理以待后续重新调度。这种状态转换通常发生在定时器中断触发后，导致正在运行的进程暂时让出处理器控制权的情况下。</strong></li>
 </ol>
 <p>最后，<code>**yield**</code><strong>调用了位于</strong><code>**proc.c**</code><strong>文件中的</strong><code>**sched**</code><strong>函数来完成实际的上下文切换工作</strong>。<strong>通过进入</strong><code>**sched**</code><strong>函数</strong>，可以进一步观察到<strong>具体的调度逻辑实现细节。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqG5J_0Kd38sS3FXWM%252Fimage.png%3Falt%3Dmedia%26token%3Deab1e070-55e5-49d6-b66f-99c4b7f5c14a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d06de555&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqG5J_0Kd38sS3FXWM%252Fimage.png%3Falt%3Dmedia%26token%3Deab1e070-55e5-49d6-b66f-99c4b7f5c14a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d06de555&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqG5J_0Kd38sS3FXWM%252Fimage.png%3Falt%3Dmedia%26token%3Deab1e070-55e5-49d6-b66f-99c4b7f5c14a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d06de555&amp;sv=1" /></a></p>
 <p>可以观察到，<code>sched</code> 函数主要执行了一系列的合理性检查，并在检测到异常时触发 <code>panic</code>。</p>
 <p><strong>存在大量的检查，是因为 XV6 代码历经多年的发展，在此过程中遭遇了多种类型的错误。因此，为了防止潜在的问题，该函数中加入了诸多的合理性验证和相应的 </strong><code>**panic**</code><strong> 处理。</strong></p>
 <p><strong>接下来，我将略过这些检查步骤，直接进入位于函数末尾的 </strong><code>**swtch**</code><strong> 调用部分。</strong></p>
 <h1 id="117-线程切换--switch函数">11.7 线程切换 &mdash; switch函数<a class="headerlink" href="#117-线程切换--switch函数" title="Permanent link">&para;</a></h1>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252Fsync%252Ff4cc050e3bff8a56c3209994b0c48950af53fc4d.png%3Fgeneration%3D1617597330870174%26alt%3Dmedia&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=60a514b9&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252Fsync%252Ff4cc050e3bff8a56c3209994b0c48950af53fc4d.png%3Fgeneration%3D1617597330870174%26alt%3Dmedia&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=60a514b9&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252Fsync%252Ff4cc050e3bff8a56c3209994b0c48950af53fc4d.png%3Fgeneration%3D1617597330870174%26alt%3Dmedia&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=60a514b9&amp;sv=1" /></a></p>
 <p>:::success
 1. <strong>swtch函数会将当前的内核线程的寄存器保存到p-&gt;context中。swtch函数的另一个参数c-&gt;context，c表示当前CPU的结构体。</strong>
 2. <strong>CPU结构体中的context保存了当前CPU核的调度器线程的寄存器。所以swtch函数在保存完当前内核线程的内核寄存器之后，就会恢复当前CPU核的调度器线程的寄存器，并继续执行当前CPU核的调度器线程。</strong></p>
 <p>:::</p>
 <p>接下来，我们快速的看一下我们将要切换到的context（注，也就是调度器线程的context）。因为我们只有一个CPU核，这里我在gdb中print cpus[0].context</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqIWBTJ2ql5nxuiTaL%252Fimage.png%3Falt%3Dmedia%26token%3Dc0cdd64c-2a7a-41db-be64-4f8401711b3f&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=544e4445&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqIWBTJ2ql5nxuiTaL%252Fimage.png%3Falt%3Dmedia%26token%3Dc0cdd64c-2a7a-41db-be64-4f8401711b3f&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=544e4445&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MPo3XwIXuht-vwuwogZ%252F-MPqIWBTJ2ql5nxuiTaL%252Fimage.png%3Falt%3Dmedia%26token%3Dc0cdd64c-2a7a-41db-be64-4f8401711b3f&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=544e4445&amp;sv=1" /></a></p>
 <p><strong>这里看到的就是之前保存的当前CPU核的调度器线程的寄存器。在这些寄存器中，最有趣的就是ra（Return Address）寄存器，因为ra寄存器保存的是当前函数的返回地址，所以调度器线程中的代码会返回到ra寄存器中的地址。通过查看kernel.asm，我们可以知道这个地址的内容是什么。也可以在gdb中输入“x/i 0x80001f2e”进行查看。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCSM6sCSkUNgyvQfrw%252Fimage.png%3Falt%3Dmedia%26token%3D016dd81d-b057-4cd7-bdf9-7ba59b8d7084&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a96bfd6d&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCSM6sCSkUNgyvQfrw%252Fimage.png%3Falt%3Dmedia%26token%3D016dd81d-b057-4cd7-bdf9-7ba59b8d7084&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a96bfd6d&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCSM6sCSkUNgyvQfrw%252Fimage.png%3Falt%3Dmedia%26token%3D016dd81d-b057-4cd7-bdf9-7ba59b8d7084&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a96bfd6d&amp;sv=1" /></a></p>
 <p><strong>输出中包含了地址中的指令和指令所在的函数名。所以我们将要返回到scheduler函数中。</strong></p>
 <p>因为我们接下来要调用swtch函数，让我们来看看swtch函数的内容。swtch函数位于switch.s文件中。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCU79U5w93hrTNHvHc%252Fimage.png%3Falt%3Dmedia%26token%3D16825013-b3dd-43f5-8e8d-5e3c0d93d6fa&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=6c6f7400&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCU79U5w93hrTNHvHc%252Fimage.png%3Falt%3Dmedia%26token%3D16825013-b3dd-43f5-8e8d-5e3c0d93d6fa&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=6c6f7400&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCU79U5w93hrTNHvHc%252Fimage.png%3Falt%3Dmedia%26token%3D16825013-b3dd-43f5-8e8d-5e3c0d93d6fa&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=6c6f7400&amp;sv=1" /></a></p>
 <p>首先，ra寄存器被保存在了a0寄存器指向的地址。a0寄存器对应了swtch函数的第一个参数，从前面可以看出这是当前线程的context对象地址 ；a1寄存器对应了swtch函数的第二个参数，从前面可以看出这是即将要切换到的调度器线程的context对象地址。</p>
 <p>所以函数中上半部分是将当前的寄存器保存在当前线程对应的context对象中，函数的下半部分是将调度器线程的寄存器，也就是我们将要切换到的线程的寄存器恢复到CPU的寄存器中。之后函数就返回了。<strong>所以调度器线程的ra寄存器的内容才显得有趣，</strong><strong><font style="background-color:#FBDE28;">因为它指向的是swtch函数返回的地址，也就是scheduler函数。</font></strong></p>
 <p>这里有个有趣的问题，或许你们已经注意到了。swtch函数的上半部分保存了ra，sp等等寄存器，但是并没有保存程序计数器pc（Program Counter），为什么会这样呢？</p>
@@ -2570,7 +2691,7 @@
 </p>
 </blockquote>
 <p>是的，程序计数器并没有有效信息，我们现在知道我们在swtch函数中执行，所以保存程序计数器并没有意义。但是我们关心的是我们是从哪调用进到swtch函数的，因为当我们通过switch恢复执行当前线程并且从swtch函数返回时，我们希望能够从调用点继续执行。ra寄存器保存了swtch函数的调用点，所以这里保存的是ra寄存器。我们可以打印ra寄存器，如你们所预期的一样，它指向了sched函数。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCYWEhUvMS21CjoydI%252Fimage.png%3Falt%3Dmedia%26token%3Dcd9b09c0-dce1-45d9-9c49-954cf2e0e668&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=38c21304&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCYWEhUvMS21CjoydI%252Fimage.png%3Falt%3Dmedia%26token%3Dcd9b09c0-dce1-45d9-9c49-954cf2e0e668&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=38c21304&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQ7GitB92kXBjpg1D92%252F-MQCYWEhUvMS21CjoydI%252Fimage.png%3Falt%3Dmedia%26token%3Dcd9b09c0-dce1-45d9-9c49-954cf2e0e668&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=38c21304&amp;sv=1" /></a></p>
 <p><strong>另一个问题是，为什么RISC-V中有32个寄存器，但是swtch函数中只保存并恢复了14个寄存器？</strong></p>
 <blockquote>
 <p>学生回答：因为switch是按照一个普通函数来调用的，对于有些寄存器，swtch函数的调用者默认swtch函数会做修改，所以调用者已经在自己的栈上保存了这些寄存器，当函数返回时，这些寄存器会自动恢复。所以swtch函数里只需要保存Callee Saved Register就行。（注，详见5.4）
@@ -2578,15 +2699,15 @@
 </blockquote>
 <p><strong>完全正确！因为swtch函数是从C代码调用的，所以我们知道Caller Saved Register会被C编译器保存在当前的栈上。Caller Saved Register大概有15-18个，而我们在swtch函数中只需要处理C编译器不会保存，但是对于swtch函数又有用的一些寄存器。所以在切换线程的时候，我们只需要保存Callee Saved Register。</strong></p>
 <p>最后我想看的是sp（Stack Pointer）寄存器。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF4iIrgYIVeAiU0KuD%252Fimage.png%3Falt%3Dmedia%26token%3D56a5d752-41df-4810-9cea-f287416aa0e5&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e51de32e&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF4iIrgYIVeAiU0KuD%252Fimage.png%3Falt%3Dmedia%26token%3D56a5d752-41df-4810-9cea-f287416aa0e5&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e51de32e&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF4iIrgYIVeAiU0KuD%252Fimage.png%3Falt%3Dmedia%26token%3D56a5d752-41df-4810-9cea-f287416aa0e5&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=e51de32e&amp;sv=1" /></a></p>
 <p>从它的值很难看出它的意义是什么。它实际是当前进程的内核栈地址，它由虚拟内存系统映射在了一个高地址。</p>
 <p>现在，我们保存了当前的寄存器，并从调度器线程的context对象恢复了寄存器，我直接跳到swtch函数的最后，也就是ret指令的位置。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF5SKdm6KJ13a_MMzq%252Fimage.png%3Falt%3Dmedia%26token%3D960d16d6-6010-4904-9608-c90351062ce9&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d73be989&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF5SKdm6KJ13a_MMzq%252Fimage.png%3Falt%3Dmedia%26token%3D960d16d6-6010-4904-9608-c90351062ce9&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d73be989&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF5SKdm6KJ13a_MMzq%252Fimage.png%3Falt%3Dmedia%26token%3D960d16d6-6010-4904-9608-c90351062ce9&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=d73be989&amp;sv=1" /></a></p>
 <p>在我们实际返回之前，我们再来打印一些有趣的寄存器。首先sp寄存器有了一个不同的值，</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF66kVCfsVrXAub-RI%252Fimage.png%3Falt%3Dmedia%26token%3D91f4b698-4516-4f55-84c4-e9554db05c7d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=1158780e&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF66kVCfsVrXAub-RI%252Fimage.png%3Falt%3Dmedia%26token%3D91f4b698-4516-4f55-84c4-e9554db05c7d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=1158780e&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF66kVCfsVrXAub-RI%252Fimage.png%3Falt%3Dmedia%26token%3D91f4b698-4516-4f55-84c4-e9554db05c7d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=1158780e&amp;sv=1" /></a></p>
 <p>sp寄存器的值现在在内存中的stack0区域中。这个区域实际上是在启动顺序中非常非常早的一个位置，start.s在这个区域创建了栈，这样才可以调用第一个C函数。所以调度器线程运行在CPU对应的bootstack上。</p>
 <p>其次是ra寄存器，</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF7GyKoKQ35FuDhXvv%252Fimage.png%3Falt%3Dmedia%26token%3Da322fa5f-24ad-449d-906c-2e9dff0c798d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=50713955&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF7GyKoKQ35FuDhXvv%252Fimage.png%3Falt%3Dmedia%26token%3Da322fa5f-24ad-449d-906c-2e9dff0c798d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=50713955&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQCads5sqicFNa18TGX%252F-MQF7GyKoKQ35FuDhXvv%252Fimage.png%3Falt%3Dmedia%26token%3Da322fa5f-24ad-449d-906c-2e9dff0c798d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=50713955&amp;sv=1" /></a></p>
 <p><strong>现在指向了scheduler函数，因为我们恢复了调度器线程的context对象中的内容。</strong></p>
 <p><strong>现在，我们其实已经在调度器线程中了，这里寄存器的值与上次打印的已经完全不一样了。虽然我们还在swtch函数中，但是现在我们实际上位于调度器线程调用的swtch函数中。调度器线程在启动过程中调用的也是swtch函数。接下来通过执行ret指令，我们就可以返回到调度器线程中。</strong></p>
 <p>（注，以下提问来自于课程结束部分，因为相关所以移到这里）</p>
@@ -2599,7 +2720,7 @@
 </blockquote>
 <h1 id="118-xv6线程切换--scheduler函数">11.8 XV6线程切换 &mdash; <code>scheduler</code>函数<a class="headerlink" href="#118-xv6线程切换--scheduler函数" title="Permanent link">&para;</a></h1>
 <p><strong>来看一下scheduler的完整代码</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQ_zAO-C8xLZin1Edy_%252Fimage.png%3Falt%3Dmedia%26token%3D08a742fb-8fe3-4ded-a120-5b7607cb3d5e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=8f028fd3&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQ_zAO-C8xLZin1Edy_%252Fimage.png%3Falt%3Dmedia%26token%3D08a742fb-8fe3-4ded-a120-5b7607cb3d5e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=8f028fd3&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQ_zAO-C8xLZin1Edy_%252Fimage.png%3Falt%3Dmedia%26token%3D08a742fb-8fe3-4ded-a120-5b7607cb3d5e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=8f028fd3&amp;sv=1" /></a></p>
 <p>:::success
 <strong>现在我们正运行在CPU拥有的调度器线程中，并且我们正好在之前调用</strong><code>**swtch**</code><strong>函数的返回状态。之前调度器线程调用</strong><code>**switch**</code><strong>是因为想要运行</strong><code>**pid**</code><strong>为</strong><code>**3**</code><strong>的进程，也就是刚刚被中断的</strong><code>**spin**</code><strong>程序。</strong></p>
 <p><strong>虽然</strong><code>**pid**</code><strong>为</strong><code>**3**</code><strong>的</strong><code>**spin**</code><strong>进程也调用了</strong><code>**swtch**</code><strong>函数，但是那个</strong><code>**switch**</code><strong>并不是当前返回的这个</strong><code>**switch**</code><strong>。</strong><code>**spin**</code><strong>进程调用的</strong><code>**swtch**</code><strong>函数还没有返回，而是保存在了</strong><code>**pid**</code><strong>为</strong><code>**3**</code><strong>的栈和</strong><code>**context**</code><strong>对象中。现在返回的是之前调度器线程对于</strong><code>**swtch**</code><strong>函数的调用。</strong></p>
@@ -2620,24 +2741,24 @@
 <hr />
 <p>现在我们在<code>**scheduler**</code><strong><font style="background-color:#FBDE28;">函数的循环中</font></strong>，<strong>代码会检查所有的进程并找到一个</strong><code>**RUNABLE**</code><strong>进程来运行</strong>。</p>
 <p>我们知道还存在另一个进程，因为我们之前<code>**fork**</code>了另一个<code>**spin**</code>进程。这里我跳过进程检查，直接在找到<code>**RUNABLE**</code>进程的位置设置一个断点。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaD4H99wRtzjMTjsFN%252Fimage.png%3Falt%3Dmedia%26token%3Dced39a0e-a4cc-4045-ad32-09109ffc965d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=9c6f94d&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaD4H99wRtzjMTjsFN%252Fimage.png%3Falt%3Dmedia%26token%3Dced39a0e-a4cc-4045-ad32-09109ffc965d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=9c6f94d&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaD4H99wRtzjMTjsFN%252Fimage.png%3Falt%3Dmedia%26token%3Dced39a0e-a4cc-4045-ad32-09109ffc965d&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=9c6f94d&amp;sv=1" /></a></p>
 <p>代码的468 行： 获取了进程的锁，所以现在我们可以进行切换到进程的各种步骤。</p>
 <p>代码的473 行：进程的状态被设置成了RUNNING。</p>
 <p>代码的474行：将找到的RUNABLE进程记录为当前CPU执行的进程。</p>
 <p>代码的475行：又调用了swtch函数来保存调度器线程的寄存器，并恢复目标进程的寄存器（注，实际上恢复的是目标进程的内核线程）</p>
 <p>我们可以打印新的进程的名字来查看新的进程。</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaGz5TlPPlAYv_pVhU%252Fimage.png%3Falt%3Dmedia%26token%3D04f0fc02-dbe0-4065-8766-9f889e7008b6&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a63d57fa&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaGz5TlPPlAYv_pVhU%252Fimage.png%3Falt%3Dmedia%26token%3D04f0fc02-dbe0-4065-8766-9f889e7008b6&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a63d57fa&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaGz5TlPPlAYv_pVhU%252Fimage.png%3Falt%3Dmedia%26token%3D04f0fc02-dbe0-4065-8766-9f889e7008b6&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=a63d57fa&amp;sv=1" /></a></p>
 <p><strong>可以看到进程名还是</strong><code>**spin**</code><strong>，但是</strong><code>**pid**</code><strong>已经变成了4，而前一个进程的</strong><code>**pid**</code><strong>是</strong><code>**3**</code><strong>。我们还可以查看目标进程的</strong><code>**context**</code><strong>对象，</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaHkXcutIc2vnhu6cD%252Fimage.png%3Falt%3Dmedia%26token%3D36789366-1c93-42c4-99a7-0407430b245a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=cc52b226&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaHkXcutIc2vnhu6cD%252Fimage.png%3Falt%3Dmedia%26token%3D36789366-1c93-42c4-99a7-0407430b245a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=cc52b226&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaHkXcutIc2vnhu6cD%252Fimage.png%3Falt%3Dmedia%26token%3D36789366-1c93-42c4-99a7-0407430b245a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=cc52b226&amp;sv=1" /></a></p>
 <p><strong>其中</strong><code>**ra**</code><strong>寄存器的内容就是我们要切换到的目标线程的代码位置。</strong></p>
 <p><strong>虽然我们在代码475行调用的是</strong><code>**swtch**</code><strong>函数，但是我们前面已经看过了</strong><code>**swtch**</code><strong>函数最终返回到即将恢复的</strong><code>**ra**</code><strong>寄存器地址。</strong></p>
 <p><strong>所以我们真正关心的就是</strong><code>**ra**</code><strong>指向的地址。</strong></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaIIDPK_JBGHqH-OAO%252Fimage.png%3Falt%3Dmedia%26token%3D48a3b1a7-5647-453a-a0d3-712f0c6c1b3e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=81278419&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaIIDPK_JBGHqH-OAO%252Fimage.png%3Falt%3Dmedia%26token%3D48a3b1a7-5647-453a-a0d3-712f0c6c1b3e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=81278419&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaIIDPK_JBGHqH-OAO%252Fimage.png%3Falt%3Dmedia%26token%3D48a3b1a7-5647-453a-a0d3-712f0c6c1b3e&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=81278419&amp;sv=1" /></a></p>
 <p><strong>通过打印这个地址的内容，可以看到</strong><code>**swtch**</code><strong>函数会返回到</strong><code>**sched**</code><strong>函数中。这完全在意料之中。</strong></p>
 <p><strong>因为可以预期的是，将要切换到的进程之前是被定时器中断通过</strong><code>**sched**</code><strong>函数挂起的，并且之前在</strong><code>**sched**</code><strong>函数中又调用了</strong><code>**swtch**</code><strong>函数。</strong></p>
 <p><strong>在</strong><code>**swtch**</code><strong>函数的最开始，我们仍然在调度器线程中，但是这一次是从调度器线程切换到目标进程的内核线程。所以从</strong><code>**swtch**</code><strong>函数内部将会返回到目标进程的内核线程的sched函数。</strong></p>
 <p><strong>通过打印</strong><code>**backtrace**</code></p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaJhElyPGnfOSjnR9B%252Fimage.png%3Falt%3Dmedia%26token%3Ddd7c1f2b-1df3-4d61-af63-615b69738589&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ed4a8fa7&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaJhElyPGnfOSjnR9B%252Fimage.png%3Falt%3Dmedia%26token%3Ddd7c1f2b-1df3-4d61-af63-615b69738589&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ed4a8fa7&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQF83mxAUN2487Ywmqy%252F-MQaJhElyPGnfOSjnR9B%252Fimage.png%3Falt%3Dmedia%26token%3Ddd7c1f2b-1df3-4d61-af63-615b69738589&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ed4a8fa7&amp;sv=1" /></a></p>
 <p><strong>我们可以看到，之前有一个usertrap的调用，这必然是之前因为定时器中断而出现的调用。之后在中断处理函数中还调用了</strong><code>**yield**</code><strong>和</strong><code>**sched**</code><strong>函数，正如我们之前看到的一样。但这里调用</strong><code>**yield**</code><strong>和</strong><code>**sched**</code><strong>函数是</strong><code>**pid**</code><strong>为</strong><code>**4**</code><strong>的进程调用的，而不是刚刚的</strong><code>**pid**</code><strong>为</strong><code>**3**</code><strong>的进程。</strong></p>
 <blockquote>
 <p>学生提问：如果不是因为定时器中断发生的切换，我们是不是可以期望ra寄存器指向其他位置，例如sleep函数？</p>
@@ -2671,7 +2792,7 @@
 <strong>（注，以下是线程第一次调用switch的过程）也就是第一个线程</strong></p>
 <p><strong>学生提问：当调用</strong><code>**swtch**</code><strong>函数的时候，实际上是从一个线程对于</strong><code>**switch**</code><strong>的调用切换到了另一个线程对于</strong><code>**switch**</code><strong>的调用。所以线程第一次调用</strong><code>**swtch**</code><strong>函数时，需要伪造一个“另一个线程”对于</strong><code>**switch**</code><strong>的调用，是吧？因为也不能通过</strong><code>**swtch**</code><strong>函数随机跳到其他代码去。</strong></p>
 <p><strong>Robert教授：是的。我们来看一下第一次调用</strong><code>**switch**</code><strong>时，“另一个”调用</strong><code>**swtch**</code><strong>函数的线程的</strong><code>**context**</code><strong>对象。</strong><code>**proc.c**</code><strong>文件中的</strong><code>**allocproc**</code><strong>函数会被启动时的第一个进程和</strong><code>**fork**</code><strong>调用，</strong><code>**allocproc**</code><strong>会设置好新进程的</strong><code>**context**</code><strong>，如下所示：</strong></p>
-<p><code>**&lt;font style="background-color:#FBDE28;"&gt;memset(&amp;p-&gt;context, 0, sizeof(p-&gt;context));&lt;/font&gt;**</code><strong><font style="background-color:#FBDE28;">伪造了“另一个”线程的</font></strong><code>**&lt;font style="background-color:#FBDE28;"&gt;context&lt;/font&gt;**</code><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQeahAhbIK9Y0WRKLpI%252Fimage.png%3Falt%3Dmedia%26token%3Dd12149c7-d087-4fe0-9c46-5dd961bc7e2a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=49e37d8d&amp;sv=1" /></p>
+<p><code>**&lt;font style="background-color:#FBDE28;"&gt;memset(&amp;p-&gt;context, 0, sizeof(p-&gt;context));&lt;/font&gt;**</code><strong><font style="background-color:#FBDE28;">伪造了“另一个”线程的</font></strong><code>**&lt;font style="background-color:#FBDE28;"&gt;context&lt;/font&gt;**</code><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQeahAhbIK9Y0WRKLpI%252Fimage.png%3Falt%3Dmedia%26token%3Dd12149c7-d087-4fe0-9c46-5dd961bc7e2a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=49e37d8d&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQeahAhbIK9Y0WRKLpI%252Fimage.png%3Falt%3Dmedia%26token%3Dd12149c7-d087-4fe0-9c46-5dd961bc7e2a&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=49e37d8d&amp;sv=1" /></a></p>
 <p><strong>实际上大部分寄存器的内容都无所谓。但</strong><code>**ra**</code><strong>很重要，因为这是进程的第一个</strong><code>**switch**</code><strong>调用会返回的位置。</strong></p>
 <p><strong>同时因为进程需要有自己的栈，所以</strong><code>**ra**</code><strong>和</strong><code>**sp**</code><strong>都被设置了。</strong></p>
 <p><strong>这里设置的</strong><code>**forkret**</code><strong>函数就是进程的第一次调用</strong><code>**swtch**</code><strong>函数会切换到的“另一个”线程位置。</strong></p>
@@ -2680,14 +2801,14 @@
 <p>学生提问：因吹斯听，我们会在其他场合调用<code>**forkret**</code>吗？还是说它只会用在这？</p>
 <p>Robert教授：是的，它只会在启动进程的时候以这种奇怪的方式运行。下面是forkret函数的代码，</p>
 <p>:::</p>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQeca10yw76tC9PcDd4%252Fimage.png%3Falt%3Dmedia%26token%3D6f29a9a9-1c8b-429c-97b3-8ac6458168e0&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ea116e40&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQeca10yw76tC9PcDd4%252Fimage.png%3Falt%3Dmedia%26token%3D6f29a9a9-1c8b-429c-97b3-8ac6458168e0&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ea116e40&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQeca10yw76tC9PcDd4%252Fimage.png%3Falt%3Dmedia%26token%3D6f29a9a9-1c8b-429c-97b3-8ac6458168e0&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=ea116e40&amp;sv=1" /></a></p>
 <blockquote>
 <p>从代码中看，它的工作其实就是释放调度器之前获取的锁。函数最后的usertrapret函数其实也是一个假的函数，它会使得程序表现的看起来像是从trap中返回，但是对应的trapframe其实也是假的，这样才能跳到用户的第一个指令中。</p>
 <p>学生提问：与之前的context对象类似的是，对于trapframe也不用初始化任何寄存器，因为我们要去的是程序的最开始，所以不需要做任何假设，对吧？</p>
 <p>Robert教授：我认为程序计数器还是要被初始化为0的。
 </p>
 </blockquote>
-<p><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQedlOtGM8Eilp35HqZ%252Fimage.png%3Falt%3Dmedia%26token%3D577bf761-608c-4832-b9a2-913985a558f5&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=1b0c6d4c&amp;sv=1" /></p>
+<p><a class="glightbox" href="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQedlOtGM8Eilp35HqZ%252Fimage.png%3Falt%3Dmedia%26token%3D577bf761-608c-4832-b9a2-913985a558f5&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=1b0c6d4c&amp;sv=1" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://mit-public-courses-cn-translatio.gitbook.io/~gitbook/image?url=https%3A%2F%2F1977542228-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-MHZoT2b_bcLghjAOPsJ%252F-MQaze0oj-FmvJMJ-YoM%252F-MQedlOtGM8Eilp35HqZ%252Fimage.png%3Falt%3Dmedia%26token%3D577bf761-608c-4832-b9a2-913985a558f5&amp;width=768&amp;dpr=4&amp;quality=100&amp;sign=1b0c6d4c&amp;sv=1" /></a></p>
 <blockquote>
 <p>因为fork拷贝的进程会同时拷贝父进程的程序计数器，所以我们唯一不是通过fork创建进程的场景就是创建第一个进程的时候。这时需要设置程序计数器为0。</p>
 <p>学生提问：在fortret函数中，if(first)是什么意思？</p>
@@ -2713,6 +2834,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2740,11 +2867,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

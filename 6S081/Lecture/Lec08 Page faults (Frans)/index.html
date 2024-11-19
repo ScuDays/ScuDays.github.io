@@ -20,7 +20,7 @@
     
     
       
-        <title>8.1 Page Fault Basics - days'blog</title>
+        <title>Lec08：Page faults (Frans) - days'blog</title>
       
     
     
@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -70,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#81-page-fault-basics" class="md-skip">
+        <a href="#lec08page-faults-frans" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              8.1 Page Fault Basics
+              Lec08：Page faults (Frans)
             
           </span>
         </div>
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -197,6 +224,8 @@
       <li class="md-tabs__item">
         <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
+  
+    
   
   CSCI0300
 
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,48 +434,35 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
     
     
       
@@ -475,6 +501,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -668,6 +710,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1228,6 +1320,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
         
@@ -1269,6 +1369,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1306,11 +1424,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1327,11 +1445,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1348,11 +1466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1369,11 +1487,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1390,11 +1508,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1411,11 +1529,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1432,11 +1550,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1453,11 +1571,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1484,6 +1602,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1526,7 +1670,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1547,7 +1691,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1568,7 +1712,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1589,7 +1733,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1610,7 +1754,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1640,7 +1784,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1662,7 +1806,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1683,7 +1827,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1704,7 +1848,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1725,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1746,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1767,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1792,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1866,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2210,6 +2386,7 @@
                   
 
 
+<h1 id="lec08page-faults-frans">Lec08：Page faults (Frans)<a class="headerlink" href="#lec08page-faults-frans" title="Permanent link">&para;</a></h1>
 <h1 id="81-page-fault-basics"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.1-page-fault-basics"><font style="color:rgb(27, 27, 27);">8.1 Page Fault Basics</font></a><a class="headerlink" href="#81-page-fault-basics" title="Permanent link">&para;</a></h1>
 <p><strong>通过 page fault可以实现的一系列虚拟内存功能</strong></p>
 <ul>
@@ -2248,7 +2425,7 @@
 </ul>
 </li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728481050708-ccdc9228-4fb0-4ed7-8ca8-3f6c687c9963.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/592e2ce2f893c6c90cc79b753205cf6f.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/592e2ce2f893c6c90cc79b753205cf6f.jpeg" /></a></p>
 <ul>
 <li><strong>第三个信息，引起page fault时的程序计数器值，这表明了page fault在用户空间发生的位置</strong><ul>
 <li>从上节课可以知道，作为trap处理代码的一部分，这个地址存放在SEPC（Supervisor Exception Program Counter）寄存器中，并同时会保存在trapframe-&gt;epc（注，详见lec06）中。</li>
@@ -2265,11 +2442,11 @@
 <p><strong><font style="color:rgb(27, 27, 27);">首先来看一下内存allocation，或者更具体的说是 sbrk()。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">sbrk是XV6提供的系统调用，它使得用户应用程序能扩大自己的 heap。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">当一个应用程序启动的时候，sbrk指向的是heap的最底端，同时也是stack的最顶端。这个位置通过代表进程的数据结构中的sz字段表示，这里以</font></strong><em><strong><font style="color:rgb(27, 27, 27);">p-&gt;sz表示</font></strong></em><strong><font style="color:rgb(27, 27, 27);">。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728483183039-69ef7468-ae6f-474a-a708-881012c2d07f.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/3e01715e78e1e1b56450d74ba17e8307.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/3e01715e78e1e1b56450d74ba17e8307.jpeg" /></a></p>
 <p><strong><font style="color:rgb(27, 27, 27);">当调用sbrk时，参数为整数，代表了你想要申请的page数量（注，原视频说的是page，但是根据Linux </font></strong><a href="https://man7.org/linux/man-pages/man2/sbrk.2.html"><strong>man page</strong></a><strong><font style="color:rgb(27, 27, 27);">，实际中sbrk的参数是字节数）。sbrk会扩展heap的上边界（也就是会扩大heap）。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">扩展后如下图 xz</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">注意：heap(堆)向上增长，stack(栈)向下增长</font></strong></p>
-<p><img alt="用户进程的虚拟地址空间分布" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728483444298-e6baa246-9319-44b1-8b9a-e3d9db7b53c4.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/8ca948ec7153f4431e576e700439d4a2.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="用户进程的虚拟地址空间分布" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/8ca948ec7153f4431e576e700439d4a2.jpeg" /></a></p>
 <ul>
 <li><strong><font style="color:rgb(27, 27, 27);">这意味着，当sbrk实际发生或者被调用的时候，内核会分配一些物理内存，并将这些内存映射到用户应用程序的地址空间，然后将内存内容初始化为0，再返回sbrk系统调用。</font></strong></li>
 <li><strong><font style="color:rgb(27, 27, 27);">这样，应用程序可以通过多次sbrk系统调用来增加它所需要的内存。应用程序爷可以通过给sbrk传入负数作为参数，来减少它的地址空间。</font></strong><font style="color:rgb(27, 27, 27);">不过在这节课我们只关注增加内存的场景。</font></li>
@@ -2326,7 +2503,7 @@
 <ul>
 <li><strong><font style="color:rgb(27, 27, 27);">有如此多的内容全是0的page，在物理内存中，只需要分配一个page，这个page的内容全是0。然后将所有虚拟地址空间的全0的page都map到这一个物理page上。这样至少在程序启动的时候能节省大量的物理内存分配。</font></strong></li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728527505915-b42b4052-1342-4a54-8c73-ce9731f84945.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/1d6f1d4df93a23789a0aaebd6a15f659.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/1d6f1d4df93a23789a0aaebd6a15f659.jpeg" /></a></p>
 <p>:::</p>
 <p>:::warning
 + <strong><font style="color:rgb(27, 27, 27);">这里的 mapping 需要非常的小心，我们不能允许用户对于这个 page 执行写操作，因为这里所有的虚拟地址空间 page 内容都期望为 0，所以这里的PTE都是只读的。</font></strong></p>
@@ -2337,7 +2514,7 @@
 <ul>
 <li><strong><font style="color:rgb(27, 27, 27);">是的，完全正确。假设store指令发生在BSS最顶端的page中。我们想要做的是，在物理内存中申请一个新的内存 page ，将其内容设置为0，因为我们预期这个内存的内容为0。之后我们需要更新这个 page 的 mapping 关系，首先 PTE 要设置成可读可写，然后将其指向新的物理 page 。这里相当于更新了 PTE ，之后我们可以重新执行指令。</font></strong></li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728527781875-54244d15-c92d-4fe6-a019-4d9e8abb1cf5.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/161da5099058af97d6eca06092653f61.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/161da5099058af97d6eca06092653f61.jpeg" /></a></p>
 <p>:::</p>
 <ul>
 <li><strong><font style="color:rgb(27, 27, 27);">第一个好处：</font></strong><font style="color:rgb(27, 27, 27);">这样节省一部分内存。你可以在需要的时候才申请内存。</font></li>
@@ -2360,7 +2537,7 @@
 2. <strong><font style="color:rgb(27, 27, 27);">fork 会创建一个 Shell 进程的拷贝，所以这时我们有一个父进程（原来的Shell）和一个子进程。</font></strong>
 3. <strong><font style="color:rgb(27, 27, 27);">Shell 的子进程执行的第一件事情就是调用 exec 运行一些其他程序，比如运行 echo。</font></strong>
 4. <strong><font style="color:rgb(27, 27, 27);">现在的情况是，fork创建了Shell地址空间的一个完整的拷贝，而 exec 第一件事情就是释放地址空间，又重新申请了一个包含了echo的地址空间。这看起来有点浪费。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728530884191-a9b4829b-67eb-43aa-87c4-3c8819517cab.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/e78183da5f77b2be278a9515b508a312.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/e78183da5f77b2be278a9515b508a312.jpeg" /></a></p>
 <p>:::</p>
 <ul>
 <li><strong>我们开始使用 COW FORK 进行优化</strong></li>
@@ -2368,7 +2545,7 @@
 <p>:::success
 <strong>所以，我们最开始有了一个父进程的虚拟地址空间，然后我们有了子进程的虚拟地址空间。</strong></p>
 <p><strong>在物理内存中，XV6中的Shell通常会有4个page，当调用fork时，基本上就是创建了4个新的page，并将父进程page的内容拷贝到4个新的子进程的page中。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728530955213-a33fc2ba-5431-4691-a711-61882d4e82ca.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/261db463e93238ad32b83995334d0aa4.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/261db463e93238ad32b83995334d0aa4.jpeg" /></a></p>
 <p>:::</p>
 <ul>
 <li><strong>1： 对内存有效的优化</strong></li>
@@ -2383,7 +2560,7 @@
 <li><strong><font style="color:rgb(27, 27, 27);">当然，我们这里需要非常小心。</font></strong></li>
 </ul>
 <p><font style="color:rgb(27, 27, 27);">因为一旦子进程想要修改这些内存的内容，相应的更新应该对父进程不可见，因为我们希望在父进程和子进程之间有强隔离性，所以这里我们需要更加小心一些。为了确保进程间的隔离性，我们可以将这里的父进程和子进程的PTE的标志位都设置成只读的。</font></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728537730134-209f42c4-ecd9-4102-8c9d-db96fbd21e56.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/8e5cfddcd1ec09a1af09fc2a8e064ce0.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/8e5cfddcd1ec09a1af09fc2a8e064ce0.jpeg" /></a></p>
 <p>:::</p>
 <ul>
 <li><strong>2： 当内存真正需要使用的时候</strong></li>
@@ -2398,9 +2575,9 @@
 </ol>
 <p><strong><font style="color:rgb(27, 27, 27);">这时，新分配的物理内存page只对子进程的地址空间可见，所以我们可以将相应的PTE设置成可读写(同时保证了隔离性)，并且我们可以重新执行store指令。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">实际上，对于触发刚刚page fault的物理page，因为现在只对父进程可见，相应的PTE对于父进程也变成可读写的了。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728538214470-fba68b37-6231-4520-b5ce-a56de792ad63.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/d6e04cebf72dcae2f6608ee70bc28094.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/d6e04cebf72dcae2f6608ee70bc28094.jpeg" /></a></p>
 <p><strong><font style="color:rgb(27, 27, 27);">所以现在，我们拷贝了一个page，将新的page映射到相应的用户地址空间，并重新执行用户指令。重新执行用户指令是指调用userret函数（注，详见6.8），也即是lec06中介绍的返回到用户空间的方法。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728538252066-e392f310-6545-4ed6-ba15-b3bc59d9eafc.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/6ca7905cacd62a5233850f12e6b31b79.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/6ca7905cacd62a5233850f12e6b31b79.jpeg" /></a></p>
 <p>:::</p>
 <p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">我们如何发现父进程写了这部分内存地址？是与子进程相同的方法吗？</font></p>
 <p><strong><font style="color:rgb(27, 27, 27);">Frans教授</font></strong><font style="color:rgb(27, 27, 27);">：是的，因为子进程的地址空间来自于父进程的地址空间的拷贝。如果我们使用了特定的虚拟地址，因为地址空间是相同的，不论是父进程还是子进程，都会有相同的处理方式。</font></p>
@@ -2412,7 +2589,7 @@
 <p>:::tips
 <strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">当发生page fault时，我们其实是在向一个只读的地址执行写操作。内核如何能分辨现在是一个copy-on-write fork的场景，而不是应用程序在向一个正常的只读地址写数据。是不是说默认情况下，用户程序的PTE都是可读写的，除非在copy-on-write fork的场景下才可能出现只读的PTE？</font></p>
 <p><strong><font style="color:rgb(27, 27, 27);">Frans教授：</font></strong><font style="color:rgb(27, 27, 27);">内核必须要能够识别这是一个copy-on-write场景。几乎所有的page table硬件都支持了这一点。我们之前并没有提到相关的内容，</font><strong><font style="color:rgb(27, 27, 27);">下图是一个常见的多级page table。对于PTE的标志位，我之前介绍过第0bit到第7bit，但是没有介绍最后两位RSW。这两位保留给supervisor software使用，supervisor softeware指的就是内核。</font></strong><font style="color:rgb(27, 27, 27);">内核可以随意使用这两个bit位。所以可以做的一件事情就是，将bit8标识为当前是一个copy-on-write page。</font></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728538587817-5844c220-1346-4c9c-9eb6-a812cfe37597.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/47640b4a1454d1e51fac97fab013f290.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/47640b4a1454d1e51fac97fab013f290.jpeg" /></a></p>
 <p><strong><font style="color:rgb(27, 27, 27);">当内核在管理这些page table时，对于copy-on-write相关的page，内核可以设置相应的bit位，这样当发生page fault时，我们可以发现如果copy-on-write bit位设置了，我们就可以执行相应的操作了。否则的话，比如说lazy allocation，我们就做一些其他的处理操作。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">在copy-on-write lab中，你们会使用RSW在PTE中设置一个copy-on-write标志位。</font></strong></p>
 <p>:::</p>
@@ -2438,7 +2615,7 @@
 </blockquote>
 <p>:::color3
 <strong><font style="color:rgb(27, 27, 27);">在 未修改的XV6中，exec() 中，操作系统会加载程序内存的text，data区域，并且以 eager (立即) 的方式将这些区域加载进page table。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728540253330-b6d32530-d20c-4957-a2a3-5c4143cc90ce.jpeg" /><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1728540239825-d17b8839-61c3-4b8e-b0c0-831e7fd7f3f7.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/bfdfd9052c57b843d5a944b95f537b27.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/bfdfd9052c57b843d5a944b95f537b27.jpeg" /></a><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/16ea26cc9113d3ea15b09f3e6baf88d8.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/16ea26cc9113d3ea15b09f3e6baf88d8.png" /></a></p>
 <p>:::</p>
 <ul>
 <li><strong>使用 lazy 加载</strong></li>
@@ -2455,7 +2632,7 @@
 <p>:::success
 + <strong><font style="color:rgb(27, 27, 27);">如果我们修改XV6使其按照上面的方式工作，我们什么时候会得到第一个page fault呢？或者说，用户应用程序运行的第一条指令是什么？用户应用程序在哪里启动的？</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">位于地址0的指令是会触发第一个page fault的指令，因为应用程序是从地址0开始运行并且 text 区域从地址0开始向上增长。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728540409041-04d6fc4e-e053-4d94-99b3-df80a7edb595.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/f8d030f28ede735d1f355f8c437e2c1e.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/f8d030f28ede735d1f355f8c437e2c1e.jpeg" /></a></p>
 <p>:::</p>
 <ul>
 <li><strong>遇到 page fault 要如何处理？</strong></li>
@@ -2486,14 +2663,14 @@
 </ul>
 <p><strong><font style="color:rgb(27, 27, 27);">看PTE，我们有RSW位，你们可以发现在bit7，对应的就是Dirty bit。当硬件向一个page写入数据，会设置dirty bit，之后操作系统就可以发现这个page曾经被写入了。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">类似的，还有一个Access bit，任何时候一个page被读或者被写了，这个Access bit会被设置。Access bit通常被用来实现这里的LRU策略。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728540883080-7a1462e3-6e51-4ae7-97ee-7aa7d36fb734.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/2d0b873df771635685b7c6a7e50416e0.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/2d0b873df771635685b7c6a7e50416e0.jpeg" /></a></p>
 <h1 id="86-memory-mapped-files"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.6-memory-mapped-files"><font style="color:rgb(27, 27, 27);">8.6 Memory Mapped Files</font></a><a class="headerlink" href="#86-memory-mapped-files" title="Permanent link">&para;</a></h1>
 <p><strong><font style="color:rgb(27, 27, 27);">这节课最后要讨论的内容，也是后面的一个实验，就是memory mapped files。这里的核心思想是，将完整或者部分文件加载到内存中，这样就可以通过内存地址相关的load或者store指令来操纵文件。为了支持这个功能，一个现代的操作系统会提供一个叫做mmap的系统调用。这个系统调用会接收一个虚拟内存地址（VA），长度（len），protection，一些标志位，一个打开文件的文件描述符，和偏移量（offset）。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728543108082-310c4e7e-083b-4111-b105-b5f337c028e9.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/f5e07799c1a0780dee5a0c06d0c4f102.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/f5e07799c1a0780dee5a0c06d0c4f102.jpeg" /></a></p>
 <p><strong><font style="color:rgb(27, 27, 27);">这里的语义就是，从文件描述符对应的文件的偏移量的位置开始，映射长度为len的内容到虚拟内存地址VA，同时我们需要加上一些保护，比如只读或者读写。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">假设文件内容是读写并且内核实现mmap的方式是eager方式（不过大部分系统都不会这么做），内核会从文件的offset位置开始，将数据拷贝到内存，设置好PTE指向物理内存的位置。之后应用程序就可以使用load或者store指令来修改内存中对应的文件内容。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">当完成操作之后，会有一个对应的unmap系统调用，参数是虚拟地址（VA），长度（len）。来表明应用程序已经完成了对文件的操作，在unmap时间点，我们需要将dirty block写回到文件中。我们可以很容易的找到哪些block是dirty的，因为它们在PTE中的dirty bit为1。</font></strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1728543135851-f4790181-57ba-4643-81c8-e6520ec173f7.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/733cfbb4a28a2c4189cc3a774af71ae7.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/733cfbb4a28a2c4189cc3a774af71ae7.jpeg" /></a></p>
 <p><strong><font style="color:rgb(27, 27, 27);">当然，在任何聪明的内存管理机制中，所有的这些都是以lazy的方式实现。你不会立即将文件内容拷贝到内存中，而是先记录一下这个PTE属于这个文件描述符。相应的信息通常在VMA结构体中保存，VMA全称是Virtual Memory Area。例如对于这里的文件f，会有一个VMA，在VMA中我们会记录文件描述符，偏移量等等，这些信息用来表示对应的内存虚拟地址的实际内容在哪，这样当我们得到一个位于VMA地址范围的page fault时，内核可以从磁盘中读数据，并加载到内存中。所以这里回答之前一个问题，dirty bit是很重要的，因为在unmap中，你需要向文件回写dirty block。</font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);"></font></strong></p>
 <p><strong><font style="color:rgb(27, 27, 27);">学生提问：有没有可能多个进程将同一个文件映射到内存，然后会有同步的问题？</font></strong></p>
@@ -2525,6 +2702,12 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -2551,11 +2734,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

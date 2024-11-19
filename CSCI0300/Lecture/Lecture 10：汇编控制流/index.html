@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -202,6 +229,8 @@
         <a href="../../Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
   
+    
+  
   CSCI0300
 
         </a>
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../6S081/Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,50 +434,37 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
   
   
   
-  
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
     
     
       
@@ -480,6 +506,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -675,6 +717,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1243,6 +1335,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1281,6 +1381,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1318,11 +1436,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1339,11 +1457,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1360,11 +1478,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1381,11 +1499,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1402,11 +1520,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1423,11 +1541,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1444,11 +1562,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1465,11 +1583,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1494,6 +1612,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1536,7 +1680,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1557,7 +1701,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1578,7 +1722,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1599,7 +1743,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1620,7 +1764,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1641,7 +1785,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1662,7 +1806,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1683,7 +1827,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1704,7 +1848,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1725,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1746,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1767,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1792,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1866,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2239,10 +2415,10 @@
 <li><strong><font style="color:rgb(33, 37, 41);">在上面的示例程序中，设置标志的指令是 </font></strong><strong><font style="color:rgb(232, 62, 140);">cmpl</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，这是一个“比较”指令，处理器在内部执行为其第一个参数从其第二个参数减法，设置标志并丢弃结果。</font></strong></li>
 <li><strong><font style="color:rgb(33, 37, 41);">算术指令可以改变一部分寄存器。最常用的标志有：</font></strong></li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712206287354-a8dbc88e-3795-494f-b5eb-c7b8958f009e.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712206287354-a8dbc88e-3795-494f-b5eb-c7b8958f009e.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712206287354-a8dbc88e-3795-494f-b5eb-c7b8958f009e.png" /></a></p>
 <p><strong><font style="color:rgb(33, 37, 41);">在条件分支之前，您经常会看到 </font></strong><strong><font style="color:rgb(232, 62, 140);">test</font></strong><strong><font style="color:rgb(33, 37, 41);"> 和 </font></strong><strong><font style="color:rgb(232, 62, 140);">cmp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 指令。如上所述，这些操作执行算术运算，但丢弃结果（而不是将其存储在目标寄存器中），而是设置标志位。 </font></strong><strong><font style="color:rgb(232, 62, 140);">test</font></strong><strong><font style="color:rgb(33, 37, 41);"> 执行二进制 AND 运算，而 </font></strong><strong><font style="color:rgb(232, 62, 140);">cmp</font></strong><strong><font style="color:rgb(33, 37, 41);"> 执行减法，并根据结果设置标志位。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);"></font></strong></p>
-<details class="lake-collapse"><summary id="u75b6ae1e"><strong><span class="ne-text" style="color: rgb(33, 37, 41); font-size: 16px"> x86-64 架构上所有分支指令，及它们的标志位</span></strong></summary><p id="u865aa108" class="ne-p"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712207868905-bba72d87-c964-461b-976d-af3e2ff00609.png" width="801.5" id="u9b0c7fe0" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712207879990-27bbf320-a268-4ef3-a83a-310c804f5014.png" width="835.5" id="u2fd56ca7" class="ne-image"></p></details>
+<details class="lake-collapse"><summary id="u75b6ae1e"><strong><span class="ne-text" style="color: rgb(33, 37, 41); font-size: 16px"> x86-64 架构上所有分支指令，及它们的标志位</span></strong></summary><p id="u865aa108" class="ne-p"><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712207868905-bba72d87-c964-461b-976d-af3e2ff00609.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712207868905-bba72d87-c964-461b-976d-af3e2ff00609.png" width="801.5" id="u9b0c7fe0" class="ne-image"></a><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712207879990-27bbf320-a268-4ef3-a83a-310c804f5014.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712207879990-27bbf320-a268-4ef3-a83a-310c804f5014.png" width="835.5" id="u2fd56ca7" class="ne-image"></a></p></details>
 <p>:::warning
 + <em><strong>条件语句实现循环</strong></em></p>
 <p>:::</p>
@@ -2268,13 +2444,13 @@
 <p>:::</p>
 <p><strong><font style="color:rgb(33, 37, 41);">汇编指令的操作数可以以几种方式编写。特别是，循环示例包含 </font></strong><strong><font style="color:rgb(232, 62, 140);">(%rdx)</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，它对寄存器 </font></strong><strong><font style="color:rgb(232, 62, 140);">%rdx</font></strong><strong><font style="color:rgb(33, 37, 41);"> 中存储的地址进行解引用。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">内存操作数的完整、通用形式是 </font></strong><strong><font style="color:rgb(232, 62, 140);">offset(base, index, scale)</font></strong><strong><font style="color:rgb(33, 37, 41);"> ，它指的是地址偏移量 + 基址 + 索引<em>比例。在 </font></em></strong><em><font style="color:rgb(232, 62, 140);">0x18(%rax, %rbx, 4)</font></em><strong><em><font style="color:rgb(33, 37, 41);"> 中， </font></em></strong><em><font style="color:rgb(232, 62, 140);">%rax</font></em><strong><em><font style="color:rgb(33, 37, 41);"> 是基址， </font></em></strong><em><font style="color:rgb(232, 62, 140);">0x18</font></em><strong><em><font style="color:rgb(33, 37, 41);"> 是偏移量， </font></em></strong><em><font style="color:rgb(232, 62, 140);">%rbx</font></em><strong><em><font style="color:rgb(33, 37, 41);"> 是索引， </font></em></strong><em><font style="color:rgb(232, 62, 140);">4</font></em><strong><em><font style="color:rgb(33, 37, 41);"> 是比例。偏移量（如果使用）必须是常数，基址和索引（如果使用）必须是寄存器；比例必须是 1、2、4 或 8。换句话说，如果我们将其写为 </font></em></strong><em><font style="color:rgb(232, 62, 140);">N(%reg1, %reg2, M)</font></em><strong><em><font style="color:rgb(33, 37, 41);"> ，计算得到的地址是 </font></em></strong><em><font style="color:rgb(232, 62, 140);">%reg1 + N + %reg2 * M</font></em><strong>*<font style="color:rgb(33, 37, 41);"> 。</font></strong></p>
-<details class="lake-collapse"><summary id="u342e6fc7"><strong><span class="ne-text">以下是一个方便的概览表，列出了所有可能的汇编指令操作数写法。</span></strong></summary><p id="uecd4bee2" class="ne-p"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712208855476-5d35f109-fc11-4151-9108-4b22971829e5.png" width="999" id="u2e557d89" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712208867962-5225c77c-771d-454d-9316-37da7d2ab5d0.png" width="1000" id="uec771903" class="ne-image"></p></details>
+<details class="lake-collapse"><summary id="u342e6fc7"><strong><span class="ne-text">以下是一个方便的概览表，列出了所有可能的汇编指令操作数写法。</span></strong></summary><p id="uecd4bee2" class="ne-p"><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712208855476-5d35f109-fc11-4151-9108-4b22971829e5.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712208855476-5d35f109-fc11-4151-9108-4b22971829e5.png" width="999" id="u2e557d89" class="ne-image"></a><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712208867962-5225c77c-771d-454d-9316-37da7d2ab5d0.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712208867962-5225c77c-771d-454d-9316-37da7d2ab5d0.png" width="1000" id="uec771903" class="ne-image"></a></p></details>
 <p><strong>还有一种全局变量的相对寻址 %rip —— 之前计组中学的相对地址寻址</strong></p>
 <hr />
 <p>:::warning
 + <strong>Calling Convention 调用约定</strong></p>
 <p>:::</p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712209516165-f0031a59-5f68-4d6e-9c19-43468e8e59c1.png" /><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712209525338-c1b15735-6ef7-4691-88a1-30545badf999.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712209516165-f0031a59-5f68-4d6e-9c19-43468e8e59c1.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712209516165-f0031a59-5f68-4d6e-9c19-43468e8e59c1.png" /></a><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712209525338-c1b15735-6ef7-4691-88a1-30545badf999.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712209525338-c1b15735-6ef7-4691-88a1-30545badf999.png" /></a></p>
 
 
 
@@ -2294,6 +2470,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2321,11 +2503,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

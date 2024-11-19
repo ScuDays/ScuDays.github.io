@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -202,6 +229,8 @@
         <a href="../../Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
   
+    
+  
   CSCI0300
 
         </a>
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../6S081/Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,50 +434,37 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
   
   
   
-  
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
     
     
       
@@ -480,6 +506,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -675,6 +717,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1243,6 +1335,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1281,6 +1381,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1318,11 +1436,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1339,11 +1457,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1360,11 +1478,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1381,11 +1499,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1402,11 +1520,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1423,11 +1541,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1444,11 +1562,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1465,11 +1583,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6S081/Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../../6S081/Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1494,6 +1612,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1536,7 +1680,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1557,7 +1701,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1578,7 +1722,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1599,7 +1743,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1620,7 +1764,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1641,7 +1785,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1662,7 +1806,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1683,7 +1827,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1704,7 +1848,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1725,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1746,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1767,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1792,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1866,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2235,7 +2411,7 @@
 <span class="w">    </span><span class="n">hexdump</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_ch</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711095969278-cc440e27-1f39-424a-9c1a-1376f573f193.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711095969278-cc440e27-1f39-424a-9c1a-1376f573f193.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711095969278-cc440e27-1f39-424a-9c1a-1376f573f193.png" /></a></p>
 <p><em><font style="color:#E746A4;"> </font></em><strong><font style="color:#E746A4;">hexdump()</font></strong><strong>打印出地址，及地址的内容 。</strong></p>
 <p><strong>这里存在两种变量生命周期：</strong></p>
 <ol>
@@ -2291,14 +2467,14 @@
 <li><strong><font style="color:rgb(33, 37, 41);">只读全局变量的部分 read-only globals (&ldquo;rodata&rdquo;) 例如：</font></strong><strong><font style="color:rgb(46, 50, 56);">常量字符串</font></strong></li>
 <li><strong><font style="color:rgb(33, 37, 41);">可修改全局变量的部分（modifyable globals (&ldquo;data&rdquo; and &ldquo;bss&rdquo;)。</font></strong></li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712211207502-4b581f6d-a285-4094-a918-987207773d4e.png" /><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712577783439-04b19bb2-cbe0-4017-ae31-b4ecd51f46d1.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712211207502-4b581f6d-a285-4094-a918-987207773d4e.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712211207502-4b581f6d-a285-4094-a918-987207773d4e.png" /></a><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712577783439-04b19bb2-cbe0-4017-ae31-b4ecd51f46d1.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1712577783439-04b19bb2-cbe0-4017-ae31-b4ecd51f46d1.png" /></a></p>
 <blockquote>
 <p><strong><font style="color:rgb(33, 37, 41);">Java Similarities Note Java相似性注释</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">在Java中，使用 new 关键字创建的任何对象都具有动态生命周期，并存储在堆上。（Java只将“原始”类型（ int ， double 等）存储在栈上。）实际上，Java在底层使用 malloc() ！然而，似乎Java对所有对象都具有自动生命周期，因为您从不需要显式地销毁它们！这是因为您的程序在Java虚拟机（JVM）内运行，JVM会“神奇地”注入代码来跟踪每个对象是否仍然可以通过作用域内的变量访问；如果引用计数变为零，JVM会自动调用 free() 来删除对象。但是，所有这些魔法在性能方面并非免费，因为需要运行代码来跟踪对象的引用计数。相比之下，C和C++选择什么都不做，并为程序员提供最大的控制权，无论是好是坏。</font></strong>
 </p>
 </blockquote>
 <p><strong><font style="color:rgb(33, 37, 41);">下表列出了我们学到的内存段，它们包含的数据以及大致的内存地址位置。</font></strong><em><strong><font style="color:rgb(33, 37, 41);">（在课程的操作系统部分，我们会发现这些内存地址实际上是一个谎言，操作系统在我们身上玩弄聪明的把戏，但现在让我们假设它们是实际的内存地址。）</font></strong></em></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098132188-2fc50690-83f2-4d92-897a-1181f8495558.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098132188-2fc50690-83f2-4d92-897a-1181f8495558.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098132188-2fc50690-83f2-4d92-897a-1181f8495558.png" /></a></p>
 <ul>
 <li><em><strong>Example: Strings of dynamic length 动态长度的字符串</strong></em></li>
 <li><strong><font style="color:rgb(33, 37, 41);">如何为一个动态字符串分配内存？</font></strong></li>
@@ -2307,7 +2483,7 @@
 <ol>
 <li><strong><font style="color:rgb(33, 37, 41);">我们能否将一个字符串直接赋值给它？不行，因为 </font></strong><strong><font style="color:rgb(232, 62, 140);">allocated_st</font></strong><strong><font style="color:rgb(33, 37, 41);"> 的类型是 </font></strong><strong><font style="color:rgb(232, 62, 140);">char<em></font></em></strong><em><font style="color:rgb(33, 37, 41);"> ，一个指向 </font></em><strong><em><font style="color:rgb(232, 62, 140);">char</font></em></strong><em><font style="color:rgb(33, 37, 41);"> （具体来说是字符串中的第一个字符）的指针。</font></em>*</li>
 </ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098290851-77c58c5c-661e-4aa7-90ce-e8ecd2ed1d7e.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098290851-77c58c5c-661e-4aa7-90ce-e8ecd2ed1d7e.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098290851-77c58c5c-661e-4aa7-90ce-e8ecd2ed1d7e.png" /></a></p>
 <ul>
 <li><em><strong>Uninitialized Memory 未初始化的内存</strong></em></li>
 </ul>
@@ -2336,7 +2512,7 @@
 <li><font style="color:rgb(33, 37, 41);">最后，程序再次请求100个字节，可能是为了另一个字符串，并打印出该内存的内容。</font></li>
 </ol>
 <p><strong>结果：发现最后一次中内存中存在有前面两次分配中残留的信息。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098449564-f8555afe-4e6e-4917-95fa-ace919aad31c.png" /></p>
+<p><a class="glightbox" href="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098449564-f8555afe-4e6e-4917-95fa-ace919aad31c.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1711098449564-f8555afe-4e6e-4917-95fa-ace919aad31c.png" /></a></p>
 <p><strong><font style="color:rgb(33, 37, 41);">我们的程序非常快速：计算机不需要对释放后得到的新内存做任何工作，只需直接使用它。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">但这非常危险，因为很容易通过未初始化的内存泄露秘密信息。</font></strong></p>
 <p><strong><font style="color:rgb(33, 37, 41);">想象一下，你将社会安全号码和信用卡详细信息存储在第一个字符串中，然后使用 </font></strong><strong><font style="color:rgb(232, 62, 140);">free()</font></strong><strong><font style="color:rgb(33, 37, 41);"> 释放它，然后程序的其他部分（可能由邪恶的人控制）请求内存并获取这些字节。这种情况在现实世界中经常发生，是计算机安全问题的重要来源。</font></strong></p>
@@ -2366,6 +2542,12 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -2392,11 +2574,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

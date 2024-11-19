@@ -20,7 +20,7 @@
     
     
       
-        <title>5.1 C程序到汇编程序的转换 - days'blog</title>
+        <title>Lec05：Calling conventions and stack frames RISC-V (TA) - days'blog</title>
       
     
     
@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -70,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#51-c程序到汇编程序的转换" class="md-skip">
+        <a href="#lec05calling-conventions-and-stack-frames-risc-v-ta" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              5.1 C程序到汇编程序的转换
+              Lec05：Calling conventions and stack frames RISC-V (TA)
             
           </span>
         </div>
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -197,6 +224,8 @@
       <li class="md-tabs__item">
         <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
+  
+    
   
   CSCI0300
 
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,48 +434,35 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
     
     
       
@@ -475,6 +501,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -668,6 +710,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1228,6 +1320,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
         
@@ -1269,6 +1369,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1306,11 +1424,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1327,11 +1445,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../../Lab/Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1348,11 +1466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
+    Lab 03：page tables
   </span>
   
 
@@ -1369,11 +1487,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+      <a href="../../Lab/Lab%2004%EF%BC%9Atraps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
+    Lab 04：traps
   </span>
   
 
@@ -1390,11 +1508,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+      <a href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! Multithreading
+    Lab 05：lazy page allocation
   </span>
   
 
@@ -1411,11 +1529,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+      <a href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 06：Copy-on-Write Fork for xv6
   </span>
   
 
@@ -1432,11 +1550,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+      <a href="../../Lab/Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 07：Multithreading
   </span>
   
 
@@ -1453,11 +1571,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+      <a href="../../Lab/Lab%2008%EF%BC%9Alock/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 08：lock
   </span>
   
 
@@ -1484,6 +1602,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1526,7 +1670,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1547,7 +1691,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1568,7 +1712,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1598,7 +1742,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1620,7 +1764,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1641,7 +1785,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1662,7 +1806,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1683,7 +1827,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1704,7 +1848,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1725,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1746,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1767,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1792,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1866,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2210,6 +2386,7 @@
                   
 
 
+<h1 id="lec05calling-conventions-and-stack-frames-risc-v-ta">Lec05：Calling conventions and stack frames RISC-V (TA)<a class="headerlink" href="#lec05calling-conventions-and-stack-frames-risc-v-ta" title="Permanent link">&para;</a></h1>
 <h1 id="51-c程序到汇编程序的转换">5.1 C程序到汇编程序的转换<a class="headerlink" href="#51-c程序到汇编程序的转换" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>没什么太多需要记笔记的
@@ -2244,12 +2421,12 @@
 <blockquote>
 <p><strong>提问：这里面.secion，.global，.text分别是什么意思？</strong></p>
 <p><strong>TA：global表示你可以在其他文件中调用这个函数。text表明这里的是代码，如果你还记得XV6中的图3.4，每个进程的page table中有一个区域是text，汇编代码中的text表明这部分是代码，并且位于page table的text区域中。text中保存的就是代码。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726984195337-ca1a7abe-19ea-441a-8b17-d51c6f4d08fe.jpeg" />
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/8b82119f429df174871e208b46e393b8.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/8b82119f429df174871e208b46e393b8.jpeg" /></a>
 </p>
 </blockquote>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726984159826-b980f61d-971c-4ebb-9ec5-6d1f43e77eb8.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/51a51c08c5fd7a1906160766544943b2.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/51a51c08c5fd7a1906160766544943b2.jpeg" /></a></p>
 <h1 id="54-risc-v寄存器">5.4 RISC-V寄存器<a class="headerlink" href="#54-risc-v寄存器" title="Permanent link">&para;</a></h1>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1722952100216-1241a293-ca5a-4b13-97bb-58b4460ec125.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/6191616ebd37535e26016bcba4d1e7ea.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/6191616ebd37535e26016bcba4d1e7ea.jpeg" /></a></p>
 <ul>
 <li><strong>寄存器的作用和重要性</strong>：寄存器是CPU上用于存储数据的预定义位置，对于执行汇编代码尤为重要。寄存器比内存有更快的数据访问速度，因此在进行算术运算（如加减法）时，优先在寄存器上操作。数据首先从内存加载到寄存器，操作完成后，结果可以存储回内存或传递给其他寄存器。</li>
 <li><strong>函数调用与寄存器</strong>：特别指出a0到a7这些寄存器在函数调用中的作用，主要用于传递函数参数和返回值。如果一个函数的参数超过8个，则需要使用内存来传递额外的参数。</li>
@@ -2267,7 +2444,7 @@
 </ul>
 <h1 id="55-stack-栈帧">5.5 Stack 栈帧<a class="headerlink" href="#55-stack-栈帧" title="Permanent link">&para;</a></h1>
 <p>下面是一个非常简单的栈的结构图，其中每一个区域都是一个Stack Frame，每执行一次函数调用就会产生一个Stack Frame。</p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1722952505554-9893d3a8-6887-45b7-a6fe-3143c99dca2b.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/49d659f4b057ab03e41519208241acb9.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/49d659f4b057ab03e41519208241acb9.jpeg" /></a></p>
 <p>**在一个进程中，进程有一个栈,进程中的每个函数调用都会创建一个栈帧，栈帧存储在进程的栈中，这些栈帧共同构成了进程的调用栈  **</p>
 <p><strong>函数通过移动 Stack Pointer (函数的 stack)来完成Stack Frame的空间分配。</strong></p>
 <p>因为栈总是向下增长，所以Stack是从高地址开始向低地址。</p>
@@ -2288,18 +2465,18 @@
 <p>:::</p>
 <p><strong>Stack Frame必须要被汇编代码创建，所以是编译器生成了汇编代码，进而创建了Stack Frame。</strong></p>
 <p><strong>所以，在汇编代码中，函数的最开始你们通常可以看到Function prologue，之后是函数的本体，最后是Epilogue。这就是一个汇编函数通常的样子。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1722952943372-878c1100-f607-4453-a340-c112a6448af4.png" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/4afcc4ced6e7f617c0bbfb8b5e7fa46f.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/4afcc4ced6e7f617c0bbfb8b5e7fa46f.png" /></a></p>
 <p>:::info</p>
 <h1 id="举例">举例<a class="headerlink" href="#举例" title="Permanent link">&para;</a></h1>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1722953001499-92085dfb-364a-4356-b633-4e6fc565c0fc.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/08f66a6cc8af1689d17524887e42da69.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/08f66a6cc8af1689d17524887e42da69.jpeg" /></a></p>
 <p><strong>之前的 sum_to函数中，只有函数主体，并没有Stack Frame的内容。它这里能正常工作的原因是它足够简单，并且它是一个leaf函数。leaf函数是指不调用别的函数的函数，它的特别之处在于它不用担心保存自己的Return address或者任何其他的Caller Saved寄存器，因为它不会调用别的函数。</strong></p>
 <p><strong>而另一个函数sum_then_double就不是一个leaf函数了，这里你可以看到它调用了sum_to。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723027593392-74eee5e5-6d0a-421c-8985-a74965e71725.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/771a9c043af82b2d6fc5e1d6157a1703.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/771a9c043af82b2d6fc5e1d6157a1703.jpeg" /></a></p>
 <p><strong>所以在这个函数中，需要包含prologue。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723027624373-ed8e6471-bdc0-4866-9257-547e3a97df01.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/abce147d0f24159da3588d94553e36bf.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/abce147d0f24159da3588d94553e36bf.jpeg" /></a></p>
 <p><strong>这里我们对Stack Pointer减16，这样我们为新的Stack Frame创建了16字节的空间。之后我们将Return address保存在Stack Pointer位置。</strong></p>
 <p><strong>之后就是调用sum_to并对结果乘以2。最后是Epilogue，</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723027645529-e640b262-282f-4fc9-9299-52e20ca724ba.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/2834cf40f21041bab1b3962af1dc71ec.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/2834cf40f21041bab1b3962af1dc71ec.jpeg" /></a></p>
 <p><strong>这里首先将Return address加载回ra寄存器，通过对Stack Pointer加16来删除刚刚创建的Stack Frame，最后ret从函数中退出。</strong></p>
 <p>:::</p>
 <blockquote>
@@ -2309,9 +2486,9 @@
 </blockquote>
 <p>:::info
 是的，完全正确，我们可以看一下具体会发生什么。先在修改过的sum_then_double设置断点，然后执行sum_then_double。</p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723027983113-316d5e99-c0f0-4e96-ab55-d3029a228985.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/7c47a646932a065b9bd9ed70a26c6ea3.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/7c47a646932a065b9bd9ed70a26c6ea3.jpeg" /></a></p>
 <p><strong>我们可以看到现在的ra寄存器是0x80006392，它指向demo2函数，也就是sum_then_double的调用函数。之后我们执行代码，调用了sum_to。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723028016089-6d5cb250-9acd-44f5-962d-c270f118c3cc.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/776574b1628a33128389b46d39e4b329.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/776574b1628a33128389b46d39e4b329.jpeg" /></a></p>
 <p><strong>我们可以看到ra寄存器的值被sum_to重写成了0x800065f4，指向sum_then_double，这也合理，符合我们的预期。我们在函数sum_then_double中调用了sum_to，那么sum_to就应该要返回到sum_then_double。</strong></p>
 <p><strong>之后执行代码直到sum_then_double返回。如前面那位同学说的，因为没有恢复sum_then_double自己的Return address，现在的Return address仍然是sum_to对应的值，现在我们就会进入到一个无限循环中。</strong></p>
 <p><strong>我认为这是一个很好的例子用来展示为什么跟踪Caller和Callee寄存器是重要的。</strong></p>
@@ -2325,11 +2502,11 @@
 </blockquote>
 <p>:::info
 接下来我们来看一些C代码。</p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723028409067-764c8200-ff97-4a10-a778-d03c18b5f31f.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/885e56061b0048ffaa3dfcd9d718770f.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/885e56061b0048ffaa3dfcd9d718770f.jpeg" /></a></p>
 <p><strong>demo4函数里面调用了dummymain函数。我们在dummymain函数中设置一个断点，</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723028422956-b665ac16-dcf5-4c69-b2f9-b308e8276547.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/c58444c3d7d0db25c7a01a42d0d7906c.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/c58444c3d7d0db25c7a01a42d0d7906c.jpeg" /></a></p>
 <p><strong>现在我们在dummymain函数中。如果我们在gdb中输入info frame，可以看到有关当前Stack Frame许多有用的信息。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723028512202-d15b91d6-5819-4d4e-a7bc-d18759e34385.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/6e3232435713e25fed5f7ba5e8aa82bf.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/6e3232435713e25fed5f7ba5e8aa82bf.jpeg" /></a></p>
 <ul>
 <li><strong>Stack level 0，表明这是调用栈的最底层</strong></li>
 <li><strong>pc，当前的程序计数器</strong></li>
@@ -2338,9 +2515,9 @@
 <li><strong>Arglist at，表明参数的起始地址。当前的参数都在寄存器中，可以看到argc=3，argv是一个地址</strong></li>
 </ul>
 <p><strong>如果输入backtrace（简写bt）可以看到从当前调用栈开始的所有Stack Frame。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723028551295-eee38fb5-18c8-4302-aa24-e92e865938c2.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/606c4cc5d04779e2767e87bc4e3616ae.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/606c4cc5d04779e2767e87bc4e3616ae.jpeg" /></a></p>
 <p><strong>如果对某一个Stack Frame感兴趣，可以先定位到那个frame再输入info frame，假设对syscall的Stack Frame感兴趣。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1723028618599-c386e913-8246-4e0b-9368-07efc261c1b6.jpeg" /></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/49d47e50905a44d287725cade4b4d3da.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/49d47e50905a44d287725cade4b4d3da.jpeg" /></a></p>
 <p><strong>在这个Stack Frame中有更多的信息，有一堆的Saved Registers，有一些本地变量等等。这些信息对于调试代码来说超级重要。</strong></p>
 <p>:::</p>
 
@@ -2362,6 +2539,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2389,11 +2572,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>

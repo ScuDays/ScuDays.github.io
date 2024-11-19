@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../Lab%21%20lazy%20page%20allocation/">
+        <link rel="prev" href="../Lab%2003%EF%BC%9Apage%20tables/">
       
       
-        <link rel="next" href="../Lab%21%20traps/">
+        <link rel="next" href="../Lab%2005%EF%BC%9Alazy%20page%20allocation/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Print a page table (easy) - days'blog</title>
+        <title>Lab 04：traps - days'blog</title>
       
     
     
@@ -46,6 +46,22 @@
       
     
     
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/utils/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css">
+    
+      <link rel="stylesheet" href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css">
+    
+      <link rel="stylesheet" href="../../../css/tasklist.css">
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+      <link rel="stylesheet" href="../../../css/card.css">
+    
+      <link rel="stylesheet" href="../../../css/flink.css">
+    
+      <link rel="stylesheet" href="../../../css/changelog_extra.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -53,7 +69,16 @@
     
     
     
-  </head>
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -70,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#print-a-page-table-easy" class="md-skip">
+        <a href="#lab-04traps" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Print a page table (easy)
+              Lab 04：traps
             
           </span>
         </div>
@@ -174,6 +199,8 @@
         <a href="../../../home/" class="md-tabs__link">
           
   
+    
+  
   Home
 
         </a>
@@ -197,6 +224,8 @@
       <li class="md-tabs__item">
         <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
           
+  
+    
   
   CSCI0300
 
@@ -226,8 +255,10 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+        <a href="../Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-tabs__link">
           
+  
+    
   
   6S081
 
@@ -249,6 +280,8 @@
       <li class="md-tabs__item">
         <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
           
+  
+    
   
   Rubbish
 
@@ -305,6 +338,14 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+    
     
       
       
@@ -317,16 +358,24 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
@@ -336,25 +385,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../home/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -363,6 +393,12 @@
   
   
     
+    
+      
+        
+          
+        
+      
     
     
       
@@ -376,16 +412,19 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../home/test/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Test
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_2">
@@ -395,48 +434,35 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../home/test/" class="md-nav__link">
+    
+    
+      
         
-  
-  <span class="md-ellipsis">
-    Welcome to MkDocs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+        
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
     
     
       
@@ -475,6 +501,22 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -668,6 +710,56 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1228,6 +1320,14 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+    
     
       
         
@@ -1271,6 +1371,24 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
       
@@ -1308,11 +1426,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+      <a href="../Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Memory allocator(moderate)
+    Lab 01：Xv6 and Unix utilities
   </span>
   
 
@@ -1329,11 +1447,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+      <a href="../Lab%2002%EF%BC%9ASyscall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab syscall! System calls
+    Lab 02：Syscall
   </span>
   
 
@@ -1350,74 +1468,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+      <a href="../Lab%2003%EF%BC%9Apage%20tables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab util! Unix utilities
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Lab! Copy on Write Fork for xv6
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab%21%20Multithreading/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Lab! Multithreading
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Lab! lazy page allocation
+    Lab 03：page tables
   </span>
   
 
@@ -1447,7 +1502,7 @@
         
   
   <span class="md-ellipsis">
-    Print a page table (easy)
+    Lab 04：traps
   </span>
   
 
@@ -1465,11 +1520,74 @@
   
   
     <li class="md-nav__item">
-      <a href="../Lab%21%20traps/" class="md-nav__link">
+      <a href="../Lab%2005%EF%BC%9Alazy%20page%20allocation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Lab! traps
+    Lab 05：lazy page allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 06：Copy-on-Write Fork for xv6
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab%2007%EF%BC%9AMultithreading/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 07：Multithreading
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab%2008%EF%BC%9Alock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 08：lock
   </span>
   
 
@@ -1494,6 +1612,32 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1536,7 +1680,7 @@
         
   
   <span class="md-ellipsis">
-    操作系统的目标
+    Lec01：Introduction and Examples (Robert)
   </span>
   
 
@@ -1557,7 +1701,7 @@
         
   
   <span class="md-ellipsis">
-    Lec03 OS Organization and System Calls (Frans)
+    Lec03：OS Organization and System Calls (Frans)
   </span>
   
 
@@ -1578,7 +1722,7 @@
         
   
   <span class="md-ellipsis">
-    Lec04 Page tables (Frans)
+    Lec04：Page tables (Frans)
   </span>
   
 
@@ -1599,7 +1743,7 @@
         
   
   <span class="md-ellipsis">
-    5.1 C程序到汇编程序的转换
+    Lec05：Calling conventions and stack frames RISC-V (TA)
   </span>
   
 
@@ -1620,7 +1764,7 @@
         
   
   <span class="md-ellipsis">
-    6.1 Trap机制
+    Lec06：Isolation &amp; system call entry!exit (Robert)
   </span>
   
 
@@ -1641,7 +1785,7 @@
         
   
   <span class="md-ellipsis">
-    8.1 Page Fault Basics
+    Lec08：Page faults (Frans)
   </span>
   
 
@@ -1662,7 +1806,7 @@
         
   
   <span class="md-ellipsis">
-    9.1 真实操作系统内存使用情况
+    Lec09：Interrupts (Frans)(外部中断)
   </span>
   
 
@@ -1683,7 +1827,7 @@
         
   
   <span class="md-ellipsis">
-    Lec10 Multiprocessors and locking (Frans)
+    Lec10：Multiprocessors and locking (Frans)
   </span>
   
 
@@ -1704,7 +1848,7 @@
         
   
   <span class="md-ellipsis">
-    总结：
+    Lec11：Thread switching (Robert)
   </span>
   
 
@@ -1725,7 +1869,7 @@
         
   
   <span class="md-ellipsis">
-    Lec13 Sleep & Wake up (Robert)
+    Lec13：Sleep &amp; Wake up (Robert)
   </span>
   
 
@@ -1746,7 +1890,7 @@
         
   
   <span class="md-ellipsis">
-    14.1 Why Interesting
+    Lec14：File systems (Frans)
   </span>
   
 
@@ -1767,7 +1911,7 @@
         
   
   <span class="md-ellipsis">
-    15.1 File system crash 概述
+    Lec15：Crash recovery (Frans)
   </span>
   
 
@@ -1792,6 +1936,10 @@
   
   
     
+    
+      
+        
+      
     
     
       
@@ -1866,6 +2014,34 @@
   
   
     
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -2210,164 +2386,210 @@
                   
 
 
-<h1 id="print-a-page-table-easy"><font style="color:rgb(51, 51, 51);">Print a page table (easy)</font><a class="headerlink" href="#print-a-page-table-easy" title="Permanent link">&para;</a></h1>
+<h1 id="lab-04traps">Lab 04：traps<a class="headerlink" href="#lab-04traps" title="Permanent link">&para;</a></h1>
+<ol>
+<li>定义系统调用</li>
+<li>定义并初始化 alarm 系统调用的参数 </li>
+<li>在alarm 系统调用后，改变一开始初始化的参数</li>
+</ol>
+<h1 id="risc-v-assembly-easy"><font style="color:rgb(51, 51, 51);">RISC-V assembly (easy)</font><a class="headerlink" href="#risc-v-assembly-easy" title="Permanent link">&para;</a></h1>
 <p>:::success
-<strong>目标：</strong></p>
-<p><strong>实现打印页表的功能</strong></p>
-<p><strong>目的：</strong></p>
+1. <strong>理解 RISC-V 汇编</strong>
+2. <strong>函数内联</strong>
+3. <strong>大端小端存储</strong></p>
+<p>:::</p>
+<h1 id="backtracemoderate"><font style="color:rgb(51, 51, 51);">Backtrace(moderate)</font><a class="headerlink" href="#backtracemoderate" title="Permanent link">&para;</a></h1>
+<p>:::warning
+<strong>题目：</strong></p>
+<p><strong>backtrace 是一个</strong><strong><font style="color:rgb(51, 51, 51);">存放于栈上用于指示错误发生位置的函数调用列表。</font></strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">在</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/printf.c</font></strong></em><strong><font style="color:rgb(51, 51, 51);">中实现名为</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;backtrace()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">的函数。在</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sys_sleep&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中插入一个对此函数的调用，然后运行</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;bttest&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">，它将会调用</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sys_sleep&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">。你的输出应该如下所示：</font></strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">backtrace:</font></strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">0x0000000080002cda</font></strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">0x0000000080002bb6</font></strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">0x0000000080002898</font></strong></p>
+<p>:::</p>
+<p>:::success
+<strong>解决方案：</strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">编译器在每一个栈帧中放置一个帧指针（frame pointer）保存调用者帧指针的地址。通过使用这些帧指针我们可以遍历栈，并在每个栈帧中打印保存的返回地址。</font></strong></p>
+<p><strong><font style="color:rgb(51, 51, 51);">tips:</font></strong></p>
 <ul>
-<li><strong>方便之后的调试</strong></li>
-<li><strong>加深对页表的理解</strong></li>
+<li><strong><font style="color:rgb(51, 51, 51);">在 </font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/defs.h </font></strong></em><strong><font style="color:rgb(51, 51, 51);">中添加</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;backtrace&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">的原型，那样你就能在</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sys_sleep&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中引用</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;backtrace&lt;/font&gt;**</code></li>
+<li><strong><font style="color:rgb(51, 51, 51);">GCC编译器将当前正在执行的函数的帧指针保存在</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;s0&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">寄存器，将下面的函数添加到</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/riscv.h（</font></strong></em><strong><font style="color:rgb(51, 51, 51);">并在</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;backtrace&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中调用此函数来读取当前的帧指针。这个函数使用</font></strong><a href="https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html"><em><strong>内联汇编</strong></em></a><strong><font style="color:rgb(51, 51, 51);">来读取</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;s0&lt;/font&gt;**</code><em><strong><font style="color:rgb(51, 51, 51);">）</font></strong></em></li>
+<li><strong><font style="color:rgb(51, 51, 51);background-color:#FBDE28;">XV6在内核中以页面对齐的地址为每个进程的栈分配一个页面</font></strong><strong><font style="color:rgb(51, 51, 51);">。你可以通过</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;PGROUNDDOWN(fp)&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">和</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;PGROUNDUP(fp)&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">（参见</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/riscv.h</font></strong></em><strong><font style="color:rgb(51, 51, 51);">）来计算栈页面的顶部和底部地址。这些数字对于</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;backtrace&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">终止循环是有帮助的。</font></strong></li>
 </ul>
 <p>:::</p>
-<p>:::info
-<strong>解决方式：</strong></p>
-<p><strong>由于 RISC-V 中页表的设计是多级，我们只需要对每个 level 的页表进行递归即可。</strong></p>
+<div class="highlight"><pre><span></span><code>static<span class="w"> </span>inline<span class="w"> </span>uint64
+r_fp<span class="o">()</span>
+<span class="o">{</span>
+<span class="w">  </span>uint64<span class="w"> </span>x<span class="p">;</span>
+<span class="w">  </span>asm<span class="w"> </span>volatile<span class="o">(</span><span class="s2">&quot;mv %0, s0&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;=r&quot;</span><span class="w"> </span><span class="o">(</span>x<span class="o">)</span><span class="w"> </span><span class="o">)</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span>x<span class="p">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>:::success
+<a class="glightbox" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/84129531170053244ecfc3c922278ae0.jpeg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/84129531170053244ecfc3c922278ae0.jpeg" /></a></p>
+<p>:::</p>
+<div class="highlight"><pre><span></span><code>void<span class="w"> </span>backtrace<span class="o">()</span>
+<span class="o">{</span>
+<span class="w">  </span>printf<span class="o">(</span><span class="s2">&quot;backtrace:\n&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="w">  </span>uint64<span class="w"> </span><span class="nv">this_fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>r_fp<span class="o">()</span><span class="p">;</span>
+<span class="w">  </span>backtrace_help<span class="o">(</span><span class="p">&amp;</span>this_fp<span class="o">)</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+<span class="o">}</span>
+void<span class="w"> </span>backtrace_help<span class="o">(</span>uint64<span class="w"> </span>*this_fp<span class="o">)</span>
+<span class="o">{</span>
+<span class="w">  </span>//<span class="w"> </span>判断是否超出栈，若超出栈，停止
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">((</span>PGROUNDUP<span class="o">(</span>*this_fp<span class="o">)</span><span class="w"> </span>-<span class="w"> </span>PGROUNDDOWN<span class="o">(</span>*this_fp<span class="o">))</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span>PGSIZE<span class="o">)</span>
+<span class="w">  </span><span class="o">{</span><span class="k">return</span><span class="p">;</span><span class="o">}</span>
+<span class="w">  </span>//<span class="w"> </span>返回地址保存在<span class="w"> </span>-8<span class="w"> </span>偏移的位置
+<span class="w">  </span>printf<span class="o">(</span><span class="s2">&quot;%p\n&quot;</span>,<span class="w"> </span>*<span class="o">(</span>uint64<span class="w"> </span>*<span class="o">)(</span>*this_fp<span class="w"> </span>-<span class="w"> </span><span class="m">8</span><span class="o">))</span><span class="p">;</span>
+<span class="w">  </span>//<span class="w"> </span>前一个帧指针保存在-16偏移的位置
+<span class="w">  </span>uint64<span class="w"> </span><span class="nv">last_fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>*this_fp<span class="w"> </span>-<span class="w"> </span><span class="m">16</span><span class="p">;</span>
+<span class="w">  </span>backtrace_help<span class="o">(</span><span class="p">&amp;</span><span class="o">(</span>*<span class="o">(</span>uint64<span class="w"> </span>*<span class="o">)</span>last_fp<span class="o">))</span><span class="p">;</span><span class="w"> </span>//<span class="w"> </span>注意这里的指针的转换为什么是必要的
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<h1 id="alarmhard"><font style="color:rgb(51, 51, 51);">Alarm(Hard)</font><a class="headerlink" href="#alarmhard" title="Permanent link">&para;</a></h1>
+<p>:::warning
+<strong>题目：</strong></p>
+<p><strong>你将向XV6添加一个特性，在进程使用CPU的时间内，XV6定期向进程发出警报。这对于那些希望限制CPU 占用时间的的进程，或者计算的同时执行某些周期性操作的进程很有用。</strong></p>
+<p><strong>更普遍的来说，你将实现用户级中断/故障处理程序的一种初级形式。</strong></p>
+<p><strong>例如，你可以在应用程序中使用类似的一些东西处理页面故障。</strong></p>
+<p>:::</p>
+<p>:::warning
+1. <strong><font style="color:rgb(51, 51, 51);">应当添加一个新的</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;sigalarm(interval, handler)&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">系统调用</font></strong>
+2. <strong><font style="color:rgb(51, 51, 51);">如果一个程序调用了</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;sigalarm(n, fn)&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">，那么程序每消耗了CPU时间达到 n 个“滴答”，内核应当使应用程序函数</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;fn&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">被调用。</font></strong>
+3. <strong><font style="color:rgb(51, 51, 51);">当</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;fn&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">返回时，应用应从它离开的地方恢复执行。在XV6中，一个滴答是一段相当任意的时间单元，取决于硬件计时器生成中断的频率。</font></strong>
+4. <strong><font style="color:rgb(51, 51, 51);">如果一个程序调用了</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;sigalarm(0, 0)&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">，系统应当停止生成周期性的报警调用。</font></strong></p>
+<p>:::</p>
+<p>:::success
+<strong>第一步：</strong><strong><font style="color:rgb(51, 51, 51);">invoke handler(调用处理程序)</font></strong></p>
+<p>:::</p>
+<p>:::success
+<strong><font style="color:rgb(51, 51, 51);">首先修改内核以跳转到用户空间中的报警处理程序：</font></strong></p>
 <ul>
-<li><strong>得到 level2 的页表，遍历整个 level2</strong></li>
-<li><strong>level2 每一项中遍历 level1，</strong></li>
-<li><strong>level1 每一项中遍历 level0，得到实际物理地址，停止。</strong></li>
+<li><strong><font style="color:rgb(51, 51, 51);">修改</font></strong><em><strong><font style="color:rgb(51, 51, 51);">Makefile </font></strong></em><strong><font style="color:rgb(51, 51, 51);">以使</font></strong><em><strong><font style="color:rgb(51, 51, 51);">alarmtest.c</font></strong></em><strong><font style="color:rgb(51, 51, 51);">被编译为xv6用户程序。</font></strong></li>
+<li><strong><font style="color:rgb(51, 51, 51);">放入 </font></strong><em><strong><font style="color:rgb(51, 51, 51);">user/user.h </font></strong></em><strong><font style="color:rgb(51, 51, 51);">的正确声明是：</font></strong></li>
 </ul>
 <p>:::</p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1726730386716-e61f800c-b182-4f9c-a072-4baa2570e3b1.png" /></p>
-<p>:::info
-<strong>解决代码</strong></p>
+<div class="highlight"><pre><span></span><code>int sigalarm(int ticks, void (*handler)());
+int sigreturn(void);
+</code></pre></div>
+<p>:::success
++ <strong><font style="color:rgb(51, 51, 51);">更新</font></strong><em><strong><font style="color:rgb(51, 51, 51);">user/usys.pl</font></strong></em><strong><font style="color:rgb(51, 51, 51);">（此文件生成</font></strong><em><strong><font style="color:rgb(51, 51, 51);">user/usys.S</font></strong></em><strong><font style="color:rgb(51, 51, 51);">）、</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/syscall.h</font></strong></em><strong><font style="color:rgb(51, 51, 51);">和 </font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/syscall.c </font></strong></em><strong><font style="color:rgb(51, 51, 51);">以允许</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;alarmtest&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">调用</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sigalarm&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">和</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sigreturn&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">系统调用。</font></strong>
++ <strong><font style="color:rgb(51, 51, 51);">目前来说，你的</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sys_sigreturn&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">系统调用返回应该是零。</font></strong></p>
 <p>:::</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// 打印传递过来的pagetable里面的内容</span>
-<span class="c1">// 分三级打印</span>
-<span class="c1">// 例子：</span>
-<span class="c1">// page table 0x0000000087f6e000</span>
-<span class="c1">// ..0: pte 0x0000000021fda801 pa 0x0000000087f6a000</span>
-<span class="c1">// .. ..0: pte 0x0000000021fda401 pa 0x0000000087f69000</span>
-<span class="c1">// .. .. ..0: pte 0x0000000021fdac1f pa 0x0000000087f6b000</span>
-<span class="c1">// .. .. ..1: pte 0x0000000021fda00f pa 0x0000000087f68000</span>
-<span class="c1">// .. .. ..2: pte 0x0000000021fd9c1f pa 0x0000000087f67000</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">vmprint</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">pagetable</span><span class="p">)</span>
+<hr />
+<p>:::warning
++ 现在我们已经有了<code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sigalarm&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">和</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sigreturn&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">系统调用，但不具有实际的功能。</font></strong>
++ <strong>我们需要存储</strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sigalarm&lt;/font&gt;**</code><strong>调用的参数</strong></p>
+<p>:::</p>
+<p>:::success
++ <code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;sys_sigalarm()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">将报警间隔和指向处理程序函数的指针存储在</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct proc&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">的新字段中（位于</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/proc.h</font></strong></em><strong><font style="color:rgb(51, 51, 51);">）。</font></strong>
++ <strong><font style="color:rgb(51, 51, 51);">需要在</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;struct proc&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">新增一个新字段。用于跟踪自上一次调用（或直到下一次调用）到进程的报警处理程序间经历了多少滴答；(用于循环,当经历了足够滴答后报警)</font></strong></p>
+<p>:::</p>
+<hr />
+<p>:::warning
++ <strong>现在我们已经存储了报警间隔和处理程序函数，我们需要在报警后调用处理程序</strong></p>
+<p>:::</p>
+<p>:::success
++ <strong><font style="color:rgb(51, 51, 51);">每一个滴答声，硬件时钟就会强制一个中断，这个中断在</font></strong><em><strong><font style="color:rgb(51, 51, 51);">kernel/trap.c</font></strong></em><strong><font style="color:rgb(51, 51, 51);">中的</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;usertrap()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">中处理，下面是处理代码</font></strong></p>
+<p>:::</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">usertrap</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;page table %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pagetable</span><span class="p">);</span>
-<span class="w">    </span><span class="n">vmprint_help</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">vmprint_help</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">level</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">level</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">512</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">r_sstatus</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">SSTATUS_SPP</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;usertrap: not from user mode&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// send interrupts and exceptions to kerneltrap(),</span>
+<span class="w">    </span><span class="c1">// since we&#39;re now in the kernel.</span>
+<span class="w">    </span><span class="n">w_stvec</span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">kernelvec</span><span class="p">);</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// save user program counter.</span>
+<span class="w">    </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">();</span>
+<span class="w">    </span><span class="cm">/** 判断是什么原因调用了usertrap函数*/</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">// 是否是系统调用</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r_scause</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// system call</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="p">)</span>
+<span class="w">            </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// sepc points to the ecall instruction,</span>
+<span class="w">        </span><span class="c1">// but we want to return to the next instruction.</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// an interrupt will change sstatus &amp;c registers,</span>
+<span class="w">        </span><span class="c1">// so don&#39;t enable until done with those registers.</span>
+<span class="w">        </span><span class="c1">// 关闭中断</span>
+<span class="w">        </span><span class="n">intr_on</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">syscall</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// 是否是设备中断</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devintr</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// ok</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// 处理意外的陷阱</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;usertrap(): unexpected scause %p pid=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r_scause</span><span class="p">(),</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="p">);</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;            sepc=%p stval=%p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">(),</span><span class="w"> </span><span class="n">r_stval</span><span class="p">());</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="p">)</span>
+<span class="w">        </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// give up the CPU if this is a timer interrupt.</span>
+<span class="w">    </span><span class="c1">// 如果这是一个定时器中断，则放弃 CPU。</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">which_dev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">){</span>
+
+<span class="w">        </span><span class="cp">#ifdef lab_traps</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">alarm_ticks</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">alarm_status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="n">pte_t</span><span class="w"> </span><span class="n">pte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pagetable</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pte</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTE_V</span><span class="p">)</span>
+<span class="w">            </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">total_ticks</span><span class="o">++</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">alarm_ticks</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">total_ticks</span><span class="p">)</span>
 <span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
-<span class="w">                            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;..%d: pte &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
-<span class="w">                            </span><span class="k">break</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
-<span class="w">                            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;.. ..%d: pte &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
-<span class="w">                            </span><span class="k">break</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">case</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span>
-<span class="w">                            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;.. .. ..%d: pte &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
-<span class="w">                            </span><span class="k">break</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%p pa %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pte</span><span class="p">,</span><span class="w"> </span><span class="n">PTE2PA</span><span class="p">(</span><span class="n">pte</span><span class="p">));</span>
-<span class="w">                </span><span class="n">uint64</span><span class="w"> </span><span class="n">child</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PTE2PA</span><span class="p">(</span><span class="n">pte</span><span class="p">);</span>
-<span class="w">                </span><span class="n">vmprint_help</span><span class="p">((</span><span class="n">pagetable_t</span><span class="p">)</span><span class="n">child</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">else</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">total_ticks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="c1">// void *handler() = (void *)p-&gt;handler;</span>
+<span class="w">                </span><span class="c1">//void (*handler)(void) = (void (*)(void))p-&gt;handler;</span>
+<span class="w">                </span><span class="c1">//handler();</span>
+<span class="w">                </span><span class="c1">// 需要保存寄存器内容，我们要在执行完报警程序后回到原本的代码执行处</span>
+<span class="w">                </span><span class="n">memmove</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">alarm_trapframe</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">trapframe</span><span class="p">));</span>
+<span class="w">                </span><span class="c1">// 正常情况下，中断恢复执行epc指向的代码，也就是恢复原本代码，但我们这个lab中</span>
+<span class="w">                </span><span class="c1">// 通过更改epc来改变中断后执行的函数，最后再通过 sigreturn 进行恢复</span>
+<span class="w">                </span><span class="c1">// 这就是为什么在上面我们保存了寄存器的内容</span>
+<span class="w">                </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">handler</span><span class="p">;</span><span class="w"> </span>
+<span class="w">                </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">alarm_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="cp">#endif</span>
+
+<span class="w">        </span><span class="n">yield</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">usertrapret</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>:::info
-<strong>代码 37 行中的  </strong><em><strong>uint64 child = PTE2PA(pte) </strong></em><strong> 是什么？</strong></p>
-<p><strong>---------------------------------------------------------</strong></p>
-<p><strong><font style="color:#117CEE;">#define PTE2PA(pte) (((pte) &gt;&gt; 10) &lt;&lt; 12)</font></strong></p>
-<p><strong>为什么要把 pte 向右移位 10 位，再向左移位 12 位呢</strong></p>
-<ol>
-<li><strong>向右移位 10 位</strong></li>
-</ol>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1726730386716-e61f800c-b182-4f9c-a072-4baa2570e3b1.png?x-oss-process=image%2Fformat%2Cwebp%2Fresize%2Cw_750%2Climit_0" /></p>
-<p><strong>如图所示，整个 PTE 共有 54 位，左边 44 位为 PPN &ndash; 即下一页表的地址；右边 10 位为 flags &ndash; 即标志位。我们要找到下一级页表物理位置，显然与右边 10 位 flags 位没关系，所以向右移位 10 位，抹除标志位。</strong></p>
-<ol>
-<li><strong>那为什么要向左移位 12 位</strong></li>
-</ol>
-<p><strong>我们要找到下一级页表的物理位置，而我们知道，在我们启用页表后，我们查找物理内存的最小单位就是一个页面大小，再根据具体页内偏移查找到具体数据。</strong><strong><font style="background-color:#FBDE28;">在 xv6 中 RISC-V 的页面大小为 4KB，即 2</font></strong><sup><strong><font style="background-color:#FBDE28;">12</font></strong></sup><strong><font style="background-color:#FBDE28;"> ，所以我们向左移位 12 位得到页表地址</font></strong>**。 **</p>
-<ol>
-<li><strong>那如何得到具体的页表内偏移呢？</strong></li>
-</ol>
-<p><strong>虚拟地址中的前 12 位为 offset&ndash;即页表内偏移</strong></p>
+<p>:::warning
++ <strong><font style="color:rgb(51, 51, 51);">在跳转执行特定的处理函数后，我们需要返回到原本的代码值</font></strong>
++ <strong><font style="color:rgb(51, 51, 51);">这个特定的处理函数需要配合 </font></strong><strong>sigreturn 一起使用，处理函数处理完后通过 sigreturn 来返回到原本的代码</strong></p>
 <p>:::</p>
-<p><strong>示例页表：</strong></p>
-<p><strong>各个页面都代表什么内容</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726730741218-9fb2e11f-0643-4a90-ac28-684ede0d76c2.jpeg" /></p>
-<h1 id="a-kernel-page-table-per-process-hard"><font style="color:rgb(0, 0, 0);">A kernel page table per process (</font><a href="https://pdos.csail.mit.edu/6.S081/2020/labs/guidance.html"><font style="color:rgb(0, 0, 0);">hard</font></a><font style="color:rgb(0, 0, 0);">)</font><a class="headerlink" href="#a-kernel-page-table-per-process-hard" title="Permanent link">&para;</a></h1>
-<p>:::success
-<strong>目标：</strong></p>
-<p><strong>修改内核来让每一个进程在内核中执行时使用它自己的页表（包含了内核页表的副本）。修改</strong><code>**struct proc**</code><strong>来为每一个进程维护一个内核页表，修改调度程序使得切换进程时也切换内核页表。每个进程的内核页表都应当与现有的的全局内核页表完全一致。</strong></p>
-<p><strong>目的：</strong></p>
-<p><strong><font style="color:rgb(51, 51, 51);">Xv6有一个单独的用于在内核中执行程序时的内核页表。内核页表直接映射（恒等映射）到物理地址，也就是说内核虚拟地址</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;x&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">映射到物理地址仍然是</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;x&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">。</font></strong></p>
-<p><strong><font style="color:rgb(51, 51, 51);">Xv6还为每个进程的用户地址空间提供了一个单独的页表，只包含该进程用户内存的映射，从虚拟地址0开始。</font></strong></p>
-<p><strong><font style="color:rgb(51, 51, 51);">因为内核页表不包含这些映射，</font></strong><strong><font style="color:rgb(51, 51, 51);background-color:#FBDE28;">所以用户地址在内核中无效</font></strong><strong><font style="color:rgb(51, 51, 51);">。</font></strong><strong><font style="color:rgb(51, 51, 51);background-color:#FBDE28;">因此，当内核需要使用在系统调用中传递的用户指针（例如，传递给</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:#FBDE28;"&gt;write()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);background-color:#FBDE28;">的缓冲区指针）时，内核必须首先将指针转换为物理地址。本节</font></strong></p>
-<p><strong><font style="color:rgb(51, 51, 51);background-color:#FBDE28;">和下一节的目标是允许内核直接解引用用户指针。</font></strong></p>
-<p>:::</p>
-<p>:::info
-<strong>解决方案：</strong></p>
-<ol>
-<li><strong>第一种：copy 页表（我的方案）</strong></li>
-<li><strong>第二种：share 页表（老师的方案）</strong></li>
-</ol>
-<p>:::</p>
-<p>:::info
-<strong>两种方案都能够达到目的</strong></p>
-<p><strong>第二种 share 方案会更简单，不需要关注哪些具体页表内映射的是什么内容，只需要复制即可。</strong></p>
-<p>:::</p>
-<p>:::color1
-<strong>第一种方案(我的方案):</strong></p>
-<ol>
-<li><strong>直接进行复制，仿照 kvminit 初始化全局内核页表的方式，对每个进程的内核页表进行映射</strong></li>
-</ol>
-<p><strong>代码中 Uvmmap 映射了：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span>
+<span class="nf">periodic</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;alarm!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">sigreturn</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
 <ul>
-<li><strong>UART0</strong></li>
-<li><strong>VIRTI0</strong></li>
-<li><strong>CLINT</strong></li>
-<li><strong>PLIC</strong></li>
-<li><strong>KERNBASE（kernel text）</strong></li>
-<li><strong>etext(kerenl data and physical RAM that we&rsquo;ll use)</strong></li>
-<li><strong>TRAMPOLINE(蹦床页面)</strong></li>
+<li><strong>sys_sigreturn 和正常的中断恢复不同，是我们人为的恢复数据，和正常的中断恢复的流程不一样</strong></li>
 </ul>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1726817251425-4fd2048a-abaf-41c1-9c2b-186c9400f677.png" /></p>
-<ol>
-<li><strong>然后对调度器进行更改</strong></li>
-</ol>
-<p><strong>问题:下图代码中，kvmswitch(p-&gt;kpagetable),我们为什么要切换到当前进程的页表</strong></p>
-<p><strong>回答:因为我们需要保证当前使用的页表不会被释放，如果我们继续使用之前的页表，那个页表可能回事一个等待被释放的页表，那么我们的 satp 寄存器将会指向一个 NULL 指针，这会引发错误。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1726818280727-65c58bee-8f67-40a9-80f4-9b041ba9525d.png" /></p>
-<p>:::</p>
-<h1 id="simplify-copyincopyinstrhard"><font style="color:rgb(51, 51, 51);">Simplify </font><code>&lt;font style="background-color:rgb(247, 247, 247);"&gt;copyin&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">/</font><code>&lt;font style="background-color:rgb(247, 247, 247);"&gt;copyinstr&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">（hard）</font><a class="headerlink" href="#simplify-copyincopyinstrhard" title="Permanent link">&para;</a></h1>
-<p>:::success
-<strong>目标：</strong></p>
-<p><strong>将定义在kernel/vm.c中的</strong><code>**copyin**</code><strong>的主题内容替换为对</strong><code>**copyin_new**</code><strong>的调用（在kernel/vmcopyin.c中定义）；对</strong><code>**copyinstr**</code><strong>和</strong><code>**copyinstr_new**</code><strong>执行相同的操作。为每个进程的内核页表添加用户地址映射，以便</strong><code>**copyin_new**</code><strong>和</strong><code>**copyinstr_new**</code><strong>工作。如果</strong><code>**usertests**</code><strong>正确运行并且所有</strong><code>**make grade**</code><strong>测试都通过，那么你就完成了此项作业。</strong></p>
-<p><strong>目的：</strong></p>
-<ol>
-<li><strong>内核的</strong><code>**copyin**</code><strong>函数读取用户指针指向的内存。它通过将用户指针转换为内核可以直接解引用的物理地址来实现这一点。</strong><code>**&lt;font style="background-color:#FBDE28;"&gt;copyin&lt;/font&gt;**</code><strong><font style="background-color:#FBDE28;">会将数据从用户空间复制到内核空间，当数据很大的时候，这会消耗大量的性能，</font></strong></li>
-<li><strong>我们的工作是将用户空间的映射添加到每个进程的内核页表（上一节中创建），以允许</strong><code>**copyin**</code><strong>（和相关的字符串函数</strong><code>**copyinstr**</code><strong>）直接解引用用户指针（因为内核现在已经在使用每个进程的内核页表）。不需要通过复制，这样可以节省大量的性能。</strong></li>
-</ol>
-<p>:::</p>
-<p>:::color1
-<strong>解决方案：</strong></p>
-<p><strong>遍历两张页表，并设置标志位</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1726830067114-3a24df09-8e87-4c2e-9797-420b7309b63e.png" /></p>
-<p><strong>问题：</strong></p>
-<ol>
-<li>**为什么 fork()中  **</li>
-</ol>
-<p><strong>copyUserPageToKernelPage(np-&gt;pagetable, np-&gt;userInKernelPageTable, 0, np-&gt;sz);</strong></p>
-<p><strong>必须要用子进程用户页表复制到它的内核页表呢，不能用父进程的用户页表复制到子进程的用户页表吗？父进程 fork()得到的子进程，他们两个的页表不是一样的吗？</strong></p>
-<p><strong>回答：其实父进程和子进程的用户页表确实一样，但是我们要考虑到在复制结束之前，父进程如果结束并释放了，那么父进程的页表也会被清空，这个时候复制函数拥有的是一个指向 NULL 的页表，这就是问题。</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1726821349128-7bffded9-35e7-4aed-bea8-6711b10fc0af.png" /></p>
-<p>:::</p>
+<div class="highlight"><pre><span></span><code><span class="n">uint64</span><span class="w"> </span>
+<span class="nf">sys_sigreturn</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+<span class="w">  </span><span class="n">myproc</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">alarm_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// 恢复原本的数据，sepc也变为</span>
+<span class="w">  </span><span class="n">memmove</span><span class="p">(</span><span class="n">myproc</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">,</span><span class="w"> </span><span class="n">myproc</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">alarm_trapframe</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">trapframe</span><span class="p">));</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
 
 
 
@@ -2387,6 +2609,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2414,11 +2642,17 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
+        <script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+      
+        <script src="../../../js/katex.js"></script>
+      
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>
