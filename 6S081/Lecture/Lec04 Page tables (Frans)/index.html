@@ -1,0 +1,2495 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Lec03%20OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+      
+      
+        <link rel="next" href="../Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>Lec04 Page tables (Frans) - days'blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="grey" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#地址空间address-spaces" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="days&#39;blog" class="md-header__button md-logo" aria-label="days'blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            days'blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lec04 Page tables (Frans)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../home/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
+          
+  
+  CSCI0300
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+          
+  
+  6S081
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
+          
+  
+  Rubbish
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="days&#39;blog" class="md-nav__button md-logo" aria-label="days'blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    days'blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../home/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome to MkDocs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Test
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Test
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../home/test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome to MkDocs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CSCI0300
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            CSCI0300
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lab
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 0 ：Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 1 ：C Programming and Build Tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%202%20%EF%BC%9ADebugging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 2 ：Debugging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 3 ：Assembly and Buffer Overflow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 4 ：Getting Familiar with WeensyOS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%205%20%EF%BC%9AProcesses/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 5 ：Processes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%206%20%EF%BC%9AThreads/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 6 ：Threads
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lecture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 01：课程概述和计算机组织
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 02：系统编程
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 03：指针和数据表示
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 04：内存组织，动态内存分配和未定义行为
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 05：数组和结构体
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 06：sizeof、typedef和有符号整数
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 07：有符号数表示和内存对齐
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 08：结构体内存对齐、收集规则、汇编语言
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 09：汇编语言
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 10：汇编控制流
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 11：栈
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 12：栈、缓冲区溢出和缓存
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 13：缓存 Caching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 14：操作系统简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 15：特权分离，内存保护
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 16：虚拟内存和页表
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 17：地址转换，进程创建 (I)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 18：进程创建 (II)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 19：进程间通信
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 20：多进程、线程
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 21：竞争条件
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 22：同步、原子操作和互斥锁 Synchronization, Atomics, and Mutexes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 23：死锁，有界缓冲区，C++互斥模式 Deadlock, Bounded Buffer，C++ Mutex Patterns
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 24：条件变量、总结
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    6S081
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            6S081
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lab
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory allocator(moderate)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab syscall! System calls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab util! Unix utilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! Copy on Write Fork for xv6
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! Multithreading
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! lazy page allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Print a page table (easy)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! traps
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lecture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec01%20Introduction%20and%20Examples%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    操作系统的目标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec03%20OS%20Organization%20and%20System%20Calls%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lec03 OS Organization and System Calls (Frans)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Lec04 Page tables (Frans)
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5.1 C程序到汇编程序的转换
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec06%20Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 Trap机制
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec08%20Page%20faults%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 Page Fault Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec09%20Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.1 真实操作系统内存使用情况
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec10%20Multiprocessors%20and%20locking%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lec10 Multiprocessors and locking (Frans)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec11%20Thread%20switching%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    总结：
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec13%20Sleep%20%26%20Wake%20up%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lec13 Sleep & Wake up (Robert)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec14%20File%20systems%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    14.1 Why Interesting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec15%20Crash%20recovery%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    15.1 File system crash 概述
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Book riscv
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Book riscv
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book-riscv/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 I/O和文件描述符
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rubbish
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Rubbish
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CS0300 进度表
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Design%20document/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Design document
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Project%201%21%20Snake/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project 1! Snake
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Project%204%21%20WeensyOS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project 4! WeensyOS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Project%205A%21%20Concurrent%20Store/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project 5A! Concurrent Store
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Summarize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summarize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/flush%E5%88%B7%E6%96%B0%E8%BE%93%E5%87%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flush刷新输出
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/question/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Question
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/resource/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resource
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error%28%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    文件读写error(程序的健壮性)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    管道操作
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线程操作
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    进程操作
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<blockquote>
+<p><strong>今天的内容主要是3个部分：</strong></p>
+<ol>
+<li><strong>首先讨论一下地址空间（Address Spaces）。</strong></li>
+<li><strong>接下来谈一下支持虚拟内存的硬件。当然，我介绍的是RISC-V相关的硬件。但是从根本上来说，所有的现代处理器都有某种形式的硬件，来作为实现虚拟内存的默认机制。</strong></li>
+<li><strong>过一下XV6中的虚拟内存代码，并看一下内核地址空间和用户地址空间的结构。</strong>
+</li>
+</ol>
+</blockquote>
+<h1 id="地址空间address-spaces">地址空间（Address Spaces）<a class="headerlink" href="#地址空间address-spaces" title="Permanent link">&para;</a></h1>
+<p><strong><font style="background-color:#FBDE28;">创造虚拟内存的一个出发点是通过它实现隔离性</font></strong></p>
+<p>:::warning
++ <strong>那如果没有隔离性会怎么样？</strong></p>
+<p>:::</p>
+<p><strong>不同程序之间可能会相互影响，比如 A 不小心访问了 B 的内存空间，然后更改了一些值，导致 B 运行发生错误；</strong></p>
+<p><strong>或者 A 更改了内核的数据。这些都是问题。</strong></p>
+<p>:::success
++ <strong>所以，我们给包括内核在内的所有程序专属的地址空间。</strong></p>
+<p>:::</p>
+<p><strong>所以，当我们运行cat时，它的地址空间从0到某个地址结束。</strong></p>
+<p><strong>当我们运行Shell时，它的地址也从0开始到某个地址结束。内核的地址空间也从0开始到某个地址结束。</strong></p>
+<p><strong>这样就实现了强隔离，每个程序都只能访问自己的内存空间。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1722406509359-b0d3d0b4-dde0-4630-92e1-22b684167133.png" /></p>
+<h1 id="页表page-table">页表（Page Table）<a class="headerlink" href="#页表page-table" title="Permanent link">&para;</a></h1>
+<h2 id="内存管理单元mmumemory-management-unit">内存管理单元（MMU，Memory Management Unit）<a class="headerlink" href="#内存管理单元mmumemory-management-unit" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>对于任何一条带有地址的指令，其中的地址都应被认为是虚拟内存地址而非物理地址。</strong></li>
+</ul>
+<p>:::success
++ <strong>虚拟地址到物理地址的翻译过程</strong>
++ <strong>什么是 MMU？</strong>
+1. 假设寄存器a0中是地址0x1000，那么这是一个虚拟内存地址。虚拟内存地址会被转到<font style="background-color:#FBDE28;">内存管理单元（MMU，Memory Management Unit）</font>
+2. 内存管理单元会将虚拟地址翻译成物理地址。之后这个物理地址会被用来索引物理内存，并从物理内存加载，或者向物理内存存储数据。</p>
+<p>:::</p>
+<ul>
+<li>从CPU的角度来说，一旦MMU打开了，它执行的每条指令中的地址都是虚拟内存地址。</li>
+<li>为了完成虚拟内存地址到物理内存地址的翻译，MMU会有<font style="background-color:#FBDE28;">一个表单</font>，表单中，一边是虚拟内存地址，另一边是物理内存地址。举个例子，虚拟内存地址0x1000对应了一个物理内存地址0xFFF0。这样的表单可以非常灵活。</li>
+<li><font style="background-color:#FBDE28;">这个记录得内存地址对应关系的表单</font>也保存在内存中。所以CPU中需要有一些寄存器用来存放表单在物理内存中的地址。在内存的某个位置保存了地址关系表单，我们假设这个位置的物理内存地址是0x10。<font style="background-color:#FBDE28;">那么在RISC-V上一个叫做SATP的寄存器会保存这个表单的地址0x10。</font></li>
+</ul>
+<p>:::success
+总结：</p>
+<ol>
+<li>MMU并不会保存page table，它只会根据 SATP 的值，到内存中读取page table，然后完成翻译</li>
+</ol>
+<p>:::</p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1722406829885-b8ffd27b-9d6e-44a4-9522-b9066210e269.png" /></p>
+<h2 id="页表构建方式">页表构建方式<a class="headerlink" href="#页表构建方式" title="Permanent link">&para;</a></h2>
+<p>:::warning
++ <strong>如果为每个地址都构建一个表单条目会怎么样？</strong></p>
+<p>:::</p>
+<p><strong>原则上说，在RISC-V上会有多少地址，或者一个寄存器可以表示多少个不同的地址呢？</strong></p>
+<p><strong>寄存器是64bit，所以有多少个地址呢？是的，理论上可以表示 2^64 个不同的地址，所以如果我们以地址为粒度来管理，表单会变得非常巨大。单是存储表单就会耗尽我们所有的内存，所以</strong><strong>为每个地址都构建一个表单条目是不可行的。</strong></p>
+<p>:::success
++ <strong>接下来我分两步介绍页表在 RISC-V 中是如何工作的。</strong></p>
+<p>:::</p>
+<h3 id="第一步">第一步<a class="headerlink" href="#第一步" title="Permanent link">&para;</a></h3>
+<p><strong>第一步：不要为每个地址创建一条表单条目，而是</strong><strong><font style="background-color:#FBDE28;">为每个内存页 page 创建一条表单条目</font></strong><strong>，所以每一次地址翻译都是针对一个page。而RISC-V中，一个page是4KB，也就是4096Bytes。这个大小非常常见，几乎所有的处理器都使用4KB大小的page或者支持4KB大小的page。</strong></p>
+<p>:::success
+<strong>现在，内存地址的翻译方式略微的不同了。</strong></p>
+<p>:::</p>
+<p><font style="background-color:#FBDE28;">对于虚拟内存地址，我们将它划分为两个部分，index和offset，index用来查找page，offset对应的是一个page中的哪个字节。</font></p>
+<p>当MMU在翻译时</p>
+<ol>
+<li>读取index可以知道物理内存中的page号，这个page号对应了物理内存中的第 4096个字节。</li>
+<li>之后虚拟内存地址中的offset指向了page中的4096个字节中的某一个，假设offset是12，那么page中的第12个字节被使用了。将offset加上page的起始地址，就可以得到物理内存地址。</li>
+</ol>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1722407591452-617adfbc-b7fe-4b38-8a88-715f87f152cb.png" /></p>
+<h3 id="第二步">第二步<a class="headerlink" href="#第二步" title="Permanent link">&para;</a></h3>
+<p><strong>通过前面的第一步，我们现在的</strong><strong><font style="background-color:#FBDE28;">地址转换表是以page为粒度，而不是以单个内存地址为粒度</font></strong><strong>，</strong></p>
+<p><strong>现在这个地址转换表已经可以被称为page table了。但是目前的设计还不能满足实际的需求。如果每个进程都有自己的page table，那么每个page table表会有多大呢？</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1722408223968-4731830b-876e-4125-b187-4858d4a02f39.jpeg" /></p>
+<p><strong>这个page table最多会有2^27个条目（虚拟内存地址中的index长度为27），这是个非常大的数字。如果每个进程都使用这么大的page table，进程需要为page table消耗大量的内存，并且很快物理内存就会耗尽。</strong></p>
+<p>:::success
++ 实际上，page table是一个多级的结构
++ <font style="background-color:#FBDE28;">前面每一级得到的 PPN 是用来索引下一级页表的内存位置</font></p>
+<p>:::</p>
+<p><strong>下图是一个真正的RISC-V page table结构和硬件实现。</strong></p>
+<p><strong>我们之前提到的虚拟内存地址中的27bit的index，实际上是由3个9bit的数字组成（L2，L1，L0）。</strong></p>
+<ol>
+<li><strong>前9个bit被用来索引最高级的page directory（注：通常page directory是用来索引page table或者其他page directory物理地址的表单，但是在课程中，page table，page directory， page directory table区分并不明显，可以都认为是有相同结构的地址对应表单）。</strong></li>
+<li><strong>一个directory是4096Bytes，就跟page的大小是一样的。Directory中的一个条目被称为PTE（Page Table Entry）是64bits，就像寄存器的大小一样，也就是8Bytes。所以一个Directory page有512个 PTE。</strong></li>
+<li><strong>所以实际上，SATP寄存器会指向最高一级的page directory的物理内存地址，之后我们用虚拟内存中index的高9bit用来索引最高一级的page directory(注，2^9 = 512，正好可以索引到一条 PTE)，这样我们就能得到一个PPN，也就是物理page号。</strong><strong><font style="background-color:#FBDE28;">这个PPN指向了中间级的页表 page directory 的位置。</font></strong></li>
+</ol>
+<p><strong>当我们在使用中间级的page directory时，我们通过虚拟内存地址中的L1部分完成索引。</strong></p>
+<p><strong>接下来会走到最低级的page directory，我们通过虚拟内存地址中的L0部分完成索引。</strong></p>
+<p><strong>在最低级的page directory中，我们可以得到对应于虚拟内存地址的物理内存地址。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1722408275434-3396f68b-c956-470d-9187-ff4680b7b6fd.png" /></p>
+<ul>
+<li>比较</li>
+</ul>
+<p>从某种程度上来说，与之前一种方案还是很相似的，除了实际的索引是由3步，而不是1步完成。这种方式的主要优点是，如果地址空间中大部分地址都没有使用，你不必为每一个index准备一个条目。</p>
+<p>举个例子，如果你的地址空间只使用了一个page，4096Bytes。</p>
+<ol>
+<li>在最高级，你需要一个page directory。在这个page directory中，你需要一个数字是0的PTE，指向中间级page directory。所以在中间级，你也需要一个page directory，里面也是一个数字0的PTE，指向最低级page directory。所以这里总共需要3个page directory（也就是3 * 512个条目，一个条目 64bit）。</li>
+<li>而在前一个方案中，虽然我们只使用了一个page，还是需要2^27个PTE（注，约 1GB 内存）。</li>
+<li>这个方案中，我们只需要3 * 512个PTE（注，12KB 内存）。所需的空间大大减少了。这是实际上硬件采用这种层次化的3级page directory结构的主要原因。</li>
+</ol>
+<h3 id="标志位">标志位<a class="headerlink" href="#标志位" title="Permanent link">&para;</a></h3>
+<p>接下来，让我们看看PTE中的Flag，因为它也很重要。每个PTE的低10bit是一堆标志位：</p>
+<ul>
+<li>第一个标志位是Valid。如果Valid bit位为1，那么表明这是一条合法的PTE，你可以用它来做地址翻译。对于刚刚举得那个小例子（注，应用程序只用了1个page的例子），我们只使用了3个page directory，每个page directory中只有第0个PTE被使用了，所以只有第0个PTE的Valid bit位会被设置成1，其他的511个PTE的Valid bit为0。这个标志位告诉MMU，你不能使用这条PTE，因为这条PTE并不包含有用的信息。</li>
+<li>下两个标志位分别是Readable和Writable。表明你是否可以读/写这个page。</li>
+<li>Executable表明你可以从这个page执行指令。</li>
+<li>User表明这个page可以被运行在用户空间的进程访问。</li>
+<li>其他标志位并不是那么重要，他们偶尔会出现，前面5个是重要的标志位。</li>
+</ul>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1722408505032-f1e9ae1d-ebb2-4806-a9aa-3c0bba82de77.jpeg" /></p>
+<h3 id="risc-v硬件设计">RISC-V硬件设计<a class="headerlink" href="#risc-v硬件设计" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>虚拟内存地址只使用了 39 位</strong></li>
+</ul>
+<p>有关RISC-V的一件有意思的事情是：<strong>虚拟内存地址都是64bit，因为RISC-V的寄存器是64bit的</strong>。实际上，我们使用的RSIC-V处理器上，并不是所有的64bit都被使用了，高25bit并没有被使用。这样的结果是限制了虚拟内存地址的数量，<strong>虚拟内存地址的数量现在只有2^39个，大概是512GB</strong>。当然，如果必要的话，最新的处理器或许可以支持更大的地址空间，只需要将未使用的25bit拿出来做为虚拟内存地址的一部分即可。</p>
+<p>在剩下的39bit中，有27bit被用来当做index，12bit被用来当做offset。offset必须是12bit，因为对应了一个page的4096个字节。</p>
+<ul>
+<li>物理内存地址使用了 56 位</li>
+</ul>
+<p>在RISC-V中，物理内存地址是56bit。所以物理内存可以大于单个虚拟内存地址空间，但是也最多到2^56。大多数主板还不支持2^56这么大的物理内存，但是原则上，如果你能造出这样的主板，那么最多可以支持2^56字节的物理内存。</p>
+<p>物理内存地址是56bit，其中44bit是物理page号（PPN，Physical Page Number），剩下12bit是offset完全继承自虚拟内存地址（也就是地址转换时，只需要将虚拟内存中的27bit翻译成物理内存中的44bit的page号，剩下的12bitoffset直接拷贝过来即可）。</p>
+<h2 id="页表缓存translation-lookaside-buffer">页表缓存（Translation Lookaside Buffer）<a class="headerlink" href="#页表缓存translation-lookaside-buffer" title="Permanent link">&para;</a></h2>
+<p><strong>每次处理器从内存加载或者存储数据时，基本上都要做3次内存查找，第一次在最高级的page directory，第二次在中间级的page directory，最后一次在最低级的page directory。这里代价是非常高的。</strong></p>
+<p>:::success
+<strong>所以实际中，几乎所有的处理器都会对最近使用过的虚拟地址的翻译结果进行缓存。</strong></p>
+<p><strong>这个缓存被称为：Translation Lookside Buffer（通常翻译成页表缓存）。你会经常看到它的缩写TLB。一般来说，这就是页表 Page Table Entry的缓存</strong></p>
+<p>:::</p>
+<p><strong>当处理器第一次查找一个虚拟地址时，硬件通过3级page table得到最终的PPN，TLB会保存虚拟地址到物理地址的映射关系。这样下一次当你访问同一个虚拟地址时，处理器可以查看TLB，TLB会直接返回物理地址，而不需要通过page table得到结果。</strong></p>
+<p>:::warning
++ <strong>注意</strong>
+1. <strong>如果你切换了page table，TLB中的缓存将不再有用，它们需要被清空，否则地址翻译可能会出错。所以操作系统知道TLB是存在的，但只会时不时的告诉操作系统，现在的TLB不能用了，因为要切换page table了。在RISC-V中，清空TLB的指令是sfence_vma。</strong>
+2. <strong>3级的page table是由硬件实现的，所以3级 page table的查找都发生在硬件中。MMU是硬件的一部分而不是操作系统的一部分。</strong></p>
+<p>:::</p>
+<p>:::warning
+RISC-V处理器中的MMU（Memory Management Unit）与TLB都位于每个CPU核内部。</p>
+<p><strong>这里的关键点在于，某些缓存（Cache）是基于虚拟地址索引的，而某些则是基于物理地址索引的。</strong></p>
+<ol>
+<li><strong>基于虚拟地址索引的Cache</strong>：<strong><font style="background-color:#FBDE28;">这类缓存位于MMU之前。</font></strong>即CPU会先查看这类缓存，看是否可以直接获取数据。如果在这类缓存中找到了数据，CPU可以直接使用这些数据，无需进行地址翻译。如果未找到，才会进入MMU进行虚拟到物理的地址翻译。</li>
+<li><strong>基于物理地址索引的Cache</strong>：<strong><font style="background-color:#FBDE28;">这类缓存位于MMU之后。</font></strong>这意味着CPU首先需要通过MMU将虚拟地址转换为物理地址，然后再使用这个物理地址去查询基于物理地址索引的缓存。</li>
+</ol>
+<p>:::</p>
+<h2 id="kernel-page-table">Kernel Page Table<a class="headerlink" href="#kernel-page-table" title="Permanent link">&para;</a></h2>
+<p><strong>接下来，我们看一下在XV6中，page table是如何工作的？</strong></p>
+<p><strong>首先我们来看一下kernel page的分布。</strong></p>
+<p><strong>下图就是内核中地址的对应关系，左边是内核的虚拟地址空间，右边上半部分是物理内存或者说是DRAM，右边下半部分是I/O设备。接下来我会首先介绍右半部分，然后再介绍左半部分。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726110301775-712f4e9c-7daf-4c8f-8867-f71ac75a9e09.jpeg" /></p>
+<h3 id="硬件设计">硬件设计<a class="headerlink" href="#硬件设计" title="Permanent link">&para;</a></h3>
+<p><strong>图中的右半部分的结构完全由硬件设计者决定。如你们上节课看到的一样，当操作系统启动时，会从地址0x80000000开始运行，这个地址其实也是由硬件设计者决定的。具体的来说，如果你们看一个主板，中间是RISC-V处理器，我们现在知道了处理器中有4个核，每个核都有自己的MMU和TLB。处理器旁边就是DRAM芯片。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726110331262-de47e006-6201-4218-88e7-ed8fa4c2f160.jpeg" /></p>
+<p><strong>主板的设计人员决定了，在完成了虚拟到物理地址的翻译之后，如果得到的物理地址大于0x80000000会走向DRAM芯片，如果得到的物理地址低于0x80000000会走向不同的I/O设备。这是由这个主板的设计人员决定的物理结构。如果你想要查看这里的物理结构，你可以阅读主板的手册，手册中会一一介绍物理地址对应关系。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726110380738-95eb4b17-6c2a-43e4-9575-0b4112089977.jpeg" /><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726110387686-4e44c6c9-9665-49eb-a432-ea3feeba4b2c.jpeg" /></p>
+<p><strong>首先，地址0是保留的，地址0x10090000对应以太网，地址0x80000000对应DDR内存，处理器外的易失存储（Off-Chip Volatile Memory），也就是主板上的DRAM芯片。所以，在你们的脑海里应该要记住这张主板的图片，即使我们接下来会基于你们都知道的C语言程序&mdash;QEMU来做介绍，但是最终所有的事情都是由主板硬件决定的。</strong></p>
+<p>学生提问：当你说这里是由硬件决定的，硬件是特指CPU还是说CPU所在的主板？</p>
+<p>Frans教授：CPU所在的主板。CPU只是主板的一小部分，DRAM芯片位于处理器之外。是主板设计者将处理器，DRAM和许多I/O设备汇总在一起。对于一个操作系统来说，CPU只是一个部分，I/O设备同样也很重要。所以当你在写一个操作系统时，你需要同时处理CPU和I/O设备，比如你需要向互联网发送一个报文，操作系统需要调用网卡驱动和网卡来实际完成这个工作。</p>
+<h3 id="内核页表">内核页表<a class="headerlink" href="#内核页表" title="Permanent link">&para;</a></h3>
+<p><strong>回到最初那张图的右侧：物理地址的分布。</strong></p>
+<p><strong>最下面是未被使用的地址，这与主板文档内容是一致的（地址为0）。</strong></p>
+<p><strong>地址0x1000是boot ROM的物理地址，当你对主板上电，主板做的第一件事情就是运行存储在boot ROM中的代码，当boot完成之后，会跳转到地址0x80000000，操作系统需要确保在地址0x80000000有一些数据（代码）能够继续启动操作系统。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726110523685-a0a1aa2d-bc10-4b8e-bd81-a84bc0633140.jpeg" /></p>
+<p><strong>这里还有一些其他的I/O设备：</strong></p>
+<ul>
+<li><strong>PLIC是中断控制器（Platform-Level Interrupt Controller）我们下周的课会讲。</strong></li>
+<li><strong>CLINT（Core Local Interruptor）也是中断的一部分。所以多个设备都能产生中断，需要中断控制器来将这些中断路由到合适的处理函数。</strong></li>
+<li><strong>UART0（Universal Asynchronous Receiver/Transmitter）负责与Console和显示器交互。</strong></li>
+<li><strong>VIRTIO disk，与磁盘进行交互。</strong></li>
+</ul>
+<p><strong>地址0x02000000对应CLINT，当你向这个地址执行读写指令，你是向实现了CLINT的芯片执行读写。这里你可以认为你直接在与设备交互，而不是读写物理内存。</strong></p>
+<blockquote>
+<p><strong>学生提问：确认一下，低于0x80000000的物理地址，不存在于DRAM中，当我们在使用这些地址的时候，指令会直接走向其他的硬件，对吗？</strong></p>
+<p><strong>Frans教授：是的。高于0x80000000的物理地址对应DRAM芯片，但是对于例如以太网接口，也有一个特定的低于0x80000000的物理地址，我们可以对这个叫做内存映射I/O（Memory-mapped I/O）的地址执行读写指令，来完成设备的操作。</strong></p>
+<p><strong>学生提问：为什么物理地址最上面一大块标为未被使用？</strong></p>
+<p><strong>Frans教授：物理地址总共有2^56那么多，但是你不用在主板上接入那么多的内存。所以不论主板上有多少DRAM芯片，总是会有一部分物理地址没有被用到。实际上在XV6中，我们限制了内存的大小是128MB。</strong></p>
+<p><strong>学生提问：当读指令从CPU发出后，它是怎么路由到正确的I/O设备的？比如说，当CPU要发出指令时，它可以发现现在地址是低于0x80000000，但是它怎么将指令送到正确的I/O设备？</strong></p>
+<p><strong>Frans教授：你可以认为在RISC-V中有一个多路输出选择器（demultiplexer）。</strong>
+</p>
+</blockquote>
+<p><strong>接下来我会切换到第一张图的左边，这就是XV6的虚拟内存地址空间。</strong></p>
+<p><strong>当机器刚刚启动时，还没有可用的page，XV6操作系统会设置好内核使用的虚拟地址空间，也就是这张图左边的地址分布。</strong></p>
+<p><strong>因为我们想让XV6尽可能的简单易懂，所以内核的虚拟地址到物理地址的映射，大部分是相等的关系。</strong></p>
+<p><strong>比如说内核会按照这种方式设置page table，虚拟地址0x02000000对应物理地址0x02000000。这意味着左侧低于PHYSTOP的虚拟地址，与右侧使用的物理地址是一样的。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726111361978-190b3ee7-92aa-40f4-b470-03d4ddf6e738.jpeg" /></p>
+<p><strong>所以，这里的箭头都是水平的，因为这里是完全相等的映射。</strong></p>
+<p><strong>除此之外，这里还有两件重要的事情：</strong></p>
+<ol>
+<li><strong>第一件事情是，有一些page在虚拟内存中的地址很靠后，比如kernel stack在虚拟内存中的地址就很靠后。这是因为在它之下有一个未被映射的Guard page，这个Guard page对应的PTE的Valid 标志位没有设置，这样，如果kernel stack耗尽了，它会溢出到Guard page，但是因为Guard page的PTE中Valid标志位未设置，会导致立即触发page fault，这样的结果好过内存越界之后造成的数据混乱。立即触发一个panic（也就是page fault），你就知道kernel stack出错了。同时我们也又不想浪费物理内存给Guard page，所以Guard page不会映射到任何物理内存，它只是占据了虚拟地址空间的一段靠后的地址。</strong></li>
+</ol>
+<p><strong>同时，kernel stack被映射了两次，在靠后的虚拟地址映射了一次，在PHYSTOP下的Kernel data中又映射了一次，但是实际使用的时候用的是上面的部分，因为有Guard page会更加安全。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726111374597-1ea4e747-2fe0-4043-939a-f6d457478993.jpeg" /></p>
+<p><strong>这是众多你可以通过page table实现的有意思的事情之一。</strong></p>
+<p><strong>你可以向同一个物理地址映射两个虚拟地址，你可以不将一个虚拟地址映射到物理地址。</strong></p>
+<p><strong>可以是一对一的映射，一对多映射，多对一映射。XV6至少在1-2个地方用到类似的技巧。这的kernel stack和Guard page就是XV6基于page table使用的有趣技巧的一个例子。</strong></p>
+<ol>
+<li><strong>第二件事情是权限。例如Kernel text page被标位R-X，意味着你可以读它，也可以在这个地址段执行指令，但是你不能向Kernel text写数据。通过设置权限我们可以尽早的发现Bug从而避免Bug。对于Kernel data需要能被写入，所以它的标志位是RW-，但是你不能在这个地址段运行指令，所以它的X标志位未被设置。</strong></li>
+</ol>
+<p><strong>（注，所以，kernel text用来存代码，代码可以读，可以运行，但是不能篡改，kernel data用来存数据，数据可以读写，但是不能通过数据伪装代码在kernel中运行）</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726111393002-da21f363-9903-42d3-9870-f909b6fd4632.jpeg" /></p>
+<blockquote>
+<p><strong>学生提问：对于不同的进程会有不同的kernel stack吗？</strong></p>
+<p><strong>Frans：答案是的。每一个用户进程都有一个对应的kernel stack</strong>
+</p>
+</blockquote>
+<hr />
+<h2 id="用户页表">用户页表<a class="headerlink" href="#用户页表" title="Permanent link">&para;</a></h2>
+<p>:::success
+<strong>学生提问：用户程序的虚拟内存会映射到未使用的物理地址空间吗？</strong></p>
+<p><strong>Frans教授：在kernel page table中，有一段Free Memory，它对应了物理内存中的一段地址。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726111413296-7881ed2c-73f4-4b09-b4d0-faf7b46151b5.jpeg" /></p>
+<p><strong>XV6使用这段free memory来存放用户进程的page table，text和data。如果我们运行了非常多的用户进程，某个时间点我们会耗尽这段内存，这个时候fork或者exec会返回错误。</strong></p>
+<p>:::</p>
+<p>:::success
+<strong>同一个学生提问：这就意味着，用户进程的虚拟地址空间会比内核的虚拟地址空间小的多，是吗？</strong></p>
+<p><strong>Frans教授：本质上来说，两边的虚拟地址空间大小是一样的。但是用户进程的虚拟地址空间使用率会更低。</strong></p>
+<p>:::</p>
+<p>:::success
+<strong>学生提问：如果多个进程都将内存映射到了同一个物理位置，这里会优化合并到同一个地址吗？</strong></p>
+<p><strong>Frans教授：XV6不会做这样的事情，但是page table实验中有一部分就是做这个事情。真正的操作系统会做这样的工作。当你们完成了page table实验，你们就会对这些内容更加了解。</strong></p>
+<p>:::</p>
+<blockquote>
+<p><strong>学生提问：每个进程都会有自己的3级树状page table，通过这个page table将虚拟地址翻译成物理地址。所以看起来当我们将内核虚拟地址翻译成物理地址时，我们并不需要kernel的page table，因为进程会使用自己的树状page table并完成地址翻译（注，不太理解这个问题点在哪）。</strong></p>
+<p><strong>Frans教授：当kernel创建了一个进程，针对这个进程的page table也会从Free memory中分配出来。内核会为用户进程的page table分配几个page，并填入PTE。在某个时间点，当内核运行了这个进程，内核会将进程的根page table的地址加载到SATP中。从那个时间点开始，处理器会使用内核为那个进程构建的虚拟地址空间。</strong></p>
+<p><strong>同一个学生提问：所以内核为进程放弃了一些自己的内存，但是进程的虚拟地址空间理论上与内核的虚拟地址空间一样大，虽然实际中肯定不会这么大。</strong></p>
+<p><strong>Frans教授：是的，下图是用户进程的虚拟地址空间分布，与内核地址空间一样，它也是从0到MAXVA。</strong>
+</p>
+</blockquote>
+<p>（<strong>用户进程的虚拟地址空间分布</strong>）</p>
+<p><img alt="用户进程的虚拟地址空间分布（用户页表）​​​​​​" src="https://cdn.nlark.com/yuque/0/2024/jpeg/27925082/1726111439238-910d4a87-822d-4d9f-8f7b-bfe6b811637c.jpeg" /></p>
+<blockquote>
+<p><strong>它有由内核设置好的，专属于进程的page table来完成地址翻译。</strong></p>
+<p><strong>学生提问：但是我们不能将所有的MAXVA地址都使用吧？</strong></p>
+<p><strong>Frans教授：是的我们不能，这样我们会耗尽内存。大多数的进程使用的内存都远远小于虚拟地址空间。</strong>
+</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

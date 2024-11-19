@@ -1,0 +1,3117 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Lec11%20Thread%20switching%20%28Robert%29/">
+      
+      
+        <link rel="next" href="../Lec14%20File%20systems%20%28Frans%29/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>Lec13 Sleep & Wake up (Robert) - days'blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="grey" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#回顾-线程调度" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="days&#39;blog" class="md-header__button md-logo" aria-label="days'blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            days'blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lec13 Sleep & Wake up (Robert)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../home/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-tabs__link">
+          
+  
+  CSCI0300
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-tabs__link">
+          
+  
+  6S081
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-tabs__link">
+          
+  
+  Rubbish
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="days&#39;blog" class="md-nav__button md-logo" aria-label="days'blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    days'blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../home/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome to MkDocs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Test
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Test
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../home/test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome to MkDocs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CSCI0300
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            CSCI0300
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lab
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 0 ：Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 1 ：C Programming and Build Tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%202%20%EF%BC%9ADebugging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 2 ：Debugging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 3 ：Assembly and Buffer Overflow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 4 ：Getting Familiar with WeensyOS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%205%20%EF%BC%9AProcesses/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 5 ：Processes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lab/Lab%206%20%EF%BC%9AThreads/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 6 ：Threads
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lecture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 01：课程概述和计算机组织
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 02：系统编程
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 03：指针和数据表示
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 04：内存组织，动态内存分配和未定义行为
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 05：数组和结构体
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 06：sizeof、typedef和有符号整数
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 07：有符号数表示和内存对齐
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 08：结构体内存对齐、收集规则、汇编语言
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 09：汇编语言
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 10：汇编控制流
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 11：栈
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 12：栈、缓冲区溢出和缓存
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 13：缓存 Caching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 14：操作系统简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 15：特权分离，内存保护
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 16：虚拟内存和页表
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 17：地址转换，进程创建 (I)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 18：进程创建 (II)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 19：进程间通信
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 20：多进程、线程
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 21：竞争条件
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 22：同步、原子操作和互斥锁 Synchronization, Atomics, and Mutexes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 23：死锁，有界缓冲区，C++互斥模式 Deadlock, Bounded Buffer，C++ Mutex Patterns
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lecture 24：条件变量、总结
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    6S081
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            6S081
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lab
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%20lock%21%20Parallelism%21locking/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory allocator(moderate)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%20syscall%21%20System%20calls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab syscall! System calls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%20util%21%20Unix%20utilities/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab util! Unix utilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20Copy-on-Write%20Fork%20for%20xv6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! Copy on Write Fork for xv6
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20Multithreading/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! Multithreading
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20lazy%20page%20allocation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! lazy page allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20page%20tables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Print a page table (easy)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab/Lab%21%20traps/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab! traps
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lecture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec01%20Introduction%20and%20Examples%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    操作系统的目标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec03%20OS%20Organization%20and%20System%20Calls%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lec03 OS Organization and System Calls (Frans)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec04%20Page%20tables%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lec04 Page tables (Frans)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5.1 C程序到汇编程序的转换
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec06%20Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 Trap机制
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec08%20Page%20faults%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 Page Fault Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec09%20Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.1 真实操作系统内存使用情况
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec10%20Multiprocessors%20and%20locking%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lec10 Multiprocessors and locking (Frans)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec11%20Thread%20switching%20%28Robert%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    总结：
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Lec13 Sleep & Wake up (Robert)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Lec13 Sleep & Wake up (Robert)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#回顾-线程调度" class="md-nav__link">
+    <span class="md-ellipsis">
+      回顾 线程调度
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="回顾 线程调度">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要在-swtch-时持有锁-why-hold-p-lock-across-swtch" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么需要在 swtch() 时持有锁 why hold p-&gt;lock across swtch()?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么-sched-禁止在让出-cpu-时保留自旋锁-why-does-sched-forbid-spinlocks-from-being-held-when-yielding-the-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么 sched() 禁止在让出 CPU 时保留自旋锁？ why does sched() forbid spinlocks from being held when yielding the CPU?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sleep-and-wakeup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sleep and wakeup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sleep and wakeup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#信号量-semaphores" class="md-nav__link">
+    <span class="md-ellipsis">
+      信号量 semaphores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#初步-sleep-想法自旋-忙等待-busy-waiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      初步 sleep 想法：自旋-忙等待 busy waiting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#尝试让出-cpu-提高性能-yield-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      尝试让出 CPU 提高性能 yield CPU
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#解决错过唤醒-lost-wakeup" class="md-nav__link">
+    <span class="md-ellipsis">
+      解决错过唤醒 lost wakeup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么-sleep需要传递保护数据的锁-why-the-lock-argument-to-sleep" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么 sleep()需要传递保护数据的锁？ why the lock argument to sleep()?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#如何在-xv6-中终止线程" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何在 xv6 中终止线程？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="如何在 xv6 中终止线程？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#进程使用exit" class="md-nav__link">
+    <span class="md-ellipsis">
+      进程使用exit()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#进程使用killpid杀死某个进程" class="md-nav__link">
+    <span class="md-ellipsis">
+      进程使用kill(pid)杀死某个进程
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real World
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real World">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#自旋锁和互斥锁性能对比" class="md-nav__link">
+    <span class="md-ellipsis">
+      自旋锁和互斥锁性能对比
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xv6的调度策略很简单" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6的调度策略很简单
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#其他同步方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      其他同步方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#惊群效应-thunder-herd" class="md-nav__link">
+    <span class="md-ellipsis">
+      惊群效应 thunder herd
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semaphores" class="md-nav__link">
+    <span class="md-ellipsis">
+      semaphores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminating-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      terminating process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unsatisfactory-kill-in-xv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      unsatisfactory kill in xv6
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec14%20File%20systems%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    14.1 Why Interesting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lec15%20Crash%20recovery%20%28Frans%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    15.1 File system crash 概述
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Book riscv
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Book riscv
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../book-riscv/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 I/O和文件描述符
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rubbish
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Rubbish
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/CS0300_%E8%BF%9B%E5%BA%A6%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CS0300 进度表
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Design%20document/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Design document
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Project%201%21%20Snake/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project 1! Snake
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Project%204%21%20WeensyOS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project 4! WeensyOS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Project%205A%21%20Concurrent%20Store/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project 5A! Concurrent Store
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/Summarize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summarize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/flush%E5%88%B7%E6%96%B0%E8%BE%93%E5%87%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flush刷新输出
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/question/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Question
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/resource/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resource
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99error%28%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%81%A5%E5%A3%AE%E6%80%A7%29/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    文件读写error(程序的健壮性)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    管道操作
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线程操作
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rubbish/%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    进程操作
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#回顾-线程调度" class="md-nav__link">
+    <span class="md-ellipsis">
+      回顾 线程调度
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="回顾 线程调度">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要在-swtch-时持有锁-why-hold-p-lock-across-swtch" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么需要在 swtch() 时持有锁 why hold p-&gt;lock across swtch()?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么-sched-禁止在让出-cpu-时保留自旋锁-why-does-sched-forbid-spinlocks-from-being-held-when-yielding-the-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么 sched() 禁止在让出 CPU 时保留自旋锁？ why does sched() forbid spinlocks from being held when yielding the CPU?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sleep-and-wakeup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sleep and wakeup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sleep and wakeup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#信号量-semaphores" class="md-nav__link">
+    <span class="md-ellipsis">
+      信号量 semaphores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#初步-sleep-想法自旋-忙等待-busy-waiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      初步 sleep 想法：自旋-忙等待 busy waiting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#尝试让出-cpu-提高性能-yield-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      尝试让出 CPU 提高性能 yield CPU
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#解决错过唤醒-lost-wakeup" class="md-nav__link">
+    <span class="md-ellipsis">
+      解决错过唤醒 lost wakeup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么-sleep需要传递保护数据的锁-why-the-lock-argument-to-sleep" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么 sleep()需要传递保护数据的锁？ why the lock argument to sleep()?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#如何在-xv6-中终止线程" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何在 xv6 中终止线程？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="如何在 xv6 中终止线程？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#进程使用exit" class="md-nav__link">
+    <span class="md-ellipsis">
+      进程使用exit()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#进程使用killpid杀死某个进程" class="md-nav__link">
+    <span class="md-ellipsis">
+      进程使用kill(pid)杀死某个进程
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real World
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real World">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#自旋锁和互斥锁性能对比" class="md-nav__link">
+    <span class="md-ellipsis">
+      自旋锁和互斥锁性能对比
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xv6的调度策略很简单" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6的调度策略很简单
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#其他同步方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      其他同步方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#惊群效应-thunder-herd" class="md-nav__link">
+    <span class="md-ellipsis">
+      惊群效应 thunder herd
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semaphores" class="md-nav__link">
+    <span class="md-ellipsis">
+      semaphores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminating-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      terminating process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unsatisfactory-kill-in-xv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      unsatisfactory kill in xv6
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>Lec13 Sleep & Wake up (Robert)</h1>
+
+<p><strong>介绍 OS调度中 </strong><code>**sleep**</code><strong> 与 </strong><code>**wakeup**</code><strong> 的机制，以及其他用到这个机制的系统调用，如 </strong><code>**kill**</code><strong> ，</strong><code>**exit**</code><strong> 和 </strong><code>**wait**</code><strong>。</strong></p>
+<h2 id="回顾-线程调度">回顾 线程调度<a class="headerlink" href="#回顾-线程调度" title="Permanent link">&para;</a></h2>
+<p><strong>重新回顾上节课的重点，一个线程开始让出 CPU 时，其 </strong><code>**p-&gt;lock**</code><strong> 保护 </strong><code>**p-&gt;state**</code><strong> 的过程是跨线程的，也就是跨 </strong><code>**swtch**</code><strong> 调用。 过程基本如下，</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nl">yield</span><span class="p">:</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">    </span><span class="n">swtch</span><span class="p">();</span>
+<span class="nl">scheduler</span><span class="p">:</span>
+<span class="w">    </span><span class="n">swtch</span><span class="p">();</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="为什么需要在-swtch-时持有锁-why-hold-p-lock-across-swtch">为什么需要在 swtch() 时持有锁 why hold p-&gt;lock across swtch()?<a class="headerlink" href="#为什么需要在-swtch-时持有锁-why-hold-p-lock-across-swtch" title="Permanent link">&para;</a></h3>
+<p><strong>跨 </strong><code>**swtch()**</code><strong> 调用持有 </strong><code>**p-&gt;lock**</code><strong> 的核心原因是，防止另一个CPU核心的 </strong><code>**scheduler**</code><strong> 看到 </strong><code>**p-&gt;state == RUNNABLE**</code><strong>后直接运行该线程，直到原线程的CPU核心停止执行线程并停止使用线程的堆栈(即在 </strong><code>**swtch()**</code><strong> 之后)。</strong></p>
+<h3 id="为什么-sched-禁止在让出-cpu-时保留自旋锁-why-does-sched-forbid-spinlocks-from-being-held-when-yielding-the-cpu">为什么 sched() 禁止在让出 CPU 时保留自旋锁？ why does sched() forbid spinlocks from being held when yielding the CPU?<a class="headerlink" href="#为什么-sched-禁止在让出-cpu-时保留自旋锁-why-does-sched-forbid-spinlocks-from-being-held-when-yielding-the-cpu" title="Permanent link">&para;</a></h3>
+<p>在 <code>sched()</code> 准备调用 <code>swtch</code> 让出 CPU 切换线程前，会检查其他自旋锁是否被持有。<strong>这是为了防止死锁。</strong></p>
+<p><strong>防止进程获取了锁后进入睡眠，永远无法释放锁，导致死锁。</strong></p>
+<p>例子：设想在单CPU系统上，</p>
+<table>
+<thead>
+<tr>
+<th><strong>P1：</strong></th>
+<th><strong>P2：</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>acq(L)</strong></td>
+<td>****</td>
+</tr>
+<tr>
+<td><strong>sched()</strong></td>
+<td>****</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>acq(L)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>P2会一直自旋，直到P1释放锁；但 P2不会释放CPU，因为 P1 除非再次运行否则不会释放锁。在单核系统上，CPU被 P2 永远占据了。</p>
+<p>多核系统中，这种死锁也可能会出现，试想更多线程 <code>acq(L)</code> 并调度，它们也占据了所有 CPU ，使得 P1 永远没机会释放锁。</p>
+<p>于是，更多的自旋锁必须涉及到统一的解决方案，即不要持有自旋锁并放弃CPU。p.s. 除了 <code>p-&gt;lock</code> ，其会在 <code>scheduler</code> 线程中被释放。</p>
+<h2 id="sleep-and-wakeup">Sleep and wakeup<a class="headerlink" href="#sleep-and-wakeup" title="Permanent link">&para;</a></h2>
+<p><strong>线程在运行时需要等待特定的事件或条件:</strong></p>
+<ul>
+<li>等待磁盘读取完成(事件来自中断)</li>
+<li>等待管道写入器产生数据(事件来自线程)</li>
+<li>等待任何子程序退出</li>
+</ul>
+<p><strong>协调线程，在于如何“等待”。</strong></p>
+<p><strong>如果单纯的 </strong><code>**while(predicate()) ;**</code><strong> 自旋可能会白白消耗时间片。</strong></p>
+<p><strong>更好的解决方案:产生CPU的协调原语，例如屏障，信号量，事件队列。Xv6使用</strong><code>**sleep and wakeup**</code><strong>机制。</strong></p>
+<h3 id="信号量-semaphores">信号量 semaphores<a class="headerlink" href="#信号量-semaphores" title="Permanent link">&para;</a></h3>
+<p>虽然 xv6 没有使用 semaphores 信号量。但 <code>sleep and wakeup</code>机制可以用作实现信号量。信号量维护一个计数并提供两个操作。V操作(对于生产者)增加计数。P操作(针对消费者)等待计数非零，然后对其递减并返回。</p>
+<h3 id="初步-sleep-想法自旋-忙等待-busy-waiting">初步 sleep 想法：自旋-忙等待 busy waiting<a class="headerlink" href="#初步-sleep-想法自旋-忙等待-busy-waiting" title="Permanent link">&para;</a></h3>
+<p>一个简单的实现如下，</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">lock</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">void</span>
+<span class="nf">V</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span>
+<span class="nf">P</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">;</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span>
+</code></pre></div>
+<p><strong>但正如之前所说，这个实现是代价高昂。因为如果生产者很少行动，消费者将花大部分时间在while循环中自旋，希望得到一个非零计数。消费者的CPU可能会找到比重复轮询 </strong><code>**s-&gt;count**</code><strong> 更高效的工作。为了避免这种繁忙的等待，需要一种方法让消费者交出CPU，并在V增加计数后才恢复。</strong></p>
+<h3 id="尝试让出-cpu-提高性能-yield-cpu">尝试让出 CPU 提高性能 yield CPU<a class="headerlink" href="#尝试让出-cpu-提高性能-yield-cpu" title="Permanent link">&para;</a></h3>
+<p><strong>现在有一对调用，</strong><code>**sleep and wakeup**</code><strong>。</strong></p>
+<ol>
+<li><code>**sleep(chan)**</code><strong> 会让调用它的线程在指定的通道 </strong><code>**chan**</code><strong> 上进入休眠状态，并释放 CPU 资源给其他任务使用。</strong></li>
+<li><code>**wakeup(chan)**</code><strong> 会唤醒所有在 </strong><code>**chan**</code><strong> 上等待的线程，让它们继续执行。如果没有线程在等待，则此操作无效果。</strong></li>
+</ol>
+<p><strong>现在考虑修改 </strong><code>**P**</code><strong> 与 </strong><code>**V**</code><strong> 操作，将空循环改为使用</strong><code>**sleep**</code><strong> 。</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span>
+<span class="nf">V</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">wakeup</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span>
+<span class="nf">P</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">sleep</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span>
+</code></pre></div>
+<p><strong>但这样的</strong><code>**P**</code><strong> 操作仍有问题，它有可能错过 </strong><code>**wakeup**</code><strong> ，即 </strong><code>**lost wake-up problem**</code><strong> 。</strong></p>
+<p>因为函数 <code>P</code> 中，语句 <code>while(s-&gt;count == 0)</code> 与 <code>sleep(s)</code> 不是原子的，假设消费者先检查条件，然后在调用 <code>sleep</code> 前，生产者线程调用了 <code>wakeup</code> 进行唤醒，此时是没有进程在休眠的，如此消费者会错过这个唤醒。指令产生了如下的交错执行，</p>
+<table>
+<thead>
+<tr>
+<th><strong>consumer(P)</strong></th>
+<th><strong>producer(V)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>**while(s-&gt;count == 0)**</code></td>
+<td>****</td>
+</tr>
+<tr>
+<td>****</td>
+<td><code>**wakeup(s)**</code></td>
+</tr>
+<tr>
+<td><code>**sleep(s)**</code></td>
+<td>****</td>
+</tr>
+</tbody>
+</table>
+<h3 id="解决错过唤醒-lost-wakeup">解决错过唤醒 lost wakeup<a class="headerlink" href="#解决错过唤醒-lost-wakeup" title="Permanent link">&para;</a></h3>
+<p><strong>为了不错过唤醒，最简单的想法，那就用锁将 </strong><code>**while(s-&gt;count == 0) sleep(s);**</code><strong> 保护起来，使其不可分割就好。</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">V</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">wakeup</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span>
+<span class="n">P</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">sleep</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">  </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span>
+</code></pre></div>
+<p><strong>这个很接近最终的答案了，但仍有问题。因为 </strong><code>**sleep**</code><strong> 会让出CPU，而在 </strong><code>**why does sched() forbid spinlocks from being held when yielding the CPU?**</code><strong> 小节提到，持有自旋锁并让出CPU，是会带来死锁的。</strong></p>
+<h3 id="为什么-sleep需要传递保护数据的锁-why-the-lock-argument-to-sleep">为什么 sleep()需要传递保护数据的锁？ why the lock argument to sleep()?<a class="headerlink" href="#为什么-sleep需要传递保护数据的锁-why-the-lock-argument-to-sleep" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong><font style="background-color:#FBDE28;">为了避免死锁，在 </font></strong><code>**&lt;font style="background-color:#FBDE28;"&gt;sleep()&lt;/font&gt;**</code><strong><font style="background-color:#FBDE28;">中再释放掉相关锁</font></strong><strong>，</strong></li>
+</ol>
+<p><strong>这也是 </strong><code>**sleep**</code><strong> 相关实现有锁参数的原因。</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">V</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">wakeup</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span>
+<span class="n">P</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">semaphore</span><span class="w"> </span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">sleep</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">s</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span>
+</code></pre></div>
+<p><strong>仔细看 xv6 的实现</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Atomically release lock and sleep on chan.</span>
+<span class="c1">// Reacquires lock when awakened.</span>
+<span class="kt">void</span>
+<span class="nf">sleep</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="o">*</span><span class="n">lk</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+<span class="w">  </span><span class="c1">// Must acquire p-&gt;lock in order to</span>
+<span class="w">  </span><span class="c1">// change p-&gt;state and then call sched.</span>
+<span class="w">  </span><span class="c1">// Once we hold p-&gt;lock, we can be</span>
+<span class="w">  </span><span class="c1">// guaranteed that we won&#39;t miss any wakeup</span>
+<span class="w">  </span><span class="c1">// (wakeup locks p-&gt;lock),</span>
+<span class="w">  </span><span class="c1">// so it&#39;s okay to release lk.</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span><span class="w">  </span><span class="c1">//DOC: sleeplock1</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="n">lk</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// Go to sleep.</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chan</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SLEEPING</span><span class="p">;</span>
+<span class="w">  </span><span class="n">sched</span><span class="p">();</span>
+<span class="w">  </span><span class="c1">// Tidy up.</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Reacquire original lock.</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="n">lk</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// Wake up all processes sleeping on chan.</span>
+<span class="c1">// Must be called without any p-&gt;lock.</span>
+<span class="kt">void</span>
+<span class="nf">wakeup</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">myproc</span><span class="p">()){</span>
+<span class="w">      </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">SLEEPING</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span>
+</code></pre></div>
+<ol>
+<li><code>**sleep**</code><strong> 在让出 CPU 前释放了相关锁，持有 </strong><code>**p-&gt;lock**</code><strong>然后改变</strong><code>**p-&gt;chan**</code><strong> 与 </strong><code>**p-&gt;state**</code><strong> ，</strong><strong>然后调用</strong><code>**switch**</code><strong> 函数切换到调度器线程，调度器线程再释放进程锁。</strong></li>
+<li><code>**wakeup**</code><strong> 也是遍历所有相同等待条件并 </strong><code>**SLEEPING**</code><strong> 的线程，修改其 </strong><code>**p-&gt;state**</code><strong> 以便 </strong><code>**scheduler**</code><strong> 线程唤醒。</strong></li>
+<li><strong>而 </strong><code>**sleep**</code><strong> 从 </strong><code>**sched()**</code><strong> 调用中返回后（即被唤醒），重新获取原相关锁，以便后续代码仍被相关锁保护的。</strong></li>
+</ol>
+<p><strong>从以上不难看出，</strong><code>**sleep and wakeup**</code><strong> 机制有两个关键，</strong></p>
+<ol>
+<li><strong>没有错过唤醒，所以 </strong><code>**sleep**</code><strong> 写 </strong><code>**p-&gt;state**</code><strong> 需要在 </strong><code>**wakeup**</code><strong> 的写之前发生，这个序列用锁来保证。</strong></li>
+<li><strong>让出CPU却不死锁，在 </strong><code>**sleep**</code><strong> 获取 </strong><code>**p-&gt;lock**</code><strong> 后释放其他锁。</strong></li>
+</ol>
+<h2 id="如何在-xv6-中终止线程">如何在 xv6 中终止线程？<a class="headerlink" href="#如何在-xv6-中终止线程" title="Permanent link">&para;</a></h2>
+<p><strong>使用 </strong><code>**sleep and wakeup**</code><strong> 机制的系统调用有很多</strong>，如 <code>pipe</code> 与 <code>wait</code> 等。因为总有工作是需要休眠让出 CPU 等待的，这就有 sleep lock 的用武之地。一个常见的场景就是进程如何退出，这个过程总伴随着资源的回收。</p>
+<p><strong>一个进程 X 要真的让另一个进程 Y 退出是困难的，需要考虑一些细节，</strong></p>
+<ul>
+<li><strong>Y 可能在另一个 CPU 上运行。</strong></li>
+<li><strong>Y 可能持有锁（其他相关资源）。</strong></li>
+<li><strong>Y 可能正在修改某些数据结构，需要保证数据结构的 invariant 所以不能改到一半。</strong></li>
+</ul>
+<p>而<strong>进程想自己回收全部资源也是不现实的，</strong></p>
+<ul>
+<li><strong>进程无法回收自己的栈，因为它自己正在用</strong></li>
+<li><strong>进程无法回收 </strong><code>**struct context**</code><strong> 可能需要调用 </strong><code>**swtch**</code></li>
+</ul>
+<p>所以 xv6 使用两种方式回收资源，即 <code>**exit**</code><strong> </strong>与 <code>**kill**</code><strong> </strong>两类。</p>
+<h3 id="进程使用exit">进程使用exit()<a class="headerlink" href="#进程使用exit" title="Permanent link">&para;</a></h3>
+<p>普通进程自愿退出，调用 <code>exit</code> 系统调用。本质上，这会使得资源一部分在 <code>exit</code> 中回收，一部分在 <code>wait</code> 回收。</p>
+<p><strong>在 </strong><code>**exit**</code><strong> 中基本的工作是，</strong></p>
+<ol>
+<li>** 关闭打开的文件**</li>
+<li><strong>将子进程的父进程ID更改为1（init）</strong></li>
+<li><strong>唤醒正在等待的父进程 p-&gt;state = ZOMBIE</strong></li>
+</ol>
+<p><strong>现在处于一个状态</strong></p>
+<ul>
+<li><strong>处于死亡但尚未被完全清理</strong></li>
+<li><strong>不会再次运行</strong></li>
+<li><strong>该进程还不会被fork()重新分配（注意堆栈和proc[]条目仍然被分配……）</strong></li>
+<li><strong>然后切换到调度器</strong></li>
+</ul>
+<p>在 <code>wait</code> 中基本工作是，</p>
+<ul>
+<li>sleep() 等待任意子进程退出</li>
+<li>扫描 proc[] 表查找状态为 ZOMBIE 的子进程</li>
+<li>调用 freeproc()（持有 p-&gt;lock&hellip;）释放 trapframe, pagetable, &hellip;，并将 p-&gt;state 设置为 UNUSED</li>
+</ul>
+<p>每个进程都需要被 <code>wait</code> 以回收资源，所以 re-parent 使得进程有父进程回收也很重要。</p>
+<h3 id="进程使用killpid杀死某个进程">进程使用kill(pid)杀死某个进程<a class="headerlink" href="#进程使用killpid杀死某个进程" title="Permanent link">&para;</a></h3>
+<p>如上面提到的，强制让一个进程退出是危险的，其中并发、数据的一致性与资源回收都很重要。</p>
+<p>所以系统调用 <code>**kill**</code> 其实只是设置 <code>**p-&gt;killed**</code> 标志，目标进程陷入内核时检查到这个标志会调用 <code>**exit(-1)**</code> 开始退出（在 <code>usertrap</code> 中）。</p>
+<p>如果 <code>kill</code> 的目标进程在休眠中，似乎此时该进程既没有执行，又没有持有锁，直接销毁目标进程似乎是可行的。但是，</p>
+<ul>
+<li><strong>如果进程 sleeping 是在等待 console input 那可以直接销毁</strong></li>
+<li><strong>但如果进程是等待磁盘的文件创建等工作，这就会产生错误。磁盘写到一半，直接销毁进程会失去一致性。</strong></li>
+</ul>
+<p><strong>为了解决这个问题，在 xv6 的 </strong><code>**kill**</code><strong> 实现还会类似 </strong><code>**wakeup()**</code><strong>实现，将 </strong><code>**p-&gt;state**</code><strong> 从 </strong><code>**SLEEPING**</code><strong> 状态改为 </strong><code>**RUNNABLE**</code><strong>。以便让休眠中的进程在条件完成前返回。</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// in kernel/pro.c file</span>
+<span class="c1">// Kill the process with the given pid.</span>
+<span class="c1">// The victim won&#39;t exit until it tries to return</span>
+<span class="c1">// to user space (see usertrap() in trap.c).</span>
+<span class="kt">int</span>
+<span class="nf">kill</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">){</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">pid</span><span class="p">){</span>
+<span class="w">      </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">SLEEPING</span><span class="p">){</span>
+<span class="w">        </span><span class="c1">// Wake process from sleep().</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span>
+</code></pre></div>
+<ul>
+<li><strong>有些使用 </strong><code>**sleep**</code><strong> 等待的函数会检查 </strong><code>**p-&gt;killed**</code>** **</li>
+</ul>
+<p><strong>例如： </strong><code>**piperead()**</code><strong> 与 </strong><code>**consoleread()**</code><strong> 系统调用，否则读操作可能永远等待一个被 </strong><code>**killed**</code><strong> 的进程。如果</strong><code>**p-&gt;killed == 1**</code><strong>则 </strong><code>**return**</code><strong>返回到</strong><code>**usertrap()**</code><strong>中，</strong><code>**usertrap()**</code><strong>中会检查 </strong><code>**p-&gt;killed**</code><strong>并调用</strong><code>**exit()**</code><strong>退出</strong></p>
+<ul>
+<li>** 有些使用 <strong><code>**sleep**</code></strong> 等待的进程不会检查<strong><code>**p-&gt;killed**</code></strong> **</li>
+</ul>
+<p><strong>例如： </strong><code>**virtio_disk.c**</code><strong> 中相关函数，因为确实需要等待磁盘 IO 的完成。</strong><strong>这个过程涉及到多次读写磁盘。我们希望完成所有的文件系统操作，完成整个系统调用。之后再检查p-&gt;killed并退出。</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/27925082/1731067869389-ca64148c-090f-43ef-a928-731dbefe10c8.png" /></p>
+<p>:::color1
+<strong>所以</strong><code>**kill**</code><strong>系统调用并不是真正的立即停止进程的运行，而是继续完成现在的任务或者根据判断返回，但进程并未被停止，一直运行</strong><strong>直到 </strong><code>**usertrap()**</code><strong>函数中 检查 </strong><code>**p-&gt;killed**</code><strong> 后调用 </strong><code>**exit(-1)**</code><strong>才会停止。</strong></p>
+<p><strong>具体</strong><strong>：</strong></p>
+<ul>
+<li><strong>目标进程在用户态，进程在下一次系统调用或异常或中断（通常是计时器中断先来）中，调用 </strong><code>**exit(-1)**</code><strong> 退出。</strong></li>
+<li><strong>目标进程在内核态，将没有机会执行用户指令，但可能停留在内核态“一段时间”，等待唤醒并 </strong><code>**exit()**</code><strong>。</strong></li>
+</ul>
+<p>:::</p>
+<h2 id="real-world">Real World<a class="headerlink" href="#real-world" title="Permanent link">&para;</a></h2>
+<h3 id="自旋锁和互斥锁性能对比">自旋锁和互斥锁性能对比<a class="headerlink" href="#自旋锁和互斥锁性能对比" title="Permanent link">&para;</a></h3>
+<p>**自旋锁比互斥锁效率更高的原因主要是因为自旋锁在等待锁释放时不会导致线程进入睡眠状态，从而避免了操作系统进行线程上下文切换的开销。因此，在锁的持有时间非常短的情况下，使用自旋锁可以减少延迟和提高程序的执行效率。  **</p>
+<p><strong>详细对比：</strong></p>
+<ul>
+<li><strong>上下文切换成本</strong>：<ul>
+<li>自旋锁适用于锁持有时间非常短的场景，因为线程在等待获取锁时不会被挂起，从而避免了上下文切换的开销。上下文切换涉及保存和恢复线程状态，切换到操作系统内核模式等操作，这些都是相对耗时的操作。</li>
+<li>互斥锁在锁被占用时通常会导致线程睡眠，这涉及到线程的上下文切换，尤其是在高并发情况下，频繁的上下文切换会显著降低系统的整体性能。</li>
+</ul>
+</li>
+<li><strong>等待时间和响应性</strong>：<ul>
+<li>在锁被频繁且快速地获取和释放的环境中，自旋锁允许线程立即检测到锁的释放，从而快速响应。</li>
+<li>对于互斥锁，线程被唤醒和重新调度可能会有明显的延迟，尤其是在系统负载较高时。</li>
+</ul>
+</li>
+<li><strong>CPU资源的使用</strong>：<ul>
+<li>自旋锁在等待锁的过程中会一直占用 CPU，这在多核处理器上不是问题，但在单核处理器上可能会导致明显的性能问题。</li>
+<li>互斥锁通过使线程进入睡眠状态，可以释放 CPU 资源供其他线程使用，这在资源受限的环境中更为合理。</li>
+</ul>
+</li>
+</ul>
+<h3 id="xv6的调度策略很简单">xv6的调度策略很简单<a class="headerlink" href="#xv6的调度策略很简单" title="Permanent link">&para;</a></h3>
+<p>xv6调度器实现了一个简单的调度策略，该策略依次运行每个进程。这种策略称为轮询。真正的操作系统实现更复杂的策略，例如，允许进程具有优先级。其思想是调度器将优先考虑可运行的高优先级进程而不是可运行的低优先级进程。这些策略可能很快变得复杂，因为经常存在相互竞争的目标:例如，操作可能还希望保证公平性和高吞吐量。</p>
+<p>复杂的策略可能导致一些进程间的交互，如优先级反转和护送(priority inversion and convoys)。 当低优先级进程和高优先级进程都使用特定的锁时，可能会发生优先级反转，当低优先级进程获得该锁时，可能会阻止高优先级进程继续进行。当许多高优先级进程正在等待一个获得共享锁的低优先级进程时，可能会形成一个长长的等待进程队列；而队列一旦形成，就可以持续很长时间。为了避免这类问题，调度器需要额外的机制。</p>
+<h3 id="其他同步方法">其他同步方法<a class="headerlink" href="#其他同步方法" title="Permanent link">&para;</a></h3>
+<p><code>sleep</code> 和 <code>wakeup</code> 是一种简单有效的同步方法，但还有许多其他方法。所有方法的第一个挑战都是避免 <code>lost wake-up problem</code>。</p>
+<ul>
+<li>最初的Unix内核的睡眠只是禁止中断，这是因为Unix运行在单cpu系统上。</li>
+<li>因为xv6运行在多核处理器上，所以它为睡眠添加了显式的锁。FreeBSD的 <code>msleep</code> 采用了同样的方法。</li>
+<li>Plan 9的睡眠使用一个回调函数，在持有相关锁且在写 <code>SLEEPING</code> 前调用回调函数。该函数可以作为 <code>sleep</code> 的最后检查，以避免错过唤醒。</li>
+<li>Linux kernel 的 <code>sleep</code> 实现使用一个显式的进程队列，称为等待队列，而不是等待通道 <code>chan</code>；这个队列有自己的内部锁。</li>
+</ul>
+<p>像 xv6 在 <code>wakeup</code> 中扫描所有进程集是低效的。更好的解决方案是用一个数据结构替换 <code>sleep and wakeup</code> 使用的 <code>chan</code>，该数据结构保存所有在该结构上休眠的进程列表，</p>
+<ul>
+<li>例如Linux的等待队列。</li>
+<li>Plan 9的 <code>sleep and wakeup</code> 会构造一个 <code>rendezvous point or Rendez</code> 集合点。</li>
+<li>许多线程库会使用相同的结构作为条件变量；在该上下文中，操作睡眠和唤醒被称为 <code>wait</code> 和 <code>signal</code>。所</li>
+<li>有这些机制都具有相同的特点：睡眠的条件由在睡眠期间原子地释放的锁保护。</li>
+</ul>
+<p>同理，真正的操作系统会在常数时间内找到具有显式空闲列表的空闲proc结构，而不是在allocproc中进行线性时间搜索；为了简单起见，Xv6使用线性扫描。</p>
+<h3 id="惊群效应-thunder-herd"><strong>惊群效应 </strong>thunder herd<a class="headerlink" href="#惊群效应-thunder-herd" title="Permanent link">&para;</a></h3>
+<p>xv6的<code>wakeup</code>实现会唤醒正在等待特定通道的所有进程，可能有许多进程正在等待该特定通道。操作系统将调度所有这些进程，它们将竞相检查睡眠状态。这种现象有时被称为“<strong>惊群效应</strong>”，是最好避免的。所以大多数条件变量都有两个唤醒原语：<code>signal</code> 和 <code>broadcast</code>，前者唤醒一个特定进程，后者唤醒所有等待的进程。</p>
+<h3 id="semaphores">semaphores<a class="headerlink" href="#semaphores" title="Permanent link">&para;</a></h3>
+<p>信号量通常用于同步。该计数通常对应于管道缓冲区中可用的字节数或进程拥有的僵尸子进程数。使用显式计数作为抽象的一部分可以避免丢失唤醒的问题，因为已经发生的唤醒数量有一个显式计数。计数也避免了虚假唤醒和惊群的问题。</p>
+<p><strong>除了sleep&amp;wakeup，还有其他更高级的协调机制，比如semaphore。semaphore接口更简单，不需要提供关于锁的信息，并且其内部已经处理了lost wakeup问题，这得益于它内置的up-down计数器。这意味着使用semaphore时不必担心丢失唤醒的问题，也不需要通过接口传递condition lock。尽管semaphore在某些方面更简单，但它主要用于等待计数器变化的情况，因此不如sleep和wakeup那样通用。</strong></p>
+<h3 id="terminating-process">terminating process<a class="headerlink" href="#terminating-process" title="Permanent link">&para;</a></h3>
+<p>在xv6中，终止进程并清理进程带来了很多复杂性。在大多数操作系统中，它甚至更加复杂，因为，<code>killed</code> 进程可能在内核睡眠的深处，unwind 它的堆栈需要小心，因为调用堆栈上的每个函数可能需要做一些清理。有些语言通过提供异常机制来提供帮助，但c语言没有这些机制。p.s. 所以这也是内核难写的原因，小心回收资源。</p>
+<p>此外，还有其他事件可以导致正在休眠的进程被唤醒，即使它所等待的事件还没有发生。例如，当一个Unix进程处于睡眠状态时，另一个进程可能向它发送一个信号。在这种情况下，进程将从中断的系统调用返回值为-1，错误码设置为EINTR。应用程序可以检查这些值并决定要做什么。由于 xv6不支持信号，因此不会产生这种复杂性。</p>
+<h3 id="unsatisfactory-kill-in-xv6">unsatisfactory kill in xv6<a class="headerlink" href="#unsatisfactory-kill-in-xv6" title="Permanent link">&para;</a></h3>
+<p>xv6 的实现仍不是完全合适的。因为有些 <code>sleep loops</code> 可能检查 <code>p-&gt;killed</code>。即使对于检查 <code>p-&gt;killed</code> 的 <code>sleep loops</code>，也存在 <code>sleep</code> 和 <code>kill</code> 之间的竞争。后者可能设置 <code>p-&gt;killed</code>，并试图在目标进程循环检查 <code>p-&gt;killed</code>后目标进程，但这在它调用睡眠之前。如果发生此问题，目标将不会注意到 <code>p-&gt;killed</code>，直到它所等待的条件发生。这可能是相当晚的，甚至永远不会(例如，如果目标进程正在等待来自控制台的输入，但用户不输入任何输入)。这本质上和丢失唤醒相似，是丢失了 <code>kill</code> 的设置 <code>p-&gt;killed</code> 的“唤醒”。当然，这样可以通过锁保护在 <code>sleep loops</code> 中保证数据一致性，这可能需要修改 <code>sleep</code> 实现和检查的 <code>sleep loops</code> 保证，读 <code>p-&gt;killed</code> 与写 <code>p-&gt;state</code> 不可分割。</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>这节课，详细介绍了 <code>sleep and wakeup</code> 机制，其关键在于，</p>
+<ol>
+<li>没有错过唤醒，所以 <code>sleep</code> 写 <code>p-&gt;state</code> 需要在 <code>wakeup</code> 的写之前发生，这个序列用锁来保证。</li>
+<li>让出CPU却不死锁，在 <code>sleep</code> 获取 <code>p-&gt;lock</code> 后释放其他锁。</li>
+</ol>
+<p>这也是所谓的 <code>sleep lock</code> 的机制，保证在写 <code>p-&gt;state</code> 时有锁（至少有一个），保证让出 CPU 后无锁。</p>
+<p>许多系统调用也用到了 <code>sleep and wakeup</code> 机制，在涉及到 terminating 时，回收资源尤其需要注意。 xv6 的 <code>kill</code> 只是简单打标记，资源回收仍然交给了 <code>exit</code> 与 <code>wait</code> 系统调用处理。这个 <code>kill</code> 实现与一些 <code>sleep loops</code> 检查 <code>p-&gt;killed</code> 的竞争也需要注意。这在 <code>Real world</code> 的 <code>unsatisfactory kill in xv6</code> 小节有所分析。</p>
+<p>总的看，<code>p-&gt;lock</code>的作用十分丰富，尤其在调度和并发中，所有与进程状态相关的保护都与其有关系，</p>
+<ul>
+<li>它与 p-&gt;state 一起，它防止在为新进程分配 proc[] 槽位时发生竞争。</li>
+<li>它在进程被创建或销毁时将其隐藏起来。即 p-&gt;killed 与 p-&gt;state</li>
+<li>它防止父进程的等待收集到一个已将其状态设置为 ZOMBIE 但尚未放弃 CPU 的进程。</li>
+<li>它防止另一个核心的调度器在进程将其状态设置为 RUNNABLE 后但在完成 swtch 之前决定运行该进程。</li>
+<li>它确保只有一个核心的调度器决定运行 RUNNABLE 进程。</li>
+<li>它防止定时器中断在进程处于 swtch 期间导致其放弃 CPU。因为此时中断是关闭的。</li>
+<li>与条件锁一起，它有助于防止唤醒操作忽略一个正在调用 sleep 但尚未完成放弃 CPU 的进程。只有在将 p-&gt;state 设置为 SLEEPING 并完成 swtch 后才释放 p-&gt;lock 锁。</li>
+<li>它防止被 kill 的目标进程在 kill 检查 p-&gt;pid 和设置 p-&gt;killed 之间退出并可能被重新分配。</li>
+<li>它使 kill 对 p-&gt;state 的检查和写入成为原子操作。</li>
+</ul>
+<p>总之，所有其他进程与CPU能看到的状态的，就是有可能数据竞争的状态，都需要保护，</p>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="c1">// p-&gt;lock must be held when using these:</span>
+<span class="w">  </span><span class="k">enum</span><span class="w"> </span><span class="n">procstate</span><span class="w"> </span><span class="n">state</span><span class="p">;</span><span class="w">        </span><span class="c1">// Process state</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span><span class="w">                  </span><span class="c1">// If non-zero, sleeping on chan</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">killed</span><span class="p">;</span><span class="w">                  </span><span class="c1">// If non-zero, have been killed</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">xstate</span><span class="p">;</span><span class="w">                  </span><span class="c1">// Exit status to be returned to parent&#39;s wait</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span><span class="w">                     </span><span class="c1">// Process ID </span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
