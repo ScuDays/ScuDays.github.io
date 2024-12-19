@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../Lec08%20Page%20faults%20%28Frans%29/" rel="prev"/>
+<link href="../Lec09%20Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.44" name="generator"/>
+<title>8.1 Page Fault Basics - days'blog</title>
+<link href="../../../assets/stylesheets/main.0253249f.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../../css/heti.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/utils/katex.min.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css" rel="stylesheet"/>
+<link href="../../../css/custom.css" rel="stylesheet"/>
+<link href="../../../css/tasklist.css" rel="stylesheet"/>
+<link href="../../../css/card.css" rel="stylesheet"/>
+<link href="../../../css/flink.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+ <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="indigo" data-md-color-primary="blue-grey" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#81-page-fault-basics">
+          跳转至
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="页眉" class="md-header__inner md-grid">
+<a aria-label="days'blog" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="days'blog">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            days'blog
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              8.1 Page Fault Basics
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="切换至夜间模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="blue-grey" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="切换至夜间模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="切换至日间模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="black" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="切换至日间模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="搜索" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="搜索" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="查找" class="md-search__options">
+<button aria-label="清空当前内容" class="md-search__icon md-icon" tabindex="-1" title="清空当前内容" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="标签" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../home/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+    
+  
+  Home
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/">
+          
+  
+    
+  
+  CSCI0300
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/">
+          
+  
+    
+  
+  6S081
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="导航栏" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="days'blog" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="days'blog">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    days'blog
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_1" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../home/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Home
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_1_2" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../home/test/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Test
+  </span>
+</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_2">
+<span class="md-nav__icon md-icon"></span>
+            Test
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    CSCI0300
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            CSCI0300
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Lab
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_1">
+<span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/">
+<span class="md-ellipsis">
+    Lab 0 ：Setup
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/">
+<span class="md-ellipsis">
+    Lab 1 ：C Programming and Build Tools
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%202%20%EF%BC%9ADebugging/">
+<span class="md-ellipsis">
+    Lab 2 ：Debugging
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/">
+<span class="md-ellipsis">
+    Lab 3 ：Assembly and Buffer Overflow
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/">
+<span class="md-ellipsis">
+    Lab 4 ：Getting Familiar with WeensyOS
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%205%20%EF%BC%9AProcesses/">
+<span class="md-ellipsis">
+    Lab 5 ：Processes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%206%20%EF%BC%9AThreads/">
+<span class="md-ellipsis">
+    Lab 6 ：Threads
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Lecture
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/">
+<span class="md-ellipsis">
+    Lecture 01：课程概述和计算机组织
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">
+<span class="md-ellipsis">
+    Lecture 02：系统编程
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/">
+<span class="md-ellipsis">
+    Lecture 03：指针和数据表示
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/">
+<span class="md-ellipsis">
+    Lecture 04：内存组织，动态内存分配和未定义行为
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/">
+<span class="md-ellipsis">
+    Lecture 05：数组和结构体
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/">
+<span class="md-ellipsis">
+    Lecture 06：sizeof、typedef和有符号整数
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/">
+<span class="md-ellipsis">
+    Lecture 07：有符号数表示和内存对齐
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
+<span class="md-ellipsis">
+    Lecture 08：结构体内存对齐、收集规则、汇编语言
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
+<span class="md-ellipsis">
+    Lecture 09：汇编语言
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/">
+<span class="md-ellipsis">
+    Lecture 10：汇编控制流
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/">
+<span class="md-ellipsis">
+    Lecture 11：栈
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/">
+<span class="md-ellipsis">
+    Lecture 12：栈、缓冲区溢出和缓存
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/">
+<span class="md-ellipsis">
+    Lecture 13：缓存 Caching
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/">
+<span class="md-ellipsis">
+    Lecture 14：操作系统简介
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/">
+<span class="md-ellipsis">
+    Lecture 15：特权分离，内存保护
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/">
+<span class="md-ellipsis">
+    Lecture 16：虚拟内存和页表
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/">
+<span class="md-ellipsis">
+    Lecture 17：地址转换，进程创建 (I)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/">
+<span class="md-ellipsis">
+    Lecture 18：进程创建 (II)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/">
+<span class="md-ellipsis">
+    Lecture 19：进程间通信
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/">
+<span class="md-ellipsis">
+    Lecture 20：多进程、线程
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/">
+<span class="md-ellipsis">
+    Lecture 21：竞争条件
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/">
+<span class="md-ellipsis">
+    Lecture 22：同步、原子操作和互斥锁 Synchronization, Atomics, and Mutexes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/">
+<span class="md-ellipsis">
+    Lecture 23：死锁，有界缓冲区，C++互斥模式 Deadlock, Bounded Buffer，C++ Mutex Patterns
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/">
+<span class="md-ellipsis">
+    Lecture 24：条件变量、总结
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-ellipsis">
+    6S081
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            6S081
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Lab
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_1">
+<span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/">
+<span class="md-ellipsis">
+    Lab 01：Xv6 and Unix utilities
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2002%EF%BC%9ASyscall/">
+<span class="md-ellipsis">
+    Lab 02：Syscall
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/">
+<span class="md-ellipsis">
+    Lab 03：page tables
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2004%EF%BC%9Atraps/">
+<span class="md-ellipsis">
+    Lab 04：traps
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/">
+<span class="md-ellipsis">
+    Lab 05：lazy page allocation
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/">
+<span class="md-ellipsis">
+    Lab 06：Copy-on-Write Fork for xv6
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2007%EF%BC%9AMultithreading/">
+<span class="md-ellipsis">
+    Lab 07：Multithreading
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2008%EF%BC%9Alock/">
+<span class="md-ellipsis">
+    Lab 08：lock
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Lecture
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_2">
+<span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec01%20Introduction%20and%20Examples%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec01：Introduction and Examples (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec01%21Introduction%20and%20Examples%20%28Robert%29/">
+<span class="md-ellipsis">
+    操作系统的目标
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec03%20OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec03：OS Organization and System Calls (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec03%21OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec03!OS Organization and System Calls (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec04%20Page%20tables%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec04：Page tables (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec04%21Page%20tables%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec04!Page tables (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+<span class="md-ellipsis">
+    Lec05：Calling conventions and stack frames RISC-V (TA)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec05%21Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+<span class="md-ellipsis">
+    5.1 C程序到汇编程序的转换
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec06%20Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec06：Isolation &amp; system call entry!exit (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec06%21Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/">
+<span class="md-ellipsis">
+    6.1 Trap机制
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec08%20Page%20faults%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec08：Page faults (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    8.1 Page Fault Basics
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec09%20Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/">
+<span class="md-ellipsis">
+    Lec09：Interrupts (Frans)(外部中断)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec09%21Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/">
+<span class="md-ellipsis">
+    9.1 真实操作系统内存使用情况
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec10%20Multiprocessors%20and%20locking%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec10：Multiprocessors and locking (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec10%21Multiprocessors%20and%20locking%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec10!Multiprocessors and locking (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec11%20Thread%20switching%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec11：Thread switching (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec11%21Thread%20switching%20%28Robert%29/">
+<span class="md-ellipsis">
+    总结：
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec13%20Sleep%20%26%20Wake%20up%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec13：Sleep &amp; Wake up (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec13%21Sleep%20%26%20Wake%20up%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec13!Sleep &amp; Wake up (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec14%20File%20systems%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec14：File systems (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec14%21File%20systems%20%28Frans%29/">
+<span class="md-ellipsis">
+    14.1 Why Interesting
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec15%20Crash%20recovery%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec15：Crash recovery (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec15%21Crash%20recovery%20%28Frans%29/">
+<span class="md-ellipsis">
+    15.1 File system crash 概述
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Book riscv
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            Book riscv
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../book-riscv/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3/">
+<span class="md-ellipsis">
+    1.2 I/O和文件描述符
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="目录" class="md-nav md-nav--secondary">
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="81-page-fault-basics"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.1-page-fault-basics"><font style="color:rgb(27, 27, 27);">8.1 Page Fault Basics</font></a><a class="headerlink" href="#81-page-fault-basics" title="Permanent link">¶</a></h1>
+<p><strong>通过<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>可以实现的一系列虚拟内存功能</strong></p>
+<ul>
+<li><strong>lazy allocation</strong></li>
+<li><strong>copy-on-write fork</strong></li>
+<li><strong>demand paging</strong></li>
+<li><strong>memory mapped files</strong></li>
+</ul>
+<p><strong>回顾一下虚拟内存两个主要的优点：</strong></p>
+<ul>
+<li><strong>第一个是<span><span class="heti-spacing"> </span>Isolation</span>，隔离性。</strong></li>
+</ul>
+<p>虚拟内存使得操作系统可以为每个应用程序提供属于它们自己的地址空间。所以一个应用程序不可能有意或者无意的修改另一个应用程序的内存数据。虚拟内存同时也提供了用户空间和内核空间的隔离性。</p>
+<ul>
+<li><strong>第二个好处是<span><span class="heti-spacing"> </span>level of indirection</span>，提供一层抽象。</strong></li>
+</ul>
+<p>处理器和所有的指令都可以使用虚拟地址，而内核会定义从虚拟地址到物理地址的映射关系。</p>
+<p>这一层抽象是我们这节课要讨论的许多有趣功能的基础。不过到目前为止，在<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>中在内核中基本上是直接映射（也就是虚拟地址等于物理地址<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。有一些特殊比较有趣的地方</p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>- trampoline page，它使得内核可以将一个物理内存page映射到多个用户地址空间中。
+- guard page，它同时在内核空间和用户空间用来保护Stack。
+</code></pre></div></td></tr></table></div>
+<p><strong>但在<span class="heti-skip"><span class="heti-spacing"> </span>xv6<span class="heti-spacing"> </span></span>中，</strong><strong>不管是<span class="heti-skip"><span class="heti-spacing"> </span>user page table<span class="heti-spacing"> </span></span>还是<span><span class="heti-spacing"> </span>kernel page table</span>，都在最开始的时候设置好，之后不做任何变动。</strong></p>
+<p><strong>而通过<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>我们可以让地址映射关系变得动态起来。</strong></p>
+<p><strong>通过<span><span class="heti-spacing"> </span>page fault</span>，内核可以更新<span><span class="heti-spacing"> </span>page table</span>，这是一个非常强大的功能。</strong></p>
+<p><strong>结合<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>page fault</span>，动态的更新虚拟地址，内核将会有巨大的灵活性。</strong></p>
+<p><strong>后面我们会看到各种各样利用动态变更<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实现的有趣的功能。</strong></p>
+<hr/>
+<p><strong>但是在那之前，首先，我们需要思考的是，什么样的信息对于<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>是必须的。或者说，当发生<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>时，内核需要什么样的信息才能够响应<span><span class="heti-spacing"> </span>page fault</span>。</strong></p>
+<ul>
+<li><strong>第一个信息，引起<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>的内存地址</strong><ul>
+<li>你知道，当出现<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>的时候，<span>XV6<span class="heti-spacing"> </span></span>内核会打印出错的虚拟地址，并且这个地址会被保存在<code>**STVAL寄存器**</code>中。所以，当一个用户应用程序触发了<span><span class="heti-spacing"> </span>page fault</span>，<span>page fault<span class="heti-spacing"> </span></span>会使用与<span class="heti-skip"><span class="heti-spacing"> </span>Robert<span class="heti-spacing"> </span></span>教授上节课介绍的相同的<span class="heti-skip"><span class="heti-spacing"> </span>trap<span class="heti-spacing"> </span></span>机制，将程序运行切换到内核，同时也会将出错的地址存放在<code>**STVAL寄存器**</code>中。这是我们需要知道的第一个信息。</li>
+</ul>
+</li>
+<li><strong>第二个信息，引起<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>的原因类型，对不同场景的<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>有不同的响应。</strong><ul>
+<li>不同的场景是指，比如因为<span class="heti-skip"><span class="heti-spacing"> </span>load<span class="heti-spacing"> </span></span>指令触发的<span><span class="heti-spacing"> </span>page fault</span>、因为<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令触发的<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>又或者是因为<span class="heti-skip"><span class="heti-spacing"> </span>jump<span class="heti-spacing"> </span></span>指令触发的<span><span class="heti-spacing"> </span>page fault</span>。所以实际上如果你查看<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>的文档，在<strong>SCAUSE</strong>（注，<span>Supervisor cause<span class="heti-spacing"> </span></span>寄存器，保存了<span class="heti-skip"><span class="heti-spacing"> </span>trap<span class="heti-spacing"> </span></span>机制中进入到<span class="heti-skip"><span class="heti-spacing"> </span>supervisor mode<span class="heti-spacing"> </span></span>的原因）寄存器的介绍中，有多个与<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>相关的原因。比如，<strong><span>13<span class="heti-spacing"> </span></span>表示是因为<span class="heti-skip"><span class="heti-spacing"> </span>load<span class="heti-spacing"> </span></span>引起的<span><span class="heti-spacing"> </span>page fault</span>；<span>15<span class="heti-spacing"> </span></span>表示是因为<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>引起的<span><span class="heti-spacing"> </span>page fault</span>；<span>12<span class="heti-spacing"> </span></span>表示是因为指令执行引起的<span><span class="heti-spacing"> </span>page fault</span></strong>。所以第二个信息<strong>存在</strong><code>**SCAUSE**</code><strong>寄存器</strong>中，<strong>其中总共有<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>个类型的原因与<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>相关，分别是读、写和指令。</strong><span>ECALL<span class="heti-spacing"> </span></span>进入到<span class="heti-skip"><span class="heti-spacing"> </span>supervisor mode<span class="heti-spacing"> </span></span>对应的是<span><span class="heti-spacing"> </span>8</span>，这是我们在上节课中应该看到的<span class="heti-skip"><span class="heti-spacing"> </span>SCAUSE<span class="heti-spacing"> </span></span>值。基本上来说，<span>page fault<span class="heti-spacing"> </span></span>和其他的异常使用与系统调用相同的<span class="heti-skip"><span class="heti-spacing"> </span>trap<span class="heti-spacing"> </span></span>机制（注，详见<span><span class="heti-spacing"> </span>lec06</span>）来从用户空间切换到内核空间。如果是因为<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>触发的<span class="heti-skip"><span class="heti-spacing"> </span>trap<span class="heti-spacing"> </span></span>机制并且进入到内核空间，<span>STVAL<span class="heti-spacing"> </span></span>寄存器和<span class="heti-skip"><span class="heti-spacing"> </span>SCAUSE<span class="heti-spacing"> </span></span>寄存器都会有相应的值。</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/592e2ce2f893c6c90cc79b753205cf6f.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/592e2ce2f893c6c90cc79b753205cf6f.jpeg"/></a></p>
+<ul>
+<li><strong>第三个信息，引起<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>时的程序计数器值，这表明了<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>在用户空间发生的位置</strong><ul>
+<li>从上节课可以知道，作为<span class="heti-skip"><span class="heti-spacing"> </span>trap<span class="heti-spacing"> </span></span>处理代码的一部分，这个地址存放在<span><span class="heti-spacing"> </span>SEPC</span>（Supervisor Exception Program Counter）寄存器中，并同时会保存在<span><span class="heti-spacing"> </span>trapframe-&gt;epc</span>（注，详见<span><span class="heti-spacing"> </span>lec06</span>）中。</li>
+</ul>
+</li>
+</ul>
+<p><strong>我们之所以关心触发<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>时的程序计数器值，是因为在<span class="heti-skip"><span class="heti-spacing"> </span>page fault handler<span class="heti-spacing"> </span></span>中我们或许想要修复<span><span class="heti-spacing"> </span>page table</span>，并重新执行对应的指令。理想情况下，修复完<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>之后，指令就可以无错误的运行了。所以，能够恢复因为<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>中断的指令运行是很重要的。</strong></p>
+<p>接下来我们将查看不同虚拟内存功能的实现机制，来帮助我们理解如何利用<span class="heti-skip"><span class="heti-spacing"> </span>page fault handler<span class="heti-spacing"> </span></span>修复<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>并做一些有趣的事情。</p>
+<h1 id="82-lazy-page-allocation"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.2-lazy-page-allocation"><font style="color:rgb(27, 27, 27);">8.2 Lazy page allocation</font></a><a class="headerlink" href="#82-lazy-page-allocation" title="Permanent link">¶</a></h1>
+<blockquote>
+<p><strong><font style="color:rgb(27, 27, 27);">基于<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实现的第一个功能</font></strong>
+</p>
+</blockquote>
+<p><strong><font style="color:rgb(27, 27, 27);">首先来看一下内存<span><span class="heti-spacing"> </span>allocation</span>，或者更具体的说是<span><span class="heti-spacing"> </span>sbrk()</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>sbrk<span class="heti-spacing"> </span></span>是<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>提供的系统调用，它使得用户应用程序能扩大自己的<span><span class="heti-spacing"> </span>heap</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">当一个应用程序启动的时候，<span>sbrk<span class="heti-spacing"> </span></span>指向的是<span class="heti-skip"><span class="heti-spacing"> </span>heap<span class="heti-spacing"> </span></span>的最底端，同时也是<span class="heti-skip"><span class="heti-spacing"> </span>stack<span class="heti-spacing"> </span></span>的最顶端。这个位置通过代表进程的数据结构中的<span class="heti-skip"><span class="heti-spacing"> </span>sz<span class="heti-spacing"> </span></span>字段表示，这里以</font></strong><em><strong><font style="color:rgb(27, 27, 27);"><span>p-&gt;sz<span class="heti-spacing"> </span></span>表示</font></strong></em><strong><font style="color:rgb(27, 27, 27);">。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/3e01715e78e1e1b56450d74ba17e8307.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/3e01715e78e1e1b56450d74ba17e8307.jpeg"/></a></p>
+<p><strong><font style="color:rgb(27, 27, 27);">当调用<span class="heti-skip"><span class="heti-spacing"> </span>sbrk<span class="heti-spacing"> </span></span>时，参数为整数，代表了你想要申请的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>数量（注，原视频说的是<span><span class="heti-spacing"> </span>page</span>，但是根据<span><span class="heti-spacing"> </span>Linux</span> </font></strong><a href="https://man7.org/linux/man-pages/man2/sbrk.2.html"><strong>man page</strong></a><strong><font style="color:rgb(27, 27, 27);">，实际中<span class="heti-skip"><span class="heti-spacing"> </span>sbrk<span class="heti-spacing"> </span></span>的参数是字节数<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。<span>sbrk<span class="heti-spacing"> </span></span>会扩展<span class="heti-skip"><span class="heti-spacing"> </span>heap<span class="heti-spacing"> </span></span>的上边界（也就是会扩大<span><span class="heti-spacing"> </span>heap</span><heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">扩展后如下图<span><span class="heti-spacing"> </span>xz</span></font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">注意：<span>heap(<span class="heti-spacing"> </span></span>堆<span class="heti-skip"><span class="heti-spacing"> </span>)<span class="heti-spacing"> </span></span>向上增长，<span>stack(<span class="heti-spacing"> </span></span>栈<span class="heti-skip"><span class="heti-spacing"> </span>)<span class="heti-spacing"> </span></span>向下增长</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/8ca948ec7153f4431e576e700439d4a2.jpeg"><img alt="用户进程的虚拟地址空间分布" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/8ca948ec7153f4431e576e700439d4a2.jpeg"/></a></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">这意味着，当<span class="heti-skip"><span class="heti-spacing"> </span>sbrk<span class="heti-spacing"> </span></span>实际发生或者被调用的时候，内核会分配一些物理内存，并将这些内存映射到用户应用程序的地址空间，然后将内存内容初始化为<span><span class="heti-spacing"> </span>0</span>，再返回<span class="heti-skip"><span class="heti-spacing"> </span>sbrk<span class="heti-spacing"> </span></span>系统调用。</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">这样，应用程序可以通过多次<span class="heti-skip"><span class="heti-spacing"> </span>sbrk<span class="heti-spacing"> </span></span>系统调用来增加它所需要的内存。应用程序爷可以通过给<span class="heti-skip"><span class="heti-spacing"> </span>sbrk<span class="heti-spacing"> </span></span>传入负数作为参数，来减少它的地址空间。</font></strong><font style="color:rgb(27, 27, 27);">不过在这节课我们只关注增加内存的场景。</font></li>
+</ul>
+<p>:::success
+<strong><font style="color:rgb(27, 27, 27);">在<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>中，<span>sbrk<span class="heti-spacing"> </span></span>的实现默认是 </font></strong><strong><font style="color:#DF2A3F;">eager allocation</font></strong><strong><font style="color:rgb(27, 27, 27);">。这表示一旦调用了<span><span class="heti-spacing"> </span>sbrk</span>，内核会立即分配应用程序所需要的物理内存。</font></strong></p>
+<p>:::</p>
+<p>:::warning
+<strong><font style="color:rgb(27, 27, 27);">但是实际上，应用程序很难预测自己到底需要多少内存，所以通常，应用程序倾向于申请多于自己所需要的内存。这意味着，进程的内存消耗会增加，但有部分内存永远也不会被应用程序所使用到。</font></strong></p>
+<p><font style="color:rgb(27, 27, 27);">比如：算法考虑最坏情况，申请一个最坏情况下才会达到的内存空间</font><strong><font style="color:rgb(27, 27, 27);"> </font></strong></p>
+<p>:::</p>
+<p>:::success
++ <strong><font style="color:rgb(27, 27, 27);">利用 </font></strong><strong><font style="color:#DF2A3F;">lazy allocation</font></strong><strong><font style="color:rgb(27, 27, 27);">。我们可以更聪明地来解决问题</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">核心思想非常简单：</font></strong></p>
+<ol>
+<li><strong><font style="color:rgb(27, 27, 27);"><span>sbrk<span class="heti-spacing"> </span></span>系统调用基本上不做任何事情，唯一需要做的事情就是提升</font></strong><em><strong><font style="color:rgb(27, 27, 27);">p-&gt;sz</font></strong></em><strong><font style="color:rgb(27, 27, 27);">，将</font></strong><em><strong><font style="color:rgb(27, 27, 27);">p-&gt;sz</font></strong></em><strong><font style="color:rgb(27, 27, 27);">增加<span><span class="heti-spacing"> </span>n</span>，其中<span class="heti-skip"><span class="heti-spacing"> </span>n<span class="heti-spacing"> </span></span>是需要新分配的内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>数量。</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">但内核在这个时间点实际上并不会分配任何物理内存。</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">之后，当应用程序使用到了新申请的那部分内存时会触发<span><span class="heti-spacing"> </span>page fault</span>，因为我们还没有将新的内存映射到<span><span class="heti-spacing"> </span>page table</span>。</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">所以，如果我们发现一个虚拟地址大于旧的</font></strong><em><strong><font style="color:rgb(27, 27, 27);">p-&gt;sz</font></strong></em><strong><font style="color:rgb(27, 27, 27);">，但是又小于新的</font></strong><em><strong><font style="color:rgb(27, 27, 27);">p-&gt;sz（注，也就是旧的<span><span class="heti-spacing"> </span>p-&gt;sz + n</span>）</font></strong></em><strong><font style="color:rgb(27, 27, 27);">，我们再通过内核分配一个内存<span><span class="heti-spacing"> </span>page</span>，并且重新执行所需指令。</font></strong></li>
+</ol>
+<p>:::</p>
+<p>举例：</p>
+<p>:::color1
+<strong><font style="color:rgb(27, 27, 27);">所以，当我们看到了一个<span><span class="heti-spacing"> </span>page fault</span>，相应的虚拟地址小于当前 </font></strong><em><strong><font style="color:rgb(27, 27, 27);">p-&gt;sz </font></strong></em><strong><font style="color:rgb(27, 27, 27);">，同时大于<span><span class="heti-spacing"> </span>stack</span> ，那么我们就知道这是一个来自于<span class="heti-skip"><span class="heti-spacing"> </span>heap<span class="heti-spacing"> </span></span>的地址，且这个地址对应内核还没有分配任何物理内存。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">所以对于这个<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>的响应也直接明了：</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">在<span class="heti-skip"><span class="heti-spacing"> </span>page fault handler<span class="heti-spacing"> </span></span>中，通过<span class="heti-skip"><span class="heti-spacing"> </span>kalloc<span class="heti-spacing"> </span></span>函数分配一个内存<span><span class="heti-spacing"> </span>page</span>；</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">初始化这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>内容为<span><span class="heti-spacing"> </span>0</span>；将这个内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>映射到<span class="heti-skip"><span class="heti-spacing"> </span>user page table<span class="heti-spacing"> </span></span>中；</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">最后重新执行指令。</font></strong></li>
+</ul>
+<p><strong><font style="color:rgb(27, 27, 27);">比方说，如果是<span class="heti-skip"><span class="heti-spacing"> </span>load<span class="heti-spacing"> </span></span>指令，或者<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令要访问属于当前进程但是还未被分配的内存，在我们映射完新申请的物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>之后，重新执行指令应该就能通过了。</font></strong></p>
+<p>:::</p>
+<h1 id="83-zero-fill-on-demand"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.3-zero-fill-on-demand"><font style="color:rgb(27, 27, 27);">8.3 Zero Fill On Demand</font></a><a class="headerlink" href="#83-zero-fill-on-demand" title="Permanent link">¶</a></h1>
+<blockquote>
+<p><strong><font style="color:rgb(27, 27, 27);">基于<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实现的第二个功能，简单但频繁使用</font></strong>
+</p>
+</blockquote>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">当你查看一个用户程序的地址空间时，存在<span class="heti-skip"><span class="heti-spacing"> </span>text<span class="heti-spacing"> </span></span>区域，<span>data<span class="heti-spacing"> </span></span>区域，同时还有一个<span class="heti-skip"><span class="heti-spacing"> </span>BSS<span class="heti-spacing"> </span></span>区域。</font></strong></li>
+</ul>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>BSS<span class="heti-spacing"> </span></span>区域：是数据段（data）的一部分（注，<span>BSS<span class="heti-spacing"> </span></span>区域包含了未被初始化或者初始化为<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的全局或者静态变量<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">当编译器在生成二进制文件时，编译器会填入这三个区域。<span>text<span class="heti-spacing"> </span></span>区域是程序的指令，<span>data<span class="heti-spacing"> </span></span>区域存放的是初始化了的全局变量，<span>BSS<span class="heti-spacing"> </span></span>包含了未被初始化或者初始化为<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的全局变量。</font></strong></li>
+</ul>
+<p>:::warning
+<strong><font style="color:rgb(27, 27, 27);">为什么要把未被初始化或者初始化为<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的全局变量单独列出来一块到<span class="heti-skip"><span class="heti-spacing"> </span>BSS<span class="heti-spacing"> </span></span>中？</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">是因为，例如你在<span class="heti-skip"><span class="heti-spacing"> </span>C<span class="heti-spacing"> </span></span>语言中定义了一个大的矩阵作为全局变量，它的元素初始值都是<span><span class="heti-spacing"> </span>0</span>，为什么要为这个矩阵分配内存呢？其实只需要记住这个矩阵的内容是<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>就行。</font></strong></li>
+</ul>
+<p>:::</p>
+<p>:::success
++ <strong><font style="color:rgb(27, 27, 27);">在一个正常的操作系统中，如果执行<span><span class="heti-spacing"> </span>exec</span>，<span>exec<span class="heti-spacing"> </span></span>会申请地址空间，里面会存放<span class="heti-skip"><span class="heti-spacing"> </span>text<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>data</span>。因为<span class="heti-skip"><span class="heti-spacing"> </span>BSS<span class="heti-spacing"> </span></span>里面保存了未被初始化的全局变量，里面或许有非常多个<span><span class="heti-spacing"> </span>page</span>，但所有的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>内容都为<span><span class="heti-spacing"> </span>0</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">通常可以调优的地方是：</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">有如此多的内容全是<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的<span><span class="heti-spacing"> </span>page</span>，在物理内存中，只需要分配一个<span><span class="heti-spacing"> </span>page</span>，这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的内容全是<span><span class="heti-spacing"> </span>0</span>。然后将所有虚拟地址空间的全<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>都<span class="heti-skip"><span class="heti-spacing"> </span>map<span class="heti-spacing"> </span></span>到这一个物理<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>上。这样至少在程序启动的时候能节省大量的物理内存分配。</font></strong></li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/1d6f1d4df93a23789a0aaebd6a15f659.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/1d6f1d4df93a23789a0aaebd6a15f659.jpeg"/></a></p>
+<p>:::</p>
+<p>:::warning
++ <strong><font style="color:rgb(27, 27, 27);">这里的<span class="heti-skip"><span class="heti-spacing"> </span>mapping<span class="heti-spacing"> </span></span>需要非常的小心，我们不能允许用户对于这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>执行写操作，因为这里所有的虚拟地址空间<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>内容都期望为<span><span class="heti-spacing"> </span>0</span>，所以这里的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>都是只读的。</font></strong></p>
+<p>:::</p>
+<p>:::warning
++ <strong><font style="color:rgb(27, 27, 27);">之后在某个时间点，应用程序尝试写<span class="heti-skip"><span class="heti-spacing"> </span>BSS<span class="heti-spacing"> </span></span>中的一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>时，比如说需要更改一两个变量的值，我们会得到<span><span class="heti-spacing"> </span>page fault</span> 。那么，对于这个<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>我们该做什么呢？</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生回答：我认为我们应该创建一个新的<span><span class="heti-spacing"> </span>page</span>，将其内容设置为<span><span class="heti-spacing"> </span>0</span>，并重新执行指令。</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">是的，完全正确。假设<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令发生在<span class="heti-skip"><span class="heti-spacing"> </span>BSS<span class="heti-spacing"> </span></span>最顶端的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中。我们想要做的是，在物理内存中申请一个新的内存<span><span class="heti-spacing"> </span>page</span> ，将其内容设置为<span><span class="heti-spacing"> </span>0</span>，因为我们预期这个内存的内容为<span><span class="heti-spacing"> </span>0</span>。之后我们需要更新这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>mapping<span class="heti-spacing"> </span></span>关系，首先<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>要设置成可读可写，然后将其指向新的物理<span><span class="heti-spacing"> </span>page</span> 。这里相当于更新了<span><span class="heti-spacing"> </span>PTE</span> ，之后我们可以重新执行指令。</font></strong></li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/161da5099058af97d6eca06092653f61.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/161da5099058af97d6eca06092653f61.jpeg"/></a></p>
+<p>:::</p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">第一个好处：</font></strong><font style="color:rgb(27, 27, 27);">这样节省一部分内存。你可以在需要的时候才申请内存。</font></li>
+<li><strong><font style="color:rgb(27, 27, 27);">第二个好处：</font></strong><font style="color:rgb(27, 27, 27);">在<span class="heti-skip"><span class="heti-spacing"> </span>exec<span class="heti-spacing"> </span></span>中需要做的工作变少，不需要映射一大堆的内存。程序可以更快启动，你可以获得更好的交互体验，因为你只需要分配一个内容全是<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的物理<span><span class="heti-spacing"> </span>page</span>。所有的虚拟<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>都可以映射到这一个物理<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>上。</font></li>
+</ul>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">但是</font><strong><font style="color:rgb(27, 27, 27);">每次都会触发一个<span><span class="heti-spacing"> </span>page fault</span>，<span>update<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>write<span class="heti-spacing"> </span></span>会变得更慢吧</font></strong><font style="color:rgb(27, 27, 27);">？</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">是的，这是个很好的观点，所以这里是</font><strong><font style="color:rgb(27, 27, 27);">实际上我们将一些操作推迟到了<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>再去执行</font></strong><font style="color:rgb(27, 27, 27);">。并且我们期望并不是所有的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>都被使用了。如果一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>是<span class="heti-skip"><span class="heti-spacing"> </span>4096<span class="heti-spacing"> </span></span>字节，我们只需要对每<span class="heti-skip"><span class="heti-spacing"> </span>4096<span class="heti-spacing"> </span></span>个字节消耗一次<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>即可。这里是个好的观点，我们的确增加了一些由<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>带来的代价。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);"><span>page fault<span class="heti-spacing"> </span></span>的代价是多少呢？我们该如何看待它？这是一个与<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令相当的代价，还是说代价要高的多？</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生回答：</font></strong><font style="color:rgb(27, 27, 27);">代价要高的多。<span>store<span class="heti-spacing"> </span></span>指令可能需要消耗一些时间来访问<span><span class="heti-spacing"> </span>RAM</span>，但是<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>需要走到内核。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">是的，在<span class="heti-skip"><span class="heti-spacing"> </span>lec06<span class="heti-spacing"> </span></span>中你们已经看到了，仅仅是在<span class="heti-skip"><span class="heti-spacing"> </span>trap<span class="heti-spacing"> </span></span>处理代码中，就有至少有<span class="heti-skip"><span class="heti-spacing"> </span>100<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令用来存储当前的寄存器。除此之外，还有从用户空间转到内核空间的额外开销。所以，<span>page fault<span class="heti-spacing"> </span></span>并不是没有代价的。</font></p>
+<h1 id="84-copy-on-write-fork"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.4-copy-on-write-fork"><font style="color:rgb(27, 27, 27);">8.4 Copy On Write Fork</font></a><a class="headerlink" href="#84-copy-on-write-fork" title="Permanent link">¶</a></h1>
+<blockquote>
+<p><strong><font style="color:rgb(27, 27, 27);">基于<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实现的一个非常常见的优化，许多操作系统都实现了它。</font></strong>
+</p>
+</blockquote>
+<p><strong><font style="color:rgb(27, 27, 27);">copy-on-write fork，也称为<span><span class="heti-spacing"> </span>COW fork</span>。</font></strong></p>
+<p>:::warning
++ <strong><span>fork<span class="heti-spacing"> </span></span>中复制<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的操作</strong>
+1. <strong><font style="color:rgb(27, 27, 27);">当<span class="heti-skip"><span class="heti-spacing"> </span>Shell<span class="heti-spacing"> </span></span>处理指令时，它会用<span class="heti-skip"><span class="heti-spacing"> </span>fork<span class="heti-spacing"> </span></span>创建一个子进程。</font></strong>
+2. <strong><font style="color:rgb(27, 27, 27);"><span>fork<span class="heti-spacing"> </span></span>会创建一个<span class="heti-skip"><span class="heti-spacing"> </span>Shell<span class="heti-spacing"> </span></span>进程的拷贝，所以这时我们有一个父进程（原来的<span><span class="heti-spacing"> </span>Shell</span>）和一个子进程。</font></strong>
+3. <strong><font style="color:rgb(27, 27, 27);"><span>Shell<span class="heti-spacing"> </span></span>的子进程执行的第一件事情就是调用<span class="heti-skip"><span class="heti-spacing"> </span>exec<span class="heti-spacing"> </span></span>运行一些其他程序，比如运行<span><span class="heti-spacing"> </span>echo</span>。</font></strong>
+4. <strong><font style="color:rgb(27, 27, 27);">现在的情况是，<span>fork<span class="heti-spacing"> </span></span>创建了<span class="heti-skip"><span class="heti-spacing"> </span>Shell<span class="heti-spacing"> </span></span>地址空间的一个完整的拷贝，而<span class="heti-skip"><span class="heti-spacing"> </span>exec<span class="heti-spacing"> </span></span>第一件事情就是释放地址空间，又重新申请了一个包含了<span class="heti-skip"><span class="heti-spacing"> </span>echo<span class="heti-spacing"> </span></span>的地址空间。这看起来有点浪费。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/e78183da5f77b2be278a9515b508a312.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/e78183da5f77b2be278a9515b508a312.jpeg"/></a> </p>
+<p>:::</p>
+<ul>
+<li><strong>我们开始使用<span class="heti-skip"><span class="heti-spacing"> </span>COW FORK<span class="heti-spacing"> </span></span>进行优化</strong></li>
+</ul>
+<p>:::success
+<strong>所以，我们最开始有了一个父进程的虚拟地址空间，然后我们有了子进程的虚拟地址空间。</strong></p>
+<p><strong>在物理内存中，<span>XV6<span class="heti-spacing"> </span></span>中的<span class="heti-skip"><span class="heti-spacing"> </span>Shell<span class="heti-spacing"> </span></span>通常会有<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>page</span>，当调用<span class="heti-skip"><span class="heti-spacing"> </span>fork<span class="heti-spacing"> </span></span>时，基本上就是创建了<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>个新的<span><span class="heti-spacing"> </span>page</span>，并将父进程<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的内容拷贝到<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>个新的子进程的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/261db463e93238ad32b83995334d0aa4.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/261db463e93238ad32b83995334d0aa4.jpeg"/></a></p>
+<p>:::</p>
+<ul>
+<li><strong>1： 对内存有效的优化</strong></li>
+</ul>
+<p>:::success
+<strong><font style="color:rgb(27, 27, 27);">但是之后，一旦调用了<span><span class="heti-spacing"> </span>exec</span>，我们又会释放这些<span><span class="heti-spacing"> </span>page</span>，并分配新的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>来包含<span class="heti-skip"><span class="heti-spacing"> </span>echo<span class="heti-spacing"> </span></span>相关的内容。</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">所以对于这个特定场景有一个非常有效的优化：</font></strong></li>
+</ul>
+<p><font style="color:rgb(27, 27, 27);">当我们创建子进程时，与其创建，分配并拷贝内容到新的物理内存，我们可以直接共享父进程的物理内存<span><span class="heti-spacing"> </span>page</span>。所以这里，我们可以设置子进程的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>指向父进程对应的物理内存<span><span class="heti-spacing"> </span>page</span>。</font></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">当然，我们这里需要非常小心。</font></strong></li>
+</ul>
+<p><font style="color:rgb(27, 27, 27);">因为一旦子进程想要修改这些内存的内容，相应的更新应该对父进程不可见，因为我们希望在父进程和子进程之间有强隔离性，所以这里我们需要更加小心一些。为了确保进程间的隔离性，我们可以将这里的父进程和子进程的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>的标志位都设置成只读的。</font></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/8e5cfddcd1ec09a1af09fc2a8e064ce0.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/8e5cfddcd1ec09a1af09fc2a8e064ce0.jpeg"/></a></p>
+<p>:::</p>
+<ul>
+<li><strong>2： 当内存真正需要使用的时候</strong></li>
+</ul>
+<p>:::success
++ <strong><font style="color:rgb(27, 27, 27);">在某个时间点，当我们需要更改内存的内容时，我们会得到<span><span class="heti-spacing"> </span>page fault</span>。因为现在父进程或子进程在向一个只读的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>写数据。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">解决：在得到<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>之后，我们需要拷贝相应的物理<span><span class="heti-spacing"> </span>page</span>。</font></strong></p>
+<ol>
+<li><strong><font style="color:rgb(27, 27, 27);">假设现在是子进程在执行<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令，那么我们会分配一个新的物理内存<span><span class="heti-spacing"> </span>page</span></font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">然后将<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>相关的物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>拷贝到新分配的物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中</font></strong></li>
+<li><strong><font style="color:rgb(27, 27, 27);">并将新分配的物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>映射到子进程。</font></strong></li>
+</ol>
+<p><strong><font style="color:rgb(27, 27, 27);">这时，新分配的物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>只对子进程的地址空间可见，所以我们可以将相应的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>设置成可读写<span class="heti-skip"><span class="heti-spacing"> </span>(<span class="heti-spacing"> </span></span>同时保证了隔离性<span><span class="heti-spacing"> </span>)</span>，并且我们可以重新执行<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">实际上，对于触发刚刚<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>的物理<span><span class="heti-spacing"> </span>page</span>，因为现在只对父进程可见，相应的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>对于父进程也变成可读写的了。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/d6e04cebf72dcae2f6608ee70bc28094.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/d6e04cebf72dcae2f6608ee70bc28094.jpeg"/></a></p>
+<p><strong><font style="color:rgb(27, 27, 27);">所以现在，我们拷贝了一个<span><span class="heti-spacing"> </span>page</span>，将新的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>映射到相应的用户地址空间，并重新执行用户指令。重新执行用户指令是指调用<span class="heti-skip"><span class="heti-spacing"> </span>userret<span class="heti-spacing"> </span></span>函数（注，详见<span><span class="heti-spacing"> </span>6.8</span><heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，也即是<span class="heti-skip"><span class="heti-spacing"> </span>lec06<span class="heti-spacing"> </span></span>中介绍的返回到用户空间的方法。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/6ca7905cacd62a5233850f12e6b31b79.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/6ca7905cacd62a5233850f12e6b31b79.jpeg"/></a></p>
+<p>:::</p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">我们如何发现父进程写了这部分内存地址？是与子进程相同的方法吗？</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授</font></strong><font style="color:rgb(27, 27, 27);">：是的，因为子进程的地址空间来自于父进程的地址空间的拷贝。如果我们使用了特定的虚拟地址，因为地址空间是相同的，不论是父进程还是子进程，都会有相同的处理方式。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">对于一些没有父进程的进程，比如系统启动的第一个进程，它会对于自己的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>设置成只读的吗？还是设置成可读写的，然后在<span class="heti-skip"><span class="heti-spacing"> </span>fork<span class="heti-spacing"> </span></span>的时候再修改成只读的？</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">这取决于你。实际上在<span class="heti-skip"><span class="heti-spacing"> </span>lazy lab<span class="heti-spacing"> </span></span>之后，会有一个<span><span class="heti-spacing"> </span>copy-on-write lab</span>。在这个<span class="heti-skip"><span class="heti-spacing"> </span>lab<span class="heti-spacing"> </span></span>中，你自己可以选择实现方式。当然最简单的方式就是将<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>设置成只读的，当你要写这些<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>时，你会得到一个<span><span class="heti-spacing"> </span>page fault</span>，之后你可以再按照上面的流程进行处理。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">因为我们经常会拷贝用户进程对应的<span><span class="heti-spacing"> </span>page</span>，内存硬件有没有实现特定的指令来完成拷贝，因为通常来说内存会有一些读写指令，但是因为我们现在有了从<span class="heti-skip"><span class="heti-spacing"> </span>page a<span class="heti-spacing"> </span></span>拷贝到<span class="heti-skip"><span class="heti-spacing"> </span>page b<span class="heti-spacing"> </span></span>的需求，会有相应的拷贝指令吗？</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);"><span>x86<span class="heti-spacing"> </span></span>有硬件指令可以用来拷贝一段内存。但是<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>并没有这样的指令。当然在一个高性能的实现中，所有这些读写操作都会流水线化，并且按照内存的带宽速度来运行。</font></p>
+<p><font style="color:rgb(27, 27, 27);">在我们这个例子中，我们只需要拷贝<span class="heti-skip"><span class="heti-spacing"> </span>1<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>page</span>，对于一个未修改的<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>系统，我们需要拷贝<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>page</span>。所以这里的方法明显更好，因为内存消耗的更少，并且性能会更高，<span>fork<span class="heti-spacing"> </span></span>会执行的更快。</font></p>
+<p>:::tips
+<strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">当发生<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>时，我们其实是在向一个只读的地址执行写操作。内核如何能分辨现在是一个<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write fork<span class="heti-spacing"> </span></span>的场景，而不是应用程序在向一个正常的只读地址写数据。是不是说默认情况下，用户程序的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>都是可读写的，除非在<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write fork<span class="heti-spacing"> </span></span>的场景下才可能出现只读的<span><span class="heti-spacing"> </span>PTE</span>？</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">内核必须要能够识别这是一个<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write<span class="heti-spacing"> </span></span>场景。几乎所有的<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>硬件都支持了这一点。我们之前并没有提到相关的内容，</font><strong><font style="color:rgb(27, 27, 27);">下图是一个常见的多级<span><span class="heti-spacing"> </span>page table</span>。对于<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>的标志位，我之前介绍过第<span class="heti-skip"><span class="heti-spacing"> </span>0bit<span class="heti-spacing"> </span></span>到第<span><span class="heti-spacing"> </span>7bit</span>，但是没有介绍最后两位<span><span class="heti-spacing"> </span>RSW</span>。这两位保留给<span class="heti-skip"><span class="heti-spacing"> </span>supervisor software<span class="heti-spacing"> </span></span>使用，<span>supervisor softeware<span class="heti-spacing"> </span></span>指的就是内核。</font></strong><font style="color:rgb(27, 27, 27);">内核可以随意使用这两个<span class="heti-skip"><span class="heti-spacing"> </span>bit<span class="heti-spacing"> </span></span>位。所以可以做的一件事情就是，将<span class="heti-skip"><span class="heti-spacing"> </span>bit8<span class="heti-spacing"> </span></span>标识为当前是一个<span><span class="heti-spacing"> </span>copy-on-write page</span>。</font></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/47640b4a1454d1e51fac97fab013f290.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/47640b4a1454d1e51fac97fab013f290.jpeg"/></a></p>
+<p><strong><font style="color:rgb(27, 27, 27);">当内核在管理这些<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>时，对于<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write<span class="heti-spacing"> </span></span>相关的<span><span class="heti-spacing"> </span>page</span>，内核可以设置相应的<span class="heti-skip"><span class="heti-spacing"> </span>bit<span class="heti-spacing"> </span></span>位，这样当发生<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>时，我们可以发现如果<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write bit<span class="heti-spacing"> </span></span>位设置了，我们就可以执行相应的操作了。否则的话，比如说<span><span class="heti-spacing"> </span>lazy allocation</span>，我们就做一些其他的处理操作。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">在<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write lab<span class="heti-spacing"> </span></span>中，你们会使用<span class="heti-skip"><span class="heti-spacing"> </span>RSW<span class="heti-spacing"> </span></span>在<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>中设置一个<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write<span class="heti-spacing"> </span></span>标志位。</font></strong></p>
+<p>:::</p>
+<p>:::tips
++ <strong><font style="color:rgb(27, 27, 27);">在<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write lab<span class="heti-spacing"> </span></span>中，还有个细节需要注意。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">对于这里的物理内存<span><span class="heti-spacing"> </span>page</span>，如果有多个用户进程或者说多个地址空间都指向了相同的物理内存<span><span class="heti-spacing"> </span>page</span>，举个例子，当父进程退出时我们需要非常小心，因为我们要判断是否能立即释放相应的物理<span><span class="heti-spacing"> </span>page</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">如果有子进程还在使用这些物理<span><span class="heti-spacing"> </span>page</span>，而内核又释放了这些物理<span><span class="heti-spacing"> </span>page</span>，我们将会出问题。</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">那么现在我们什么时候才能释放内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>呢？</font></strong></li>
+</ul>
+<p><strong><font style="color:rgb(27, 27, 27);">我们需要对于每一个物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的引用进行计数，当我们释放虚拟<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>时，我们将物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的引用数减<span><span class="heti-spacing"> </span>1</span>，如果引用数等于<span><span class="heti-spacing"> </span>0</span>，那么我们就能释放物理内存<span><span class="heti-spacing"> </span>page</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">我们应该在哪存储这些引用计数呢？因为如果我们需要对每个物理内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的引用计数的话，这些计数可能会有很多。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">对于每个物理内存<span><span class="heti-spacing"> </span>page</span>，我们都需要做引用计数，也就是说对于每<span class="heti-skip"><span class="heti-spacing"> </span>4096<span class="heti-spacing"> </span></span>个字节，我们都需要维护一个引用计数（似乎并没有回答问题<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">我们可以将引用计数存在<span class="heti-skip"><span class="heti-spacing"> </span>RSW<span class="heti-spacing"> </span></span>对应的<span class="heti-skip"><span class="heti-spacing"> </span>2<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>bit<span class="heti-spacing"> </span></span>中吗？并且限制不超过<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>个引用。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">讲道理，如果引用超过了<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>次，那么将会是一个问题。因为一个内存引用超过了<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>次，你将不能再使用这里的优化了。但是这里的实现方式是自由的。</font></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：</font></strong><font style="color:rgb(27, 27, 27);">真的有必要额外增加一位来表示当前的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>是<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write<span class="heti-spacing"> </span></span>吗？因为内核可以维护有关进程的一些信息<span><span class="heti-spacing"> </span>...</span></font></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：</font></strong><font style="color:rgb(27, 27, 27);">是的，你可以在管理用户地址空间时维护一些其他的元数据信息，这样你就知道这部分虚拟内存地址如果发生了<span><span class="heti-spacing"> </span>page fault</span>，那么必然是<span class="heti-skip"><span class="heti-spacing"> </span>copy-on-write<span class="heti-spacing"> </span></span>场景。实际上，在后面的一个实验中，你们需要出于相同的原因扩展<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>管理的元数据。在你们完成这些实验时，具体的实现是很自由的。</font></p>
+<p>:::</p>
+<h1 id="85-demand-paging"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.5-demand-paging"><font style="color:rgb(27, 27, 27);">8.5 Demand Paging</font></a><a class="headerlink" href="#85-demand-paging" title="Permanent link">¶</a></h1>
+<blockquote>
+<p><strong><font style="color:rgb(27, 27, 27);">基于<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实现的一个非常流行的功能，许多操作系统都实现了它。</font></strong>
+</p>
+</blockquote>
+<p>:::color3
+<strong><font style="color:rgb(27, 27, 27);">在 未修改的<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>中，<span>exec()<span class="heti-spacing"> </span></span>中，操作系统会加载程序内存的<span><span class="heti-spacing"> </span>text</span>，<span>data<span class="heti-spacing"> </span></span>区域，并且以<span class="heti-skip"><span class="heti-spacing"> </span>eager (<span class="heti-spacing"> </span></span>立即<span class="heti-skip"><span class="heti-spacing"> </span>)<span class="heti-spacing"> </span></span>的方式将这些区域加载进<span><span class="heti-spacing"> </span>page table</span>。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/bfdfd9052c57b843d5a944b95f537b27.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/bfdfd9052c57b843d5a944b95f537b27.jpeg"/></a><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/16ea26cc9113d3ea15b09f3e6baf88d8.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/16ea26cc9113d3ea15b09f3e6baf88d8.png"/></a></p>
+<p>:::</p>
+<ul>
+<li><strong>使用<span class="heti-skip"><span class="heti-spacing"> </span>lazy<span class="heti-spacing"> </span></span>加载</strong></li>
+</ul>
+<p>:::success
++ <strong><font style="color:rgb(27, 27, 27);">但为什么我们要以<span class="heti-skip"><span class="heti-spacing"> </span>eager<span class="heti-spacing"> </span></span>的方式将程序加载到内存中？</font></strong>
++ <strong><font style="color:rgb(27, 27, 27);">为什么不直到应用程序实际需要这些指令的时候再加载内存？</font></strong>
++ <strong><font style="color:rgb(27, 27, 27);">程序的二进制文件可能非常的巨大，将它全部从磁盘加载到内存中将会是一个代价很高的操作。又或者<span class="heti-skip"><span class="heti-spacing"> </span>data<span class="heti-spacing"> </span></span>区域的大小远大于常见的场景所需要的大小。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">所以对于<span><span class="heti-spacing"> </span>exec</span>，在虚拟地址空间中，我们为<span class="heti-skip"><span class="heti-spacing"> </span>text<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>data<span class="heti-spacing"> </span></span>分配好地址段，但是相应的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>并不实际对应任何物理内存<span><span class="heti-spacing"> </span>page</span> 。对于这些<span><span class="heti-spacing"> </span>PTE</span>，我们只需要将<span class="heti-skip"><span class="heti-spacing"> </span>valid bit<span class="heti-spacing"> </span></span>位设置为<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>即可。</font></strong></p>
+<p>:::</p>
+<ul>
+<li><strong>什么时候会遇到第一个<span><span class="heti-spacing"> </span>page fault</span>？</strong></li>
+</ul>
+<p>:::success
++ <strong><font style="color:rgb(27, 27, 27);">如果我们修改<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>使其按照上面的方式工作，我们什么时候会得到第一个<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>呢？或者说，用户应用程序运行的第一条指令是什么？用户应用程序在哪里启动的？</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">位于地址<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的指令是会触发第一个<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>的指令，因为应用程序是从地址<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>开始运行并且<span class="heti-skip"><span class="heti-spacing"> </span>text<span class="heti-spacing"> </span></span>区域从地址<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>开始向上增长。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/f8d030f28ede735d1f355f8c437e2c1e.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/f8d030f28ede735d1f355f8c437e2c1e.jpeg"/></a></p>
+<p>:::</p>
+<ul>
+<li><strong>遇到<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>要如何处理？</strong></li>
+</ul>
+<p>:::success
+1. <strong><font style="color:rgb(27, 27, 27);">首先我们需要知道，这些<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>是<span><span class="heti-spacing"> </span>on-demand page</span>。</font></strong>
+2. <strong><font style="color:rgb(27, 27, 27);">我们需要在某个地方记录了这些<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>对应的程序文件</font></strong>
+3. <strong><font style="color:rgb(27, 27, 27);">我们在<span class="heti-skip"><span class="heti-spacing"> </span>page fault handler<span class="heti-spacing"> </span></span>中需要从程序文件中读取<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>数据，加载到内存中；</font></strong>
+4. <strong><font style="color:rgb(27, 27, 27);">之后将内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>映射到<span><span class="heti-spacing"> </span>page table</span>；最后再重新执行指令。</font></strong>
+5. <strong><font style="color:rgb(27, 27, 27);">之后程序就可以运行了。</font></strong></p>
+<p>:::</p>
+<ul>
+<li><strong>问题：如果内存耗尽了怎么办？</strong></li>
+<li><strong>回答：撤回内存</strong></li>
+</ul>
+<p>:::success
+<font style="color:rgb(27, 27, 27);">我们将要读取的文件，它的text和data区域可能大于物理内存的容量。对于demand paging来说，假设内存已经耗尽了或者说OOM了，这个时候如果得到了一个page fault，需要从文件系统拷贝中拷贝一些内容到内存中，但这时你又没有任何可用的物理内存page。</font></p>
+<ul>
+<li><strong><font style="color:rgb(27, 27, 27);">这其实回到了之前的一个问题：在<span class="heti-skip"><span class="heti-spacing"> </span>lazy allocation<span class="heti-spacing"> </span></span>中，如果内存耗尽了该如何办？</font></strong>
+1. <strong>一个选择是撤回某个<span><span class="heti-spacing"> </span>page</span>（evict page<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。比如说将部分内存<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中的内容写回到文件系统再撤回<span><span class="heti-spacing"> </span>page</span>。那么你就有了一个新的空闲的<span><span class="heti-spacing"> </span>page</span>，分配给刚刚的<span><span class="heti-spacing"> </span>page fault handler</span>，再重新执行指令。</strong></li>
+</ul>
+<p>:::</p>
+<ul>
+<li><strong>问题：使用什么策略来选择撤回的内存</strong>
+1. <strong>Least Recently Used （LRU）</strong>
+2. <strong><span>dirty page<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>non-dirty page</span></strong></li>
+<li><strong>问题：如何判断是否<span><span class="heti-spacing"> </span>dirty</span>？或者<span><span class="heti-spacing"> </span>least recently used</span>？</strong></li>
+</ul>
+<p><strong><font style="color:rgb(27, 27, 27);">看<span><span class="heti-spacing"> </span>PTE</span>，我们有<span class="heti-skip"><span class="heti-spacing"> </span>RSW<span class="heti-spacing"> </span></span>位，你们可以发现在<span><span class="heti-spacing"> </span>bit7</span>，对应的就是<span><span class="heti-spacing"> </span>Dirty bit</span>。当硬件向一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>写入数据，会设置<span><span class="heti-spacing"> </span>dirty bit</span>，之后操作系统就可以发现这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>曾经被写入了。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">类似的，还有一个<span><span class="heti-spacing"> </span>Access bit</span>，任何时候一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>被读或者被写了，这个<span class="heti-skip"><span class="heti-spacing"> </span>Access bit<span class="heti-spacing"> </span></span>会被设置。<span>Access bit<span class="heti-spacing"> </span></span>通常被用来实现这里的<span class="heti-skip"><span class="heti-spacing"> </span>LRU<span class="heti-spacing"> </span></span>策略。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/2d0b873df771635685b7c6a7e50416e0.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/2d0b873df771635685b7c6a7e50416e0.jpeg"/></a></p>
+<h1 id="86-memory-mapped-files"><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec08-page-faults-frans/8.6-memory-mapped-files"><font style="color:rgb(27, 27, 27);">8.6 Memory Mapped Files</font></a><a class="headerlink" href="#86-memory-mapped-files" title="Permanent link">¶</a></h1>
+<p><strong><font style="color:rgb(27, 27, 27);">这节课最后要讨论的内容，也是后面的一个实验，就是<span><span class="heti-spacing"> </span>memory mapped files</span>。这里的核心思想是，将完整或者部分文件加载到内存中，这样就可以通过内存地址相关的<span class="heti-skip"><span class="heti-spacing"> </span>load<span class="heti-spacing"> </span></span>或者<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令来操纵文件。为了支持这个功能，一个现代的操作系统会提供一个叫做<span class="heti-skip"><span class="heti-spacing"> </span>mmap<span class="heti-spacing"> </span></span>的系统调用。这个系统调用会接收一个虚拟内存地址（VA<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，长度（len<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，protection，一些标志位，一个打开文件的文件描述符，和偏移量（offset<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/f5e07799c1a0780dee5a0c06d0c4f102.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/f5e07799c1a0780dee5a0c06d0c4f102.jpeg"/></a></p>
+<p><strong><font style="color:rgb(27, 27, 27);">这里的语义就是，从文件描述符对应的文件的偏移量的位置开始，映射长度为<span class="heti-skip"><span class="heti-spacing"> </span>len<span class="heti-spacing"> </span></span>的内容到虚拟内存地址<span><span class="heti-spacing"> </span>VA</span>，同时我们需要加上一些保护，比如只读或者读写。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">假设文件内容是读写并且内核实现<span class="heti-skip"><span class="heti-spacing"> </span>mmap<span class="heti-spacing"> </span></span>的方式是<span class="heti-skip"><span class="heti-spacing"> </span>eager<span class="heti-spacing"> </span></span>方式（不过大部分系统都不会这么做<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，内核会从文件的<span class="heti-skip"><span class="heti-spacing"> </span>offset<span class="heti-spacing"> </span></span>位置开始，将数据拷贝到内存，设置好<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>指向物理内存的位置。之后应用程序就可以使用<span class="heti-skip"><span class="heti-spacing"> </span>load<span class="heti-spacing"> </span></span>或者<span class="heti-skip"><span class="heti-spacing"> </span>store<span class="heti-spacing"> </span></span>指令来修改内存中对应的文件内容。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">当完成操作之后，会有一个对应的<span class="heti-skip"><span class="heti-spacing"> </span>unmap<span class="heti-spacing"> </span></span>系统调用，参数是虚拟地址（VA<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，长度（len<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。来表明应用程序已经完成了对文件的操作，在<span class="heti-skip"><span class="heti-spacing"> </span>unmap<span class="heti-spacing"> </span></span>时间点，我们需要将<span class="heti-skip"><span class="heti-spacing"> </span>dirty block<span class="heti-spacing"> </span></span>写回到文件中。我们可以很容易的找到哪些<span class="heti-skip"><span class="heti-spacing"> </span>block<span class="heti-spacing"> </span></span>是<span class="heti-skip"><span class="heti-spacing"> </span>dirty<span class="heti-spacing"> </span></span>的，因为它们在<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>中的<span class="heti-skip"><span class="heti-spacing"> </span>dirty bit<span class="heti-spacing"> </span></span>为<span><span class="heti-spacing"> </span>1</span>。</font></strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/733cfbb4a28a2c4189cc3a774af71ae7.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/733cfbb4a28a2c4189cc3a774af71ae7.jpeg"/></a></p>
+<p><strong><font style="color:rgb(27, 27, 27);">当然，在任何聪明的内存管理机制中，所有的这些都是以<span class="heti-skip"><span class="heti-spacing"> </span>lazy<span class="heti-spacing"> </span></span>的方式实现。你不会立即将文件内容拷贝到内存中，而是先记录一下这个<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>属于这个文件描述符。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">相应的信息通常在<span class="heti-skip"><span class="heti-spacing"> </span>VMA<span class="heti-spacing"> </span></span>结构体中保存，<span>VMA<span class="heti-spacing"> </span></span>全称是<span><span class="heti-spacing"> </span>Virtual Memory Area</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">例如对于这里的文件<span><span class="heti-spacing"> </span>f</span>，会有一个<span><span class="heti-spacing"> </span>VMA</span>，在<span class="heti-skip"><span class="heti-spacing"> </span>VMA<span class="heti-spacing"> </span></span>中我们会记录文件描述符，偏移量等等，这些信息用来表示对应的内存虚拟地址的实际内容在哪，这样当我们得到一个位于<span class="heti-skip"><span class="heti-spacing"> </span>VMA<span class="heti-spacing"> </span></span>地址范围的<span class="heti-skip"><span class="heti-spacing"> </span>page fault<span class="heti-spacing"> </span></span>时，内核可以从磁盘中读数据，并加载到内存中。所以这里回答之前一个问题，<span>dirty bit<span class="heti-spacing"> </span></span>是很重要的，因为在<span class="heti-skip"><span class="heti-spacing"> </span>unmap<span class="heti-spacing"> </span></span>中，你需要向文件回写<span><span class="heti-spacing"> </span>dirty block</span>。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);"></font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：有没有可能多个进程将同一个文件映射到内存，然后会有同步的问题？</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：好问题。这个问题其实等价于，多个进程同时通过<span class="heti-skip"><span class="heti-spacing"> </span>read/write<span class="heti-spacing"> </span></span>系统调用读写一个文件会怎么样？</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">这里的行为是不可预知的。<span>write<span class="heti-spacing"> </span></span>系统调用会以某种顺序出现，如果两个进程向一个文件的<span class="heti-skip"><span class="heti-spacing"> </span>block<span class="heti-spacing"> </span></span>写数据，要么第一个进程的<span class="heti-skip"><span class="heti-spacing"> </span>write<span class="heti-spacing"> </span></span>能生效，要么第二个进程的<span class="heti-skip"><span class="heti-spacing"> </span>write<span class="heti-spacing"> </span></span>能生效，只能是两者之一生效。在这里其实也是一样的，所以我们并不需要考虑冲突的问题。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">一个更加成熟的<span class="heti-skip"><span class="heti-spacing"> </span>Unix<span class="heti-spacing"> </span></span>操作系统支持锁定文件，你可以先锁定文件，这样就能保证数据同步。但是默认情况下，并没有同步保证。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：<span>mmap<span class="heti-spacing"> </span></span>的参数中，<span>len<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>flag<span class="heti-spacing"> </span></span>是什么意思？</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：<span>len<span class="heti-spacing"> </span></span>是文件中你想映射到内存中的字节数。<span>prot<span class="heti-spacing"> </span></span>是<span><span class="heti-spacing"> </span>read/write</span>。<span>flags<span class="heti-spacing"> </span></span>会在<span class="heti-skip"><span class="heti-spacing"> </span>mmap lab<span class="heti-spacing"> </span></span>中出现，我认为它表示了这个区域是私有的还是共享的。如果是共享的，那么这个区域可以在多个进程之间共享。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">学生提问：如果其他进程直接修改了文件的内容，那么是不是意味着修改的内容不会体现在这里的内存中？</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);"><span>Frans<span class="heti-spacing"> </span></span>教授：是的。但是如果文件是共享的，那么你应该同步这些变更。我记不太清楚在<span class="heti-skip"><span class="heti-spacing"> </span>mmap<span class="heti-spacing"> </span></span>中，文件共享时会发生什么。</font></strong></p>
+<p><strong><font style="color:rgb(27, 27, 27);">你们会在<span class="heti-skip"><span class="heti-spacing"> </span>file system lab<span class="heti-spacing"> </span></span>之后做这里相关的<span><span class="heti-spacing"> </span>mmap lab</span>，这将会是我们最后一个虚拟内存实验。</font></strong></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到页面顶部
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+    
+    
+      Powered by
+      <a href="https://www.mkdocs.org/" rel="noopener" target="_blank">
+        MkDocs
+      </a>
+      with theme
+      <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+        Material
+      </a>
+      modified by
+      <a href="https://github.com/WncFht" rel="noopener" target="_blank">
+        WncFht
+      </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+<script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+<script src="../../../js/katex.js"></script>
+<script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

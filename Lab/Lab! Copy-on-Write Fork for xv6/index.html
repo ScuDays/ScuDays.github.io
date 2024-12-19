@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/" rel="prev"/>
+<link href="../Lab%21%20Multithreading/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.44" name="generator"/>
+<title>Lab! Copy on Write Fork for xv6 - days'blog</title>
+<link href="../../assets/stylesheets/main.0253249f.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../css/heti.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/utils/katex.min.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css" rel="stylesheet"/>
+<link href="../../css/custom.css" rel="stylesheet"/>
+<link href="../../css/tasklist.css" rel="stylesheet"/>
+<link href="../../css/card.css" rel="stylesheet"/>
+<link href="../../css/flink.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+ <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="indigo" data-md-color-primary="blue-grey" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#_1">
+          跳转至
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="页眉" class="md-header__inner md-grid">
+<a aria-label="days'blog" class="md-header__button md-logo" data-md-component="logo" href="../.." title="days'blog">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            days'blog
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Lab! Copy on Write Fork for xv6
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="切换至夜间模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="blue-grey" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="切换至夜间模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="切换至日间模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="black" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="切换至日间模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="搜索" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="搜索" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="查找" class="md-search__options">
+<button aria-label="清空当前内容" class="md-search__icon md-icon" tabindex="-1" title="清空当前内容" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="标签" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../home/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+    
+  
+  Home
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/">
+          
+  
+    
+  
+  CSCI0300
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/">
+          
+  
+    
+  
+  6S081
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="导航栏" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="days'blog" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="days'blog">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    days'blog
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_1" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../home/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Home
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_1_2" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../home/test/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Test
+  </span>
+</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_2">
+<span class="md-nav__icon md-icon"></span>
+            Test
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    CSCI0300
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            CSCI0300
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Lab
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_1">
+<span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/">
+<span class="md-ellipsis">
+    Lab 0 ：Setup
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/">
+<span class="md-ellipsis">
+    Lab 1 ：C Programming and Build Tools
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%202%20%EF%BC%9ADebugging/">
+<span class="md-ellipsis">
+    Lab 2 ：Debugging
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/">
+<span class="md-ellipsis">
+    Lab 3 ：Assembly and Buffer Overflow
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/">
+<span class="md-ellipsis">
+    Lab 4 ：Getting Familiar with WeensyOS
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%205%20%EF%BC%9AProcesses/">
+<span class="md-ellipsis">
+    Lab 5 ：Processes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lab/Lab%206%20%EF%BC%9AThreads/">
+<span class="md-ellipsis">
+    Lab 6 ：Threads
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Lecture
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/">
+<span class="md-ellipsis">
+    Lecture 01：课程概述和计算机组织
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">
+<span class="md-ellipsis">
+    Lecture 02：系统编程
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/">
+<span class="md-ellipsis">
+    Lecture 03：指针和数据表示
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/">
+<span class="md-ellipsis">
+    Lecture 04：内存组织，动态内存分配和未定义行为
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/">
+<span class="md-ellipsis">
+    Lecture 05：数组和结构体
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/">
+<span class="md-ellipsis">
+    Lecture 06：sizeof、typedef和有符号整数
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/">
+<span class="md-ellipsis">
+    Lecture 07：有符号数表示和内存对齐
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
+<span class="md-ellipsis">
+    Lecture 08：结构体内存对齐、收集规则、汇编语言
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
+<span class="md-ellipsis">
+    Lecture 09：汇编语言
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/">
+<span class="md-ellipsis">
+    Lecture 10：汇编控制流
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/">
+<span class="md-ellipsis">
+    Lecture 11：栈
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/">
+<span class="md-ellipsis">
+    Lecture 12：栈、缓冲区溢出和缓存
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/">
+<span class="md-ellipsis">
+    Lecture 13：缓存 Caching
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/">
+<span class="md-ellipsis">
+    Lecture 14：操作系统简介
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/">
+<span class="md-ellipsis">
+    Lecture 15：特权分离，内存保护
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/">
+<span class="md-ellipsis">
+    Lecture 16：虚拟内存和页表
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/">
+<span class="md-ellipsis">
+    Lecture 17：地址转换，进程创建 (I)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/">
+<span class="md-ellipsis">
+    Lecture 18：进程创建 (II)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/">
+<span class="md-ellipsis">
+    Lecture 19：进程间通信
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/">
+<span class="md-ellipsis">
+    Lecture 20：多进程、线程
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/">
+<span class="md-ellipsis">
+    Lecture 21：竞争条件
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/">
+<span class="md-ellipsis">
+    Lecture 22：同步、原子操作和互斥锁 Synchronization, Atomics, and Mutexes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/">
+<span class="md-ellipsis">
+    Lecture 23：死锁，有界缓冲区，C++互斥模式 Deadlock, Bounded Buffer，C++ Mutex Patterns
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/">
+<span class="md-ellipsis">
+    Lecture 24：条件变量、总结
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    6S081
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            6S081
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Lab
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_1">
+<span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/">
+<span class="md-ellipsis">
+    Lab 01：Xv6 and Unix utilities
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2002%EF%BC%9ASyscall/">
+<span class="md-ellipsis">
+    Lab 02：Syscall
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2003%EF%BC%9Apage%20tables/">
+<span class="md-ellipsis">
+    Lab 03：page tables
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2004%EF%BC%9Atraps/">
+<span class="md-ellipsis">
+    Lab 04：traps
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/">
+<span class="md-ellipsis">
+    Lab 05：lazy page allocation
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/">
+<span class="md-ellipsis">
+    Lab 06：Copy-on-Write Fork for xv6
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2007%EF%BC%9AMultithreading/">
+<span class="md-ellipsis">
+    Lab 07：Multithreading
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lab/Lab%2008%EF%BC%9Alock/">
+<span class="md-ellipsis">
+    Lab 08：lock
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Lecture
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_2">
+<span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec01%20Introduction%20and%20Examples%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec01：Introduction and Examples (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec01%21Introduction%20and%20Examples%20%28Robert%29/">
+<span class="md-ellipsis">
+    操作系统的目标
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec03%20OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec03：OS Organization and System Calls (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec03%21OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec03!OS Organization and System Calls (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec04%20Page%20tables%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec04：Page tables (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec04%21Page%20tables%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec04!Page tables (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+<span class="md-ellipsis">
+    Lec05：Calling conventions and stack frames RISC-V (TA)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec05%21Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+<span class="md-ellipsis">
+    5.1 C程序到汇编程序的转换
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec06%20Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec06：Isolation &amp; system call entry!exit (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec06%21Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/">
+<span class="md-ellipsis">
+    6.1 Trap机制
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec08%20Page%20faults%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec08：Page faults (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec08%21Page%20faults%20%28Frans%29/">
+<span class="md-ellipsis">
+    8.1 Page Fault Basics
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec09%20Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/">
+<span class="md-ellipsis">
+    Lec09：Interrupts (Frans)(外部中断)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec09%21Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/">
+<span class="md-ellipsis">
+    9.1 真实操作系统内存使用情况
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec10%20Multiprocessors%20and%20locking%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec10：Multiprocessors and locking (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec10%21Multiprocessors%20and%20locking%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec10!Multiprocessors and locking (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec11%20Thread%20switching%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec11：Thread switching (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec11%21Thread%20switching%20%28Robert%29/">
+<span class="md-ellipsis">
+    总结：
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec13%20Sleep%20%26%20Wake%20up%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec13：Sleep &amp; Wake up (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec13%21Sleep%20%26%20Wake%20up%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec13!Sleep &amp; Wake up (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec14%20File%20systems%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec14：File systems (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec14%21File%20systems%20%28Frans%29/">
+<span class="md-ellipsis">
+    14.1 Why Interesting
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec15%20Crash%20recovery%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec15：Crash recovery (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/Lecture/Lec15%21Crash%20recovery%20%28Frans%29/">
+<span class="md-ellipsis">
+    15.1 File system crash 概述
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Book riscv
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            Book riscv
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6S081/book-riscv/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3/">
+<span class="md-ellipsis">
+    1.2 I/O和文件描述符
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="目录" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_1">
+<span class="md-ellipsis">
+      问题
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      解决方案
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      思路
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1>Lab! Copy on Write Fork for xv6</h1>
+<h2 id="_1"><font style="color:rgb(51, 51, 51);">问题</font><a class="headerlink" href="#_1" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h2>
+<p><strong>在<span class="heti-skip"><span class="heti-spacing"> </span>xv6<span class="heti-spacing"> </span></span>中，</strong><code>**fork()**</code><strong>系统调用会复制父进程的所有用户空间内存到子进程中。当父进程很大时，这种复制过程会非常耗时，并且常常导致资源浪费，特别是当子进程紧接着执行</strong><code>**exec()**</code><strong>时，之前复制的大部分内存会被立即丢弃而未被使用。</strong></p>
+<p><strong>然而，如果父子进程共享某些页面并且至少有一方对这些页面进行了写操作，则确实需要进行复制以保持各自数据的独立性。</strong></p>
+<h2 id="_2"><font style="color:rgb(51, 51, 51);">解决方案</font><a class="headerlink" href="#_2" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h2>
+<p><strong><span>Copy-on-Write (COW)<span class="heti-spacing"> </span></span>机制下的 </strong><code>**fork()**</code><strong> 操作，旨在延迟物理内存页的复制直到子进程实际需要独立内存时。</strong></p>
+<p><code>**fork()**</code><strong> 创建一个新进程，让其用户空间页表项指向父进程的物理内存页，同时将这些页表项设为只读。</strong></p>
+<p><strong>当任一进程尝试写入这些共享且只读的页面时，会触发页面错误。内核识别这是由<span class="heti-skip"><span class="heti-spacing"> </span>COW<span class="heti-spacing"> </span></span>引起的后，会给该进程分配新的物理页，复制原内容到新页，并更新对应的页表项为可写状态。之后，程序可以继续执行之前被中断的写操作。</strong></p>
+<p><strong>使用<span class="heti-skip"><span class="heti-spacing"> </span>COW<span class="heti-spacing"> </span></span>增加了管理用户空间内存的复杂性，因为同一物理页可能被多个进程引用。只有当所有引用该页的页表项都被移除后，才能安全释放此物理页。因此，系统需要跟踪每个物理页的引用计数，以防止过早回收仍在使用的内存。</strong></p>
+<h2 id="_3"><font style="color:rgb(51, 51, 51);">思路</font><a class="headerlink" href="#_3" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h2>
+<ol>
+<li><strong><font style="color:rgb(51, 51, 51);">修改</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;uvmcopy()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">将父进程的物理页映射到子进程，而不是分配新页。在子进程和父进程的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>中清除</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;PTE_W&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">标志。</font></strong></li>
+</ol>
+<p><strong>当<span class="heti-skip"><span class="heti-spacing"> </span>fork()<span class="heti-spacing"> </span></span>被调用的时候，<span>uvmcopy<span class="heti-spacing"> </span></span>被调用来复制父进程的页表到子进程中，通过修改</strong><strong><font style="background-color:rgb(247, 247, 247);">uvmcopy()</font></strong><strong><font style="color:rgb(51, 51, 51);">实现延迟分配。</font></strong></p>
+<ul>
+<li><strong><font style="color:rgb(51, 51, 51);">修改完之后，我们希望得到一个什么结果呢？</font></strong></li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/9de38f1b3ebdeeda7a800783d2f715a5.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/9de38f1b3ebdeeda7a800783d2f715a5.png"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/a4700cdc0c67013cbcf3ef537f52b7b6.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/a4700cdc0c67013cbcf3ef537f52b7b6.png"/></a></p>
+<p><strong>我们想要获得一个<span class="heti-skip"><span class="heti-spacing"> </span>scause<span class="heti-spacing"> </span></span>为<span class="heti-skip"><span class="heti-spacing"> </span>13<span class="heti-spacing"> </span></span>或者<span class="heti-skip"><span class="heti-spacing"> </span>15<span class="heti-spacing"> </span></span>的错误，因为我们清除了父进程和子进程页表的读权限，所以当程序访问数据的时候，理应会有该错误。</strong></p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1">// Given a parent process's page table, copy</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="c1">// its memory into a child's page table.</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="c1">// Copies both the page table and the</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="c1">// physical memory.</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="c1">// returns 0 on success, -1 on failure.</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="c1">// frees any allocated pages on failure.</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kt">int</span><span class="w"> </span><span class="nf">uvmcopy</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">sz</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="p">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="n">pte_t</span><span class="w"> </span><span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="n">uint64</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">    </span><span class="n">uint64</span><span class="w"> </span><span class="n">pa</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">    </span><span class="n">uint</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">sz</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">pte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">walk</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">            </span><span class="n">panic</span><span class="p">(</span><span class="s">"uvmcopy: pte should exist"</span><span class="p">);</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTE_V</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="w">            </span><span class="n">panic</span><span class="p">(</span><span class="s">"uvmcopy: page not present"</span><span class="p">);</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">        </span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PTE_FLAGS</span><span class="p">(</span><span class="o">*</span><span class="n">pte</span><span class="p">);</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">        </span><span class="n">pa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PTE2PA</span><span class="p">(</span><span class="o">*</span><span class="n">pte</span><span class="p">);</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="w">            </span><span class="c1">// 问题:</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="w">       </span><span class="cm">/** </span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="cm">       原因:flags在下面代码mappage中需要用到，忘记修改flags导致了问题</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="cm">       * 一直在怀疑错误代码和修复后的代码效果不是一样的吗？</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="cm">       * 结果两个代码最后对PTE的权限位修改确实是一样的</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="cm">       * 但问题就出在flags上了</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="cm">       */</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">       </span><span class="c1">// 源代码</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">       </span><span class="cm">/* </span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="cm">      * *pte = (*pte) &amp; (~PTE_W);</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="cm">      * pte = *pte | PTE_C;</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="cm">      */</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">            </span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_C</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">PTE_W</span><span class="p">;</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">            </span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PA2PTE</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mappages</span><span class="p">(</span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">,</span><span class="w"> </span><span class="n">pa</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">"uvmcopy: mappages</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">            </span><span class="n">uvmunmap</span><span class="p">(</span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="w">        </span><span class="n">PageRefIncrease</span><span class="p">((</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">pa</span><span class="p">);</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ol start="2">
+<li><strong><font style="color:rgb(51, 51, 51);">修改</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;usertrap()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">以识别页面错误。当<span class="heti-skip"><span class="heti-spacing"> </span>COW<span class="heti-spacing"> </span></span>页面出现页面错误时，使用</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;kalloc()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">分配一个新页面，并将旧页面复制到新页面，然后将新页面添加到<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>中并设置</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;PTE_W&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">。</font></strong></li>
+</ol>
+<p>好了，我们在第一步中已经修改了<code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;uvmcopy()&lt;/font&gt;**</code>，并且产生了我们希望的错误。</p>
+<ul>
+<li><strong>现在我们需要处理在 </strong><code>**usertrap()**</code><strong>中处理这个错误。</strong></li>
+</ul>
+<p>当父进程或子进程访问数据的时候，就会产生错误并进入<code>usertrap()</code>，这个时候我们必须要为父进程或者子进程分配实际的内存，<font style="color:rgb(51, 51, 51);">并将旧页面复制到新页面，并设置权限。</font></p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span>
+<span class="normal"><a href="#__codelineno-1-19">19</a></span>
+<span class="normal"><a href="#__codelineno-1-20">20</a></span>
+<span class="normal"><a href="#__codelineno-1-21">21</a></span>
+<span class="normal"><a href="#__codelineno-1-22">22</a></span>
+<span class="normal"><a href="#__codelineno-1-23">23</a></span>
+<span class="normal"><a href="#__codelineno-1-24">24</a></span>
+<span class="normal"><a href="#__codelineno-1-25">25</a></span>
+<span class="normal"><a href="#__codelineno-1-26">26</a></span>
+<span class="normal"><a href="#__codelineno-1-27">27</a></span>
+<span class="normal"><a href="#__codelineno-1-28">28</a></span>
+<span class="normal"><a href="#__codelineno-1-29">29</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1">//</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="c1">// handle an interrupt, exception, or system call from user space.</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="c1">// called from trampoline.S</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="c1">//</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="kt">void</span><span class="w"> </span><span class="nf">usertrap</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="p">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">    </span><span class="p">...</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devintr</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">){}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r_scause</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">13</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">r_scause</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">    </span><span class="c1">// 问题:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">    </span><span class="cm">/**  </span>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="cm">     * 原因:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="cm">     * 1:cowAlloc中只考虑了是否是COW页面，</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="cm">     * 2:但是这里页面错误情况中还需要考虑地址是否有效，</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="cm">     * 3:是否确实有对应的页表.</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="cm">     * */</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">    </span><span class="c1">// 原本代码：</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="w">    </span><span class="c1">// if(cowAlloc(p-&gt;pagetable, r_stval()) == 0)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="w">    </span><span class="c1">//   p-&gt;killed = 1;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="w">    </span><span class="c1">// 修正后代码</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="w">    </span><span class="n">uint64</span><span class="w"> </span><span class="n">fault_va</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_stval</span><span class="p">();</span><span class="w"> </span><span class="c1">// 获取出错的虚拟地址</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="w">    </span><span class="c1">// 1.通过cowpage()判断是否是cow页面并进行一些错误判断</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24"></a><span class="w">    </span><span class="c1">// 2.调用cowAlloc来分配页面并复制页面</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fault_va</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">cowpage</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">fault_va</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">cowAlloc</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">fault_va</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="w">      </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28"></a><span class="w">  </span><span class="p">...</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><code>**cowpage()**</code><strong>函数进行判断</strong></li>
+<li><code>**cowAlloc()**</code><strong>函数进行实际分配页表与复制</strong></li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span>
+<span class="normal"><a href="#__codelineno-2-28">28</a></span>
+<span class="normal"><a href="#__codelineno-2-29">29</a></span>
+<span class="normal"><a href="#__codelineno-2-30">30</a></span>
+<span class="normal"><a href="#__codelineno-2-31">31</a></span>
+<span class="normal"><a href="#__codelineno-2-32">32</a></span>
+<span class="normal"><a href="#__codelineno-2-33">33</a></span>
+<span class="normal"><a href="#__codelineno-2-34">34</a></span>
+<span class="normal"><a href="#__codelineno-2-35">35</a></span>
+<span class="normal"><a href="#__codelineno-2-36">36</a></span>
+<span class="normal"><a href="#__codelineno-2-37">37</a></span>
+<span class="normal"><a href="#__codelineno-2-38">38</a></span>
+<span class="normal"><a href="#__codelineno-2-39">39</a></span>
+<span class="normal"><a href="#__codelineno-2-40">40</a></span>
+<span class="normal"><a href="#__codelineno-2-41">41</a></span>
+<span class="normal"><a href="#__codelineno-2-42">42</a></span>
+<span class="normal"><a href="#__codelineno-2-43">43</a></span>
+<span class="normal"><a href="#__codelineno-2-44">44</a></span>
+<span class="normal"><a href="#__codelineno-2-45">45</a></span>
+<span class="normal"><a href="#__codelineno-2-46">46</a></span>
+<span class="normal"><a href="#__codelineno-2-47">47</a></span>
+<span class="normal"><a href="#__codelineno-2-48">48</a></span>
+<span class="normal"><a href="#__codelineno-2-49">49</a></span>
+<span class="normal"><a href="#__codelineno-2-50">50</a></span>
+<span class="normal"><a href="#__codelineno-2-51">51</a></span>
+<span class="normal"><a href="#__codelineno-2-52">52</a></span>
+<span class="normal"><a href="#__codelineno-2-53">53</a></span>
+<span class="normal"><a href="#__codelineno-2-54">54</a></span>
+<span class="normal"><a href="#__codelineno-2-55">55</a></span>
+<span class="normal"><a href="#__codelineno-2-56">56</a></span>
+<span class="normal"><a href="#__codelineno-2-57">57</a></span>
+<span class="normal"><a href="#__codelineno-2-58">58</a></span>
+<span class="normal"><a href="#__codelineno-2-59">59</a></span>
+<span class="normal"><a href="#__codelineno-2-60">60</a></span>
+<span class="normal"><a href="#__codelineno-2-61">61</a></span>
+<span class="normal"><a href="#__codelineno-2-62">62</a></span>
+<span class="normal"><a href="#__codelineno-2-63">63</a></span>
+<span class="normal"><a href="#__codelineno-2-64">64</a></span>
+<span class="normal"><a href="#__codelineno-2-65">65</a></span>
+<span class="normal"><a href="#__codelineno-2-66">66</a></span>
+<span class="normal"><a href="#__codelineno-2-67">67</a></span>
+<span class="normal"><a href="#__codelineno-2-68">68</a></span>
+<span class="normal"><a href="#__codelineno-2-69">69</a></span>
+<span class="normal"><a href="#__codelineno-2-70">70</a></span>
+<span class="normal"><a href="#__codelineno-2-71">71</a></span>
+<span class="normal"><a href="#__codelineno-2-72">72</a></span>
+<span class="normal"><a href="#__codelineno-2-73">73</a></span>
+<span class="normal"><a href="#__codelineno-2-74">74</a></span>
+<span class="normal"><a href="#__codelineno-2-75">75</a></span>
+<span class="normal"><a href="#__codelineno-2-76">76</a></span>
+<span class="normal"><a href="#__codelineno-2-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1">// 通过cowpage()判断是否是cow页面并进行一些错误判断</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kt">int</span><span class="w"> </span><span class="nf">cowpage</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">va</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">va</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">MAXVA</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">  </span><span class="n">pte_t</span><span class="o">*</span><span class="w"> </span><span class="n">pte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">walk</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">va</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">pte</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTE_V</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTE_C</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="c1">//调用cowAlloc来分配页面并复制页面</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="c1">// 对设置了 PTE_C 的页面进行分配</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="nf">cowAlloc</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">error_va</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="p">{</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">   </span><span class="k">if</span><span class="p">(</span><span class="n">error_va</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">MAXVA</span><span class="p">)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">  </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mem</span><span class="p">;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">pa</span><span class="p">;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a><span class="w">  </span><span class="n">uint</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">  </span><span class="n">pte_t</span><span class="w"> </span><span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a><span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">alloc_va</span><span class="p">;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="w">  </span><span class="c1">// 实际需要进行映射的虚拟地址</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="w">  </span><span class="n">alloc_va</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PGROUNDDOWN</span><span class="p">(</span><span class="n">error_va</span><span class="p">);</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="w">  </span><span class="n">pte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">walk</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">alloc_va</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="w">  </span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PTE_FLAGS</span><span class="p">(</span><span class="o">*</span><span class="n">pte</span><span class="p">);</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="w">  </span><span class="n">pa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PTE2PA</span><span class="p">(</span><span class="o">*</span><span class="n">pte</span><span class="p">);</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28"></a><span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">pa</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31"></a><span class="w">  </span><span class="c1">// 判断是否是 COW 页面</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTE_C</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34"></a><span class="w">    </span><span class="c1">// 只有一个进程对此物理地址存在引用</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35"></a><span class="w">    </span><span class="c1">// 则直接修改PTE</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ref</span><span class="p">.</span><span class="n">cnt</span><span class="p">[</span><span class="n">pa</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38"></a><span class="w">      </span><span class="c1">//  printf(" ==1\n");</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39"></a><span class="w">      </span><span class="c1">//  清除 COW 位并加上读权限</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40"></a><span class="w">      </span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">;</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41"></a><span class="w">      </span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">&amp;=</span><span class="w"> </span><span class="o">~</span><span class="n">PTE_C</span><span class="p">;</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">pa</span><span class="p">;</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44"></a><span class="w">    </span><span class="k">else</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46"></a><span class="w">      </span><span class="c1">// printf("r_scause:%p  before:flags:%p\n", r_scause(), flags);</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47"></a><span class="w">      </span><span class="c1">// 清除 COW 位并加上读权限</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48"></a><span class="w">      </span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flags</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">;</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49"></a><span class="w">      </span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">~</span><span class="n">PTE_C</span><span class="p">));</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50"></a><span class="w">      </span><span class="n">mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kalloc</span><span class="p">();</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53"></a><span class="w">        </span><span class="c1">//printf("kalloc失败\n");</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56"></a><span class="w">      </span><span class="n">memmove</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">pa</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">);</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57"></a><span class="w">     </span><span class="c1">// uvmunmap(pagetable, alloc_va, 1, 0);</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58"></a><span class="w">       </span><span class="o">*</span><span class="n">pte</span><span class="w"> </span><span class="o">&amp;=</span><span class="w"> </span><span class="o">~</span><span class="n">PTE_V</span><span class="p">;</span>
+<a id="__codelineno-2-59" name="__codelineno-2-59"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mappages</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">alloc_va</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">mem</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-60" name="__codelineno-2-60"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-2-61" name="__codelineno-2-61"></a><span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">"mappages失败</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<a id="__codelineno-2-62" name="__codelineno-2-62"></a><span class="w">        </span><span class="n">kfree</span><span class="p">((</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">mem</span><span class="p">);</span>
+<a id="__codelineno-2-63" name="__codelineno-2-63"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-64" name="__codelineno-2-64"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-2-65" name="__codelineno-2-65"></a><span class="w">      </span><span class="c1">// 减少原本指向的内存的引用</span>
+<a id="__codelineno-2-66" name="__codelineno-2-66"></a><span class="w">      </span><span class="c1">// 问题:</span>
+<a id="__codelineno-2-67" name="__codelineno-2-67"></a><span class="w">      </span><span class="c1">// 原因:copyout()中)调用cowAlloc()会存在需要释放内存的情况，但在usertrap()调用cowAlloc()处理中不会，</span>
+<a id="__codelineno-2-68" name="__codelineno-2-68"></a><span class="w">      </span><span class="c1">// 一直考虑的是cowAlloc()中释放内存的情况，导致错误。</span>
+<a id="__codelineno-2-69" name="__codelineno-2-69"></a><span class="w">      </span><span class="c1">// 原本代码：</span>
+<a id="__codelineno-2-70" name="__codelineno-2-70"></a><span class="w">      </span><span class="c1">//PageRefDecrease((void*)(PGROUNDDOWN(pa)));</span>
+<a id="__codelineno-2-71" name="__codelineno-2-71"></a><span class="w">      </span><span class="c1">// 修正后代码：</span>
+<a id="__codelineno-2-72" name="__codelineno-2-72"></a><span class="w">      </span><span class="n">kfree</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">PGROUNDDOWN</span><span class="p">(</span><span class="n">pa</span><span class="p">));</span>
+<a id="__codelineno-2-73" name="__codelineno-2-73"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">mem</span><span class="p">;</span>
+<a id="__codelineno-2-74" name="__codelineno-2-74"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-75" name="__codelineno-2-75"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-76" name="__codelineno-2-76"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-77" name="__codelineno-2-77"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ol start="3">
+<li><strong>由于现在我们可能有多个进程指向同一个进程的情况，所以我们需要确保物理页在其最后一个<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>引用被移除时才被释放，这我们引入引用计数机制。</strong>
++ 为每个物理页维护一个引用计数。
++ 当通过<code>kalloc()</code>分配新页时，设置其引用计数为1。
++ 在进程fork过程中如果子进程共享了父进程的页面，则增加这些页面的引用计数。每当有进程从自己的页表中移除对某个页面的引用时，相应地减少该页的引用计数。
++ 只有当某一页的引用计数降为0时，<code>kfree()</code>才能将此页归还到空闲列表中。<br/>
+引用计数可以通过一个整型数组来管理，其中数组大小和索引方式需要根据实际需求设计。例如，可以用物理地址除以4096作为数组索引来访问相应的引用计数，并且保证数组大小足够覆盖所有可能被分配出去的物理页的最大地址范围。</li>
+</ol>
+<p><strong>我们维护一个页表引用数组的同时<span class="heti-skip"><span class="heti-spacing"> </span>,<span class="heti-spacing"> </span></span>我们需要为数组添加一个锁，</strong><strong><font style="color:rgb(51, 51, 51);">这里使用自旋锁是考虑到这种情况：</font></strong></p>
+<blockquote>
+<p><strong><font style="color:rgb(51, 51, 51);">进程<span class="heti-skip"><span class="heti-spacing"> </span>P1<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>P2<span class="heti-spacing"> </span></span>共用内存<span><span class="heti-spacing"> </span>M</span>，<span>M<span class="heti-spacing"> </span></span>引用计数为<span><span class="heti-spacing"> </span>2</span>，此时<span class="heti-skip"><span class="heti-spacing"> </span>CPU1<span class="heti-spacing"> </span></span>要执行</font></strong><code>**&lt;font style="color:rgb(51, 51, 51);background-color:rgb(247, 247, 247);"&gt;fork&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">产生<span class="heti-skip"><span class="heti-spacing"> </span>P1<span class="heti-spacing"> </span></span>的子进程，<span>CPU2<span class="heti-spacing"> </span></span>要终止<span><span class="heti-spacing"> </span>P2</span>，那么假设两个<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>同时读取引用计数为<span><span class="heti-spacing"> </span>2</span>，执行完成后<span class="heti-skip"><span class="heti-spacing"> </span>CPU1<span class="heti-spacing"> </span></span>中保存的引用计数为<span><span class="heti-spacing"> </span>3</span>，<span>CPU2<span class="heti-spacing"> </span></span>保存的计数为<span><span class="heti-spacing"> </span>1</span>，那么后赋值的语句会覆盖掉先赋值的语句，从而产生错误</font></strong>
+</p>
+</blockquote>
+<p><strong>（其实可以不需要添加一个锁，直接用</strong><code>**kmem.lock**</code><strong>也可以）</strong></p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
+<span class="normal"><a href="#__codelineno-3-2">2</a></span>
+<span class="normal"><a href="#__codelineno-3-3">3</a></span>
+<span class="normal"><a href="#__codelineno-3-4">4</a></span>
+<span class="normal"><a href="#__codelineno-3-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">ref_stru</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">lock</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">cnt</span><span class="p">[</span><span class="n">PHYSTOP</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">];</span><span class="w"> </span><span class="c1">// 引用计数</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="p">}</span><span class="w"> </span><span class="n">ref</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>在</strong><code>**kinit()**</code><strong>中我们需要初始化锁</strong></li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span>
+<span class="normal"><a href="#__codelineno-4-5">5</a></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span>
+<span class="normal"><a href="#__codelineno-4-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">kinit</span><span class="p">()</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">kmem</span><span class="p">.</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="s">"kmem"</span><span class="p">);</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">  </span><span class="c1">// memset(PageRefCount, 0, sizeof(sizeof(int) * PHYSTOP / PGSIZE));</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ref</span><span class="p">.</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="s">"ref"</span><span class="p">);</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">  </span><span class="n">freerange</span><span class="p">(</span><span class="n">end</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">PHYSTOP</span><span class="p">);</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>当通过</strong><code>**kalloc()**</code><strong>分配新页时，设置其引用计数为<span><span class="heti-spacing"> </span>1</span></strong></li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span>
+<span class="normal"><a href="#__codelineno-5-13">13</a></span>
+<span class="normal"><a href="#__codelineno-5-14">14</a></span>
+<span class="normal"><a href="#__codelineno-5-15">15</a></span>
+<span class="normal"><a href="#__codelineno-5-16">16</a></span>
+<span class="normal"><a href="#__codelineno-5-17">17</a></span>
+<span class="normal"><a href="#__codelineno-5-18">18</a></span>
+<span class="normal"><a href="#__codelineno-5-19">19</a></span>
+<span class="normal"><a href="#__codelineno-5-20">20</a></span>
+<span class="normal"><a href="#__codelineno-5-21">21</a></span>
+<span class="normal"><a href="#__codelineno-5-22">22</a></span>
+<span class="normal"><a href="#__codelineno-5-23">23</a></span>
+<span class="normal"><a href="#__codelineno-5-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1">// Allocate one 4096-byte page of physical memory.</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="c1">// Returns a pointer that the kernel can use.</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="c1">// Returns 0 if the memory cannot be allocated.</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="kt">void</span><span class="w"> </span><span class="o">*</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="nf">kalloc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="o">*</span><span class="n">r</span><span class="p">;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">  </span><span class="c1">// 获得锁</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">kmem</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="w">  </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kmem</span><span class="p">.</span><span class="n">freelist</span><span class="p">;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">){</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="w">    </span><span class="n">kmem</span><span class="p">.</span><span class="n">freelist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a><span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ref</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="w">  </span><span class="c1">// 将引用计数初始化为1</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="w">    </span><span class="n">ref</span><span class="p">.</span><span class="n">cnt</span><span class="p">[(</span><span class="n">uint64</span><span class="p">)</span><span class="n">r</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ref</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">kmem</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="w">    </span><span class="n">memset</span><span class="p">((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">);</span><span class="w"> </span><span class="c1">// fill with junk </span>
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">r</span><span class="p">;</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><code>**kfree()**</code><strong>当引用为<span class="heti-skip"><span class="heti-spacing"> </span>1<span class="heti-spacing"> </span></span>的时候作为一个释放页表的函数，当引用大于<span class="heti-skip"><span class="heti-spacing"> </span>1<span class="heti-spacing"> </span></span>的时候可以作为一个给特定页表引用减一的函数</strong></li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-6-10">10</a></span>
+<span class="normal"><a href="#__codelineno-6-11">11</a></span>
+<span class="normal"><a href="#__codelineno-6-12">12</a></span>
+<span class="normal"><a href="#__codelineno-6-13">13</a></span>
+<span class="normal"><a href="#__codelineno-6-14">14</a></span>
+<span class="normal"><a href="#__codelineno-6-15">15</a></span>
+<span class="normal"><a href="#__codelineno-6-16">16</a></span>
+<span class="normal"><a href="#__codelineno-6-17">17</a></span>
+<span class="normal"><a href="#__codelineno-6-18">18</a></span>
+<span class="normal"><a href="#__codelineno-6-19">19</a></span>
+<span class="normal"><a href="#__codelineno-6-20">20</a></span>
+<span class="normal"><a href="#__codelineno-6-21">21</a></span>
+<span class="normal"><a href="#__codelineno-6-22">22</a></span>
+<span class="normal"><a href="#__codelineno-6-23">23</a></span>
+<span class="normal"><a href="#__codelineno-6-24">24</a></span>
+<span class="normal"><a href="#__codelineno-6-25">25</a></span>
+<span class="normal"><a href="#__codelineno-6-26">26</a></span>
+<span class="normal"><a href="#__codelineno-6-27">27</a></span>
+<span class="normal"><a href="#__codelineno-6-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1">// Free the page of physical memory pointed at by v,</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="c1">// which normally should have been returned by a</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="c1">// call to kalloc().  (The exception is when</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="c1">// initializing the allocator; see kinit above.)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="kt">void</span><span class="w"> </span><span class="nf">kfree</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">pa</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="p">{</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="o">*</span><span class="n">r</span><span class="p">;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(((</span><span class="n">uint64</span><span class="p">)</span><span class="n">pa</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">pa</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">pa</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">PHYSTOP</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">"kfree"</span><span class="p">);</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">    </span><span class="c1">// 获取锁</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ref</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="w">    </span><span class="c1">// 判断页表引用减一后是否为0</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13"></a><span class="w">    </span><span class="c1">// 若为 0 则释放页表</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">--</span><span class="n">ref</span><span class="p">.</span><span class="n">cnt</span><span class="p">[(</span><span class="n">uint64</span><span class="p">)</span><span class="n">pa</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ref</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17"></a><span class="w">    </span><span class="c1">// Fill with junk to catch dangling refs.</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18"></a><span class="w">    </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">pa</span><span class="p">;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19"></a><span class="w">    </span><span class="n">memset</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">);</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20"></a><span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">kmem</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21"></a><span class="w">    </span><span class="n">r</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kmem</span><span class="p">.</span><span class="n">freelist</span><span class="p">;</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22"></a><span class="w">    </span><span class="n">kmem</span><span class="p">.</span><span class="n">freelist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">;</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23"></a><span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">kmem</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25"></a><span class="w">  </span><span class="k">else</span><span class="p">{</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26"></a><span class="w">     </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ref</span><span class="p">.</span><span class="n">lock</span><span class="p">);</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ol start="4">
+<li><strong><font style="color:rgb(51, 51, 51);">修改</font></strong><code>**&lt;font style="background-color:rgb(247, 247, 247);"&gt;copyout()&lt;/font&gt;**</code><strong><font style="color:rgb(51, 51, 51);">在遇到<span class="heti-skip"><span class="heti-spacing"> </span>COW<span class="heti-spacing"> </span></span>页面时使用与页面错误相同的方案。</font></strong></li>
+</ol>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="k">while</span><span class="p">(</span><span class="n">len</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="w">  </span><span class="n">va0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PGROUNDDOWN</span><span class="p">(</span><span class="n">dstva</span><span class="p">);</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="w">  </span><span class="n">pa0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">walkaddr</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">va0</span><span class="p">);</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="w">  </span><span class="c1">// 处理COW页面的情况</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">cowpage</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">va0</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="w">    </span><span class="c1">// 更换目标物理地址</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="w">    </span><span class="n">pa0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">cowalloc</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">va0</span><span class="p">);</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">pa0</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="w">  </span><span class="p">...</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ol start="5">
+<li><strong>修<span><span class="heti-spacing"> </span>bug</span>，修改<span><span class="heti-spacing"> </span>freerange()</span></strong></li>
+</ol>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">C</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-8-10">10</a></span>
+<span class="normal"><a href="#__codelineno-8-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kt">void</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="nf">freerange</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">pa_start</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">pa_end</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="w">  </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">PGROUNDUP</span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">pa_start</span><span class="p">);</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="w">  </span><span class="k">for</span><span class="p">(;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">PGSIZE</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">pa_end</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">    </span><span class="c1">// 在kfree中将会对cnt[]减1，这里要先设为1，否则就会减成负数</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="w">    </span><span class="n">ref</span><span class="p">.</span><span class="n">cnt</span><span class="p">[(</span><span class="n">uint64</span><span class="p">)</span><span class="n">p</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="w">    </span><span class="n">kfree</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到页面顶部
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+    
+    
+      Powered by
+      <a href="https://www.mkdocs.org/" rel="noopener" target="_blank">
+        MkDocs
+      </a>
+      with theme
+      <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+        Material
+      </a>
+      modified by
+      <a href="https://github.com/WncFht" rel="noopener" target="_blank">
+        WncFht
+      </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+<script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+<script src="../../js/katex.js"></script>
+<script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

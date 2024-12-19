@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../Lec04%20Page%20tables%20%28Frans%29/" rel="prev"/>
+<link href="../Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.44" name="generator"/>
+<title>Lec04!Page tables (Frans) - days'blog</title>
+<link href="../../../assets/stylesheets/main.0253249f.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../../css/heti.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/utils/katex.min.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/jbmono/jetbrainsmono.css" rel="stylesheet"/>
+<link href="https://cdn.tonycrane.cc/lxgw/lxgwscreen.css" rel="stylesheet"/>
+<link href="../../../css/custom.css" rel="stylesheet"/>
+<link href="../../../css/tasklist.css" rel="stylesheet"/>
+<link href="../../../css/card.css" rel="stylesheet"/>
+<link href="../../../css/flink.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+ <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="indigo" data-md-color-primary="blue-grey" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#address-spaces">
+          跳转至
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="页眉" class="md-header__inner md-grid">
+<a aria-label="days'blog" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="days'blog">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            days'blog
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Lec04!Page tables (Frans)
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="切换至夜间模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="blue-grey" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="切换至夜间模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="切换至日间模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="black" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="切换至日间模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="搜索" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="搜索" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="查找" class="md-search__options">
+<button aria-label="清空当前内容" class="md-search__icon md-icon" tabindex="-1" title="清空当前内容" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="标签" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../home/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+    
+  
+  Home
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/">
+          
+  
+    
+  
+  CSCI0300
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/">
+          
+  
+    
+  
+  6S081
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="导航栏" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="days'blog" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="days'blog">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    days'blog
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_1" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../home/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Home
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_1_2" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../home/test/">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+<span class="md-ellipsis">
+    Test
+  </span>
+</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_2">
+<span class="md-nav__icon md-icon"></span>
+            Test
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    CSCI0300
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            CSCI0300
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Lab
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_1">
+<span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%200%20%EF%BC%9ASetup/">
+<span class="md-ellipsis">
+    Lab 0 ：Setup
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%201%20%EF%BC%9AC%20Programming%20and%20Build%20Tools/">
+<span class="md-ellipsis">
+    Lab 1 ：C Programming and Build Tools
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%202%20%EF%BC%9ADebugging/">
+<span class="md-ellipsis">
+    Lab 2 ：Debugging
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%203%20%EF%BC%9AAssembly%20and%20Buffer%20Overflow/">
+<span class="md-ellipsis">
+    Lab 3 ：Assembly and Buffer Overflow
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%204%20%EF%BC%9AGetting%20Familiar%20with%20WeensyOS/">
+<span class="md-ellipsis">
+    Lab 4 ：Getting Familiar with WeensyOS
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%205%20%EF%BC%9AProcesses/">
+<span class="md-ellipsis">
+    Lab 5 ：Processes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lab/Lab%206%20%EF%BC%9AThreads/">
+<span class="md-ellipsis">
+    Lab 6 ：Threads
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Lecture
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2001%EF%BC%9A%E8%AF%BE%E7%A8%8B%E6%A6%82%E8%BF%B0%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E7%BB%87/">
+<span class="md-ellipsis">
+    Lecture 01：课程概述和计算机组织
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2002%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">
+<span class="md-ellipsis">
+    Lecture 02：系统编程
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2003%EF%BC%9A%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA/">
+<span class="md-ellipsis">
+    Lecture 03：指针和数据表示
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2004%EF%BC%9A%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87%EF%BC%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E6%9C%AA%E5%AE%9A%E4%B9%89%E8%A1%8C%E4%B8%BA/">
+<span class="md-ellipsis">
+    Lecture 04：内存组织，动态内存分配和未定义行为
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2005%EF%BC%9A%E6%95%B0%E7%BB%84%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/">
+<span class="md-ellipsis">
+    Lecture 05：数组和结构体
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2006%EF%BC%9Asizeof%E3%80%81typedef%E5%92%8C%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0/">
+<span class="md-ellipsis">
+    Lecture 06：sizeof、typedef和有符号整数
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2007%EF%BC%9A%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90/">
+<span class="md-ellipsis">
+    Lecture 07：有符号数表示和内存对齐
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2008%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E3%80%81%E6%94%B6%E9%9B%86%E8%A7%84%E5%88%99%E3%80%81%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
+<span class="md-ellipsis">
+    Lecture 08：结构体内存对齐、收集规则、汇编语言
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2009%EF%BC%9A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
+<span class="md-ellipsis">
+    Lecture 09：汇编语言
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2010%EF%BC%9A%E6%B1%87%E7%BC%96%E6%8E%A7%E5%88%B6%E6%B5%81/">
+<span class="md-ellipsis">
+    Lecture 10：汇编控制流
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2011%EF%BC%9A%E6%A0%88/">
+<span class="md-ellipsis">
+    Lecture 11：栈
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2012%EF%BC%9A%E6%A0%88%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%92%8C%E7%BC%93%E5%AD%98/">
+<span class="md-ellipsis">
+    Lecture 12：栈、缓冲区溢出和缓存
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2013%EF%BC%9A%E7%BC%93%E5%AD%98%20Caching/">
+<span class="md-ellipsis">
+    Lecture 13：缓存 Caching
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2014%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/">
+<span class="md-ellipsis">
+    Lecture 14：操作系统简介
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2015%EF%BC%9A%E7%89%B9%E6%9D%83%E5%88%86%E7%A6%BB%EF%BC%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4/">
+<span class="md-ellipsis">
+    Lecture 15：特权分离，内存保护
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2016%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%92%8C%E9%A1%B5%E8%A1%A8/">
+<span class="md-ellipsis">
+    Lecture 16：虚拟内存和页表
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2017%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%28I%29/">
+<span class="md-ellipsis">
+    Lecture 17：地址转换，进程创建 (I)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2018%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%20%20%28II%29/">
+<span class="md-ellipsis">
+    Lecture 18：进程创建 (II)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2019%EF%BC%9A%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/">
+<span class="md-ellipsis">
+    Lecture 19：进程间通信
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2020%EF%BC%9A%E5%A4%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B/">
+<span class="md-ellipsis">
+    Lecture 20：多进程、线程
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2021%EF%BC%9A%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6/">
+<span class="md-ellipsis">
+    Lecture 21：竞争条件
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2022%EF%BC%9A%E5%90%8C%E6%AD%A5%E3%80%81%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E4%BA%92%E6%96%A5%E9%94%81%20%20Synchronization%2C%20Atomics%2C%20and%20Mutexes/">
+<span class="md-ellipsis">
+    Lecture 22：同步、原子操作和互斥锁 Synchronization, Atomics, and Mutexes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2023%EF%BC%9A%E6%AD%BB%E9%94%81%EF%BC%8C%E6%9C%89%E7%95%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%8CC%2B%2B%E4%BA%92%E6%96%A5%E6%A8%A1%E5%BC%8F%20Deadlock%2C%20Bounded%20Buffer%EF%BC%8CC%2B%2B%20Mutex%20Patterns/">
+<span class="md-ellipsis">
+    Lecture 23：死锁，有界缓冲区，C++互斥模式 Deadlock, Bounded Buffer，C++ Mutex Patterns
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../CSCI0300/Lecture/Lecture%2024%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E3%80%81%E6%80%BB%E7%BB%93/">
+<span class="md-ellipsis">
+    Lecture 24：条件变量、总结
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-ellipsis">
+    6S081
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            6S081
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Lab
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_1">
+<span class="md-nav__icon md-icon"></span>
+            Lab
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2001%EF%BC%9AXv6%20and%20Unix%20utilities/">
+<span class="md-ellipsis">
+    Lab 01：Xv6 and Unix utilities
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2002%EF%BC%9ASyscall/">
+<span class="md-ellipsis">
+    Lab 02：Syscall
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2003%EF%BC%9Apage%20tables/">
+<span class="md-ellipsis">
+    Lab 03：page tables
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2004%EF%BC%9Atraps/">
+<span class="md-ellipsis">
+    Lab 04：traps
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2005%EF%BC%9Alazy%20page%20allocation/">
+<span class="md-ellipsis">
+    Lab 05：lazy page allocation
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2006%EF%BC%9ACopy-on-Write%20Fork%20for%20xv6/">
+<span class="md-ellipsis">
+    Lab 06：Copy-on-Write Fork for xv6
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2007%EF%BC%9AMultithreading/">
+<span class="md-ellipsis">
+    Lab 07：Multithreading
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Lab/Lab%2008%EF%BC%9Alock/">
+<span class="md-ellipsis">
+    Lab 08：lock
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Lecture
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_2">
+<span class="md-nav__icon md-icon"></span>
+            Lecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec01%20Introduction%20and%20Examples%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec01：Introduction and Examples (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec01%21Introduction%20and%20Examples%20%28Robert%29/">
+<span class="md-ellipsis">
+    操作系统的目标
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec03%20OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec03：OS Organization and System Calls (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec03%21OS%20Organization%20and%20System%20Calls%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec03!OS Organization and System Calls (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec04%20Page%20tables%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec04：Page tables (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Lec04!Page tables (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec05%20Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+<span class="md-ellipsis">
+    Lec05：Calling conventions and stack frames RISC-V (TA)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec05%21Calling%20conventions%20and%20stack%20frames%20RISC-V%20%28TA%29/">
+<span class="md-ellipsis">
+    5.1 C程序到汇编程序的转换
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec06%20Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec06：Isolation &amp; system call entry!exit (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec06%21Isolation%20%26%20system%20call%20entry%21exit%20%28Robert%29/">
+<span class="md-ellipsis">
+    6.1 Trap机制
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec08%20Page%20faults%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec08：Page faults (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec08%21Page%20faults%20%28Frans%29/">
+<span class="md-ellipsis">
+    8.1 Page Fault Basics
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec09%20Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/">
+<span class="md-ellipsis">
+    Lec09：Interrupts (Frans)(外部中断)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec09%21Interrupts%20%28Frans%29%28%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%29/">
+<span class="md-ellipsis">
+    9.1 真实操作系统内存使用情况
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec10%20Multiprocessors%20and%20locking%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec10：Multiprocessors and locking (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec10%21Multiprocessors%20and%20locking%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec10!Multiprocessors and locking (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec11%20Thread%20switching%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec11：Thread switching (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec11%21Thread%20switching%20%28Robert%29/">
+<span class="md-ellipsis">
+    总结：
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec13%20Sleep%20%26%20Wake%20up%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec13：Sleep &amp; Wake up (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec13%21Sleep%20%26%20Wake%20up%20%28Robert%29/">
+<span class="md-ellipsis">
+    Lec13!Sleep &amp; Wake up (Robert)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec14%20File%20systems%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec14：File systems (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec14%21File%20systems%20%28Frans%29/">
+<span class="md-ellipsis">
+    14.1 Why Interesting
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec15%20Crash%20recovery%20%28Frans%29/">
+<span class="md-ellipsis">
+    Lec15：Crash recovery (Frans)
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Lec15%21Crash%20recovery%20%28Frans%29/">
+<span class="md-ellipsis">
+    15.1 File system crash 概述
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Book riscv
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            Book riscv
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../book-riscv/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3/">
+<span class="md-ellipsis">
+    1.2 I/O和文件描述符
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="目录" class="md-nav md-nav--secondary">
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<blockquote>
+<p><strong>今天的内容主要是<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>个部分：</strong></p>
+<ol>
+<li><strong>首先讨论一下地址空间（Address Spaces<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</strong></li>
+<li><strong>接下来谈一下支持虚拟内存的硬件。当然，我介绍的是<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>相关的硬件。但是从根本上来说，所有的现代处理器都有某种形式的硬件，来作为实现虚拟内存的默认机制。</strong></li>
+<li><strong>过一下<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>中的虚拟内存代码，并看一下内核地址空间和用户地址空间的结构。</strong>
+</li>
+</ol>
+</blockquote>
+<h1 id="address-spaces">地址空间（Address Spaces）<a class="headerlink" href="#address-spaces" title="Permanent link">¶</a></h1>
+<p><strong><font style="background-color:#FBDE28;">创造虚拟内存的一个出发点是通过它实现隔离性</font></strong></p>
+<p>:::warning
++ <strong>那如果没有隔离性会怎么样？</strong></p>
+<p>:::</p>
+<p><strong>不同程序之间可能会相互影响，比如<span class="heti-skip"><span class="heti-spacing"> </span>A<span class="heti-spacing"> </span></span>不小心访问了<span class="heti-skip"><span class="heti-spacing"> </span>B<span class="heti-spacing"> </span></span>的内存空间，然后更改了一些值，导致<span class="heti-skip"><span class="heti-spacing"> </span>B<span class="heti-spacing"> </span></span>运行发生错误；</strong></p>
+<p><strong>或者<span class="heti-skip"><span class="heti-spacing"> </span>A<span class="heti-spacing"> </span></span>更改了内核的数据。这些都是问题。</strong></p>
+<p>:::success
++ <strong>所以，我们给包括内核在内的所有程序专属的地址空间。</strong></p>
+<p>:::</p>
+<p><strong>所以，当我们运行<span class="heti-skip"><span class="heti-spacing"> </span>cat<span class="heti-spacing"> </span></span>时，它的地址空间从<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>到某个地址结束。</strong></p>
+<p><strong>当我们运行<span class="heti-skip"><span class="heti-spacing"> </span>Shell<span class="heti-spacing"> </span></span>时，它的地址也从<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>开始到某个地址结束。内核的地址空间也从<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>开始到某个地址结束。</strong></p>
+<p><strong>这样就实现了强隔离，每个程序都只能访问自己的内存空间。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/caaded5140c0a20abb05e554a9a24a7a.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/caaded5140c0a20abb05e554a9a24a7a.png"/></a></p>
+<h1 id="page-table">页表（Page Table）<a class="headerlink" href="#page-table" title="Permanent link">¶</a></h1>
+<h2 id="mmumemory-management-unit">内存管理单元（MMU，Memory Management Unit）<a class="headerlink" href="#mmumemory-management-unit" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>对于任何一条带有地址的指令，其中的地址都应被认为是虚拟内存地址而非物理地址。</strong></li>
+</ul>
+<p>:::success
++ <strong>虚拟地址到物理地址的翻译过程</strong>
++ <strong>什么是<span><span class="heti-spacing"> </span>MMU</span>？</strong>
+1. 假设寄存器a0中是地址0x1000，那么这是一个虚拟内存地址。虚拟内存地址会被转到<font style="background-color:#FBDE28;">内存管理单元（MMU，Memory Management Unit）</font>
+2. 内存管理单元会将虚拟地址翻译成物理地址。之后这个物理地址会被用来索引物理内存，并从物理内存加载，或者向物理内存存储数据。</p>
+<p>:::</p>
+<ul>
+<li>从<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>的角度来说，一旦<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>打开了，它执行的每条指令中的地址都是虚拟内存地址。</li>
+<li>为了完成虚拟内存地址到物理内存地址的翻译，<span>MMU<span class="heti-spacing"> </span></span>会有<font style="background-color:#FBDE28;">一个表单</font>，表单中，一边是虚拟内存地址，另一边是物理内存地址。举个例子，虚拟内存地址<span class="heti-skip"><span class="heti-spacing"> </span>0x1000<span class="heti-spacing"> </span></span>对应了一个物理内存地址<span><span class="heti-spacing"> </span>0xFFF0</span>。这样的表单可以非常灵活。</li>
+<li><font style="background-color:#FBDE28;">这个记录得内存地址对应关系的表单</font>也保存在内存中。所以<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>中需要有一些寄存器用来存放表单在物理内存中的地址。在内存的某个位置保存了地址关系表单，我们假设这个位置的物理内存地址是<span><span class="heti-spacing"> </span>0x10</span>。<font style="background-color:#FBDE28;">那么在<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>上一个叫做<span class="heti-skip"><span class="heti-spacing"> </span>SATP<span class="heti-spacing"> </span></span>的寄存器会保存这个表单的地址<span><span class="heti-spacing"> </span>0x10</span>。</font></li>
+</ul>
+<p>:::success
+总结：</p>
+<ol>
+<li><span>MMU<span class="heti-spacing"> </span></span>并不会保存<span><span class="heti-spacing"> </span>page table</span>，它只会根据<span class="heti-skip"><span class="heti-spacing"> </span>SATP<span class="heti-spacing"> </span></span>的值，到内存中读取<span><span class="heti-spacing"> </span>page table</span>，然后完成翻译</li>
+</ol>
+<p>:::</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/03c8532cb3b9d98f2062ee22f909b3c9.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/03c8532cb3b9d98f2062ee22f909b3c9.png"/></a></p>
+<h2 id="_1">页表构建方式<a class="headerlink" href="#_1" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h2>
+<p>:::warning
++ <strong>如果为每个地址都构建一个表单条目会怎么样？</strong></p>
+<p>:::</p>
+<p><strong>原则上说，在<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>上会有多少地址，或者一个寄存器可以表示多少个不同的地址呢？</strong></p>
+<p><strong>寄存器是<span><span class="heti-spacing"> </span>64bit</span>，所以有多少个地址呢？是的，理论上可以表示<span class="heti-skip"><span class="heti-spacing"> </span>2^64<span class="heti-spacing"> </span></span>个不同的地址，所以如果我们以地址为粒度来管理，表单会变得非常巨大。单是存储表单就会耗尽我们所有的内存，所以</strong><strong>为每个地址都构建一个表单条目是不可行的。</strong></p>
+<p>:::success
++ <strong>接下来我分两步介绍页表在<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>中是如何工作的。</strong></p>
+<p>:::</p>
+<h3 id="_2">第一步<a class="headerlink" href="#_2" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h3>
+<p><strong>第一步：不要为每个地址创建一条表单条目，而是</strong><strong><font style="background-color:#FBDE28;">为每个内存页<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>创建一条表单条目</font></strong><strong>，所以每一次地址翻译都是针对一个<span><span class="heti-spacing"> </span>page</span>。而<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>中，一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>是<span><span class="heti-spacing"> </span>4KB</span>，也就是<span><span class="heti-spacing"> </span>4096Bytes</span>。这个大小非常常见，几乎所有的处理器都使用<span class="heti-skip"><span class="heti-spacing"> </span>4KB<span class="heti-spacing"> </span></span>大小的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>或者支持<span class="heti-skip"><span class="heti-spacing"> </span>4KB<span class="heti-spacing"> </span></span>大小的<span><span class="heti-spacing"> </span>page</span>。</strong></p>
+<p>:::success
+<strong>现在，内存地址的翻译方式略微的不同了。</strong></p>
+<p>:::</p>
+<p><font style="background-color:#FBDE28;">对于虚拟内存地址，我们将它划分为两个部分，<span>index<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>offset</span>，<span>index<span class="heti-spacing"> </span></span>用来查找<span><span class="heti-spacing"> </span>page</span>，<span>offset<span class="heti-spacing"> </span></span>对应的是一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中的哪个字节。</font></p>
+<p>当<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>在翻译时</p>
+<ol>
+<li>读取<span class="heti-skip"><span class="heti-spacing"> </span>index<span class="heti-spacing"> </span></span>可以知道物理内存中的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>号，这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>号对应了物理内存中的第<span class="heti-skip"><span class="heti-spacing"> </span>4096<span class="heti-spacing"> </span></span>个字节。</li>
+<li>之后虚拟内存地址中的<span class="heti-skip"><span class="heti-spacing"> </span>offset<span class="heti-spacing"> </span></span>指向了<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中的<span class="heti-skip"><span class="heti-spacing"> </span>4096<span class="heti-spacing"> </span></span>个字节中的某一个，假设<span class="heti-skip"><span class="heti-spacing"> </span>offset<span class="heti-spacing"> </span></span>是<span><span class="heti-spacing"> </span>12</span>，那么<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>中的第<span class="heti-skip"><span class="heti-spacing"> </span>12<span class="heti-spacing"> </span></span>个字节被使用了。将<span class="heti-skip"><span class="heti-spacing"> </span>offset<span class="heti-spacing"> </span></span>加上<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的起始地址，就可以得到物理内存地址。</li>
+</ol>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/baa379b01859884963d64f53bdc53104.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/baa379b01859884963d64f53bdc53104.png"/></a></p>
+<h3 id="_3">第二步<a class="headerlink" href="#_3" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h3>
+<p><strong>通过前面的第一步，我们现在的</strong><strong><font style="background-color:#FBDE28;">地址转换表是以<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>为粒度，而不是以单个内存地址为粒度</font></strong><strong>，</strong></p>
+<p><strong>现在这个地址转换表已经可以被称为<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>了。但是目前的设计还不能满足实际的需求。如果每个进程都有自己的<span><span class="heti-spacing"> </span>page table</span>，那么每个<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>表会有多大呢？</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/575c33a2a24190be37e51ac3727f9d69.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/575c33a2a24190be37e51ac3727f9d69.jpeg"/></a></p>
+<p><strong>这个<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>最多会有<span class="heti-skip"><span class="heti-spacing"> </span>2^27<span class="heti-spacing"> </span></span>个条目（虚拟内存地址中的<span class="heti-skip"><span class="heti-spacing"> </span>index<span class="heti-spacing"> </span></span>长度为<span><span class="heti-spacing"> </span>27</span><heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，这是个非常大的数字。如果每个进程都使用这么大的<span><span class="heti-spacing"> </span>page table</span>，进程需要为<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>消耗大量的内存，并且很快物理内存就会耗尽。</strong></p>
+<p>:::success
++ 实际上，page table是一个多级的结构
++ <font style="background-color:#FBDE28;">前面每一级得到的 PPN 是用来索引下一级页表的内存位置</font></p>
+<p>:::</p>
+<p><strong>下图是一个真正的<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V page table<span class="heti-spacing"> </span></span>结构和硬件实现。</strong></p>
+<p><strong>我们之前提到的虚拟内存地址中的<span class="heti-skip"><span class="heti-spacing"> </span>27bit<span class="heti-spacing"> </span></span>的<span><span class="heti-spacing"> </span>index</span>，实际上是由<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>9bit<span class="heti-spacing"> </span></span>的数字组成（L2，L1，L0<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</strong></p>
+<ol>
+<li><strong>前<span class="heti-skip"><span class="heti-spacing"> </span>9<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>bit<span class="heti-spacing"> </span></span>被用来索引最高级的<span><span class="heti-spacing"> </span>page directory</span>（注：通常<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>是用来索引<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>或者其他<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>物理地址的表单，但是在课程中，page table，page directory， <span>page directory table<span class="heti-spacing"> </span></span>区分并不明显，可以都认为是有相同结构的地址对应表单<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</strong></li>
+<li><strong>一个<span class="heti-skip"><span class="heti-spacing"> </span>directory<span class="heti-spacing"> </span></span>是<span><span class="heti-spacing"> </span>4096Bytes</span>，就跟<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的大小是一样的。<span>Directory<span class="heti-spacing"> </span></span>中的一个条目被称为<span><span class="heti-spacing"> </span>PTE</span>（Page Table Entry）是<span><span class="heti-spacing"> </span>64bits</span>，就像寄存器的大小一样，也就是<span><span class="heti-spacing"> </span>8Bytes</span>。所以一个<span class="heti-skip"><span class="heti-spacing"> </span>Directory page<span class="heti-spacing"> </span></span>有<span class="heti-skip"><span class="heti-spacing"> </span>512<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>PTE</span>。</strong></li>
+<li><strong>所以实际上，<span>SATP<span class="heti-spacing"> </span></span>寄存器会指向最高一级的<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>的物理内存地址，之后我们用虚拟内存中<span class="heti-skip"><span class="heti-spacing"> </span>index<span class="heti-spacing"> </span></span>的高<span class="heti-skip"><span class="heti-spacing"> </span>9bit<span class="heti-spacing"> </span></span>用来索引最高一级的<span class="heti-skip"><span class="heti-spacing"> </span>page directory(<span class="heti-spacing"> </span></span>注，2^9 = 512，正好可以索引到一条<span><span class="heti-spacing"> </span>PTE)</span>，这样我们就能得到一个<span><span class="heti-spacing"> </span>PPN</span>，也就是物理<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>号。</strong><strong><font style="background-color:#FBDE28;">这个<span class="heti-skip"><span class="heti-spacing"> </span>PPN<span class="heti-spacing"> </span></span>指向了中间级的页表<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>的位置。</font></strong></li>
+</ol>
+<p><strong>当我们在使用中间级的<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>时，我们通过虚拟内存地址中的<span class="heti-skip"><span class="heti-spacing"> </span>L1<span class="heti-spacing"> </span></span>部分完成索引。</strong></p>
+<p><strong>接下来会走到最低级的<span><span class="heti-spacing"> </span>page directory</span>，我们通过虚拟内存地址中的<span class="heti-skip"><span class="heti-spacing"> </span>L0<span class="heti-spacing"> </span></span>部分完成索引。</strong></p>
+<p><strong>在最低级的<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>中，我们可以得到对应于虚拟内存地址的物理内存地址。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/cf095262d3ed2d0e3f0b1f22de8043de.png"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/cf095262d3ed2d0e3f0b1f22de8043de.png"/></a></p>
+<ul>
+<li>比较</li>
+</ul>
+<p>从某种程度上来说，与之前一种方案还是很相似的，除了实际的索引是由<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>步，而不是<span class="heti-skip"><span class="heti-spacing"> </span>1<span class="heti-spacing"> </span></span>步完成。这种方式的主要优点是，如果地址空间中大部分地址都没有使用，你不必为每一个<span class="heti-skip"><span class="heti-spacing"> </span>index<span class="heti-spacing"> </span></span>准备一个条目。</p>
+<p>举个例子，如果你的地址空间只使用了一个<span><span class="heti-spacing"> </span>page</span>，4096Bytes。</p>
+<ol>
+<li>在最高级，你需要一个<span><span class="heti-spacing"> </span>page directory</span>。在这个<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>中，你需要一个数字是<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的<span><span class="heti-spacing"> </span>PTE</span>，指向中间级<span><span class="heti-spacing"> </span>page directory</span>。所以在中间级，你也需要一个<span><span class="heti-spacing"> </span>page directory</span>，里面也是一个数字<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>的<span><span class="heti-spacing"> </span>PTE</span>，指向最低级<span><span class="heti-spacing"> </span>page directory</span>。所以这里总共需要<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>page directory</span>（也就是<span class="heti-skip"><span class="heti-spacing"> </span>3 * 512<span class="heti-spacing"> </span></span>个条目，一个条目<span><span class="heti-spacing"> </span>64bit</span><heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</li>
+<li>而在前一个方案中，虽然我们只使用了一个<span><span class="heti-spacing"> </span>page</span>，还是需要<span class="heti-skip"><span class="heti-spacing"> </span>2^27<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>PTE</span>（注，约<span class="heti-skip"><span class="heti-spacing"> </span>1GB<span class="heti-spacing"> </span></span>内存<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</li>
+<li>这个方案中，我们只需要<span class="heti-skip"><span class="heti-spacing"> </span>3 * 512<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>PTE</span>（注，<span>12KB<span class="heti-spacing"> </span></span>内存<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。所需的空间大大减少了。这是实际上硬件采用这种层次化的<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>级<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>结构的主要原因。</li>
+</ol>
+<h3 id="_4">标志位<a class="headerlink" href="#_4" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h3>
+<p>接下来，让我们看看<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>中的<span><span class="heti-spacing"> </span>Flag</span>，因为它也很重要。每个<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>的低<span class="heti-skip"><span class="heti-spacing"> </span>10bit<span class="heti-spacing"> </span></span>是一堆标志位：</p>
+<ul>
+<li>第一个标志位是<span><span class="heti-spacing"> </span>Valid</span>。如果<span class="heti-skip"><span class="heti-spacing"> </span>Valid bit<span class="heti-spacing"> </span></span>位为<span><span class="heti-spacing"> </span>1</span>，那么表明这是一条合法的<span><span class="heti-spacing"> </span>PTE</span>，你可以用它来做地址翻译。对于刚刚举得那个小例子（注，应用程序只用了<span class="heti-skip"><span class="heti-spacing"> </span>1<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的例子<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，我们只使用了<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>个<span><span class="heti-spacing"> </span>page directory</span>，每个<span class="heti-skip"><span class="heti-spacing"> </span>page directory<span class="heti-spacing"> </span></span>中只有第<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>被使用了，所以只有第<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>Valid bit<span class="heti-spacing"> </span></span>位会被设置成<span><span class="heti-spacing"> </span>1</span>，其他的<span class="heti-skip"><span class="heti-spacing"> </span>511<span class="heti-spacing"> </span></span>个<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>Valid bit<span class="heti-spacing"> </span></span>为<span><span class="heti-spacing"> </span>0</span>。这个标志位告诉<span><span class="heti-spacing"> </span>MMU</span>，你不能使用这条<span><span class="heti-spacing"> </span>PTE</span>，因为这条<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>并不包含有用的信息。</li>
+<li>下两个标志位分别是<span class="heti-skip"><span class="heti-spacing"> </span>Readable<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>Writable</span>。表明你是否可以读<span class="heti-skip"><span class="heti-spacing"> </span>/<span class="heti-spacing"> </span></span>写这个<span><span class="heti-spacing"> </span>page</span>。</li>
+<li><span>Executable<span class="heti-spacing"> </span></span>表明你可以从这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>执行指令。</li>
+<li><span>User<span class="heti-spacing"> </span></span>表明这个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>可以被运行在用户空间的进程访问。</li>
+<li>其他标志位并不是那么重要，他们偶尔会出现，前面<span class="heti-skip"><span class="heti-spacing"> </span>5<span class="heti-spacing"> </span></span>个是重要的标志位。</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/df61cd9859e812df312c2da3ec586678.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/df61cd9859e812df312c2da3ec586678.jpeg"/></a></p>
+<h3 id="risc-v"><span>RISC-V<span class="heti-spacing"> </span></span>硬件设计<a class="headerlink" href="#risc-v" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h3>
+<ul>
+<li><strong>虚拟内存地址只使用了<span class="heti-skip"><span class="heti-spacing"> </span>39<span class="heti-spacing"> </span></span>位</strong></li>
+</ul>
+<p>有关<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>的一件有意思的事情是：<strong>虚拟内存地址都是<span><span class="heti-spacing"> </span>64bit</span>，因为<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>的寄存器是<span class="heti-skip"><span class="heti-spacing"> </span>64bit<span class="heti-spacing"> </span></span>的</strong>。实际上，我们使用的<span class="heti-skip"><span class="heti-spacing"> </span>RSIC-V<span class="heti-spacing"> </span></span>处理器上，并不是所有的<span class="heti-skip"><span class="heti-spacing"> </span>64bit<span class="heti-spacing"> </span></span>都被使用了，高<span class="heti-skip"><span class="heti-spacing"> </span>25bit<span class="heti-spacing"> </span></span>并没有被使用。这样的结果是限制了虚拟内存地址的数量，<strong>虚拟内存地址的数量现在只有<span class="heti-skip"><span class="heti-spacing"> </span>2^39<span class="heti-spacing"> </span></span>个，大概是<span><span class="heti-spacing"> </span>512GB</span></strong>。当然，如果必要的话，最新的处理器或许可以支持更大的地址空间，只需要将未使用的<span class="heti-skip"><span class="heti-spacing"> </span>25bit<span class="heti-spacing"> </span></span>拿出来做为虚拟内存地址的一部分即可。</p>
+<p>在剩下的<span class="heti-skip"><span class="heti-spacing"> </span>39bit<span class="heti-spacing"> </span></span>中，有<span class="heti-skip"><span class="heti-spacing"> </span>27bit<span class="heti-spacing"> </span></span>被用来当做<span><span class="heti-spacing"> </span>index</span>，<span>12bit<span class="heti-spacing"> </span></span>被用来当做<span><span class="heti-spacing"> </span>offset</span>。<span>offset<span class="heti-spacing"> </span></span>必须是<span><span class="heti-spacing"> </span>12bit</span>，因为对应了一个<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>4096<span class="heti-spacing"> </span></span>个字节。</p>
+<ul>
+<li>物理内存地址使用了<span class="heti-skip"><span class="heti-spacing"> </span>56<span class="heti-spacing"> </span></span>位</li>
+</ul>
+<p>在<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>中，物理内存地址是<span><span class="heti-spacing"> </span>56bit</span>。所以物理内存可以大于单个虚拟内存地址空间，但是也最多到<span><span class="heti-spacing"> </span>2^56</span>。大多数主板还不支持<span class="heti-skip"><span class="heti-spacing"> </span>2^56<span class="heti-spacing"> </span></span>这么大的物理内存，但是原则上，如果你能造出这样的主板，那么最多可以支持<span class="heti-skip"><span class="heti-spacing"> </span>2^56<span class="heti-spacing"> </span></span>字节的物理内存。</p>
+<p>物理内存地址是<span><span class="heti-spacing"> </span>56bit</span>，其中<span class="heti-skip"><span class="heti-spacing"> </span>44bit<span class="heti-spacing"> </span></span>是物理<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>号（PPN，Physical Page Number<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，剩下<span class="heti-skip"><span class="heti-spacing"> </span>12bit<span class="heti-spacing"> </span></span>是<span class="heti-skip"><span class="heti-spacing"> </span>offset<span class="heti-spacing"> </span></span>完全继承自虚拟内存地址（也就是地址转换时，只需要将虚拟内存中的<span class="heti-skip"><span class="heti-spacing"> </span>27bit<span class="heti-spacing"> </span></span>翻译成物理内存中的<span class="heti-skip"><span class="heti-spacing"> </span>44bit<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>号，剩下的<span class="heti-skip"><span class="heti-spacing"> </span>12bitoffset<span class="heti-spacing"> </span></span>直接拷贝过来即可<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</p>
+<h2 id="translation-lookaside-buffer">页表缓存（Translation Lookaside Buffer）<a class="headerlink" href="#translation-lookaside-buffer" title="Permanent link">¶</a></h2>
+<p><strong>每次处理器从内存加载或者存储数据时，基本上都要做<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>次内存查找，第一次在最高级的<span><span class="heti-spacing"> </span>page directory</span>，第二次在中间级的<span><span class="heti-spacing"> </span>page directory</span>，最后一次在最低级的<span><span class="heti-spacing"> </span>page directory</span>。这里代价是非常高的。</strong></p>
+<p>:::success
+<strong>所以实际中，几乎所有的处理器都会对最近使用过的虚拟地址的翻译结果进行缓存。</strong></p>
+<p><strong>这个缓存被称为：Translation Lookside Buffer（通常翻译成页表缓存<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。你会经常看到它的缩写<span><span class="heti-spacing"> </span>TLB</span>。一般来说，这就是页表<span class="heti-skip"><span class="heti-spacing"> </span>Page Table Entry<span class="heti-spacing"> </span></span>的缓存</strong></p>
+<p>:::</p>
+<p><strong>当处理器第一次查找一个虚拟地址时，硬件通过<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>级<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>得到最终的<span><span class="heti-spacing"> </span>PPN</span>，<span>TLB<span class="heti-spacing"> </span></span>会保存虚拟地址到物理地址的映射关系。这样下一次当你访问同一个虚拟地址时，处理器可以查看<span><span class="heti-spacing"> </span>TLB</span>，<span>TLB<span class="heti-spacing"> </span></span>会直接返回物理地址，而不需要通过<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>得到结果。</strong></p>
+<p>:::warning
++ <strong>注意</strong>
+1. <strong>如果你切换了<span><span class="heti-spacing"> </span>page table</span>，<span>TLB<span class="heti-spacing"> </span></span>中的缓存将不再有用，它们需要被清空，否则地址翻译可能会出错。所以操作系统知道<span class="heti-skip"><span class="heti-spacing"> </span>TLB<span class="heti-spacing"> </span></span>是存在的，但只会时不时的告诉操作系统，现在的<span class="heti-skip"><span class="heti-spacing"> </span>TLB<span class="heti-spacing"> </span></span>不能用了，因为要切换<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>了。在<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>中，清空<span class="heti-skip"><span class="heti-spacing"> </span>TLB<span class="heti-spacing"> </span></span>的指令是<span><span class="heti-spacing"> </span>sfence_vma</span>。</strong>
+2. <strong><span>3<span class="heti-spacing"> </span></span>级的<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>是由硬件实现的，所以<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>级<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>的查找都发生在硬件中。<span>MMU<span class="heti-spacing"> </span></span>是硬件的一部分而不是操作系统的一部分。</strong></p>
+<p>:::</p>
+<p>:::warning
+RISC-V处理器中的MMU（Memory Management Unit）与TLB都位于每个CPU核内部。</p>
+<p><strong>这里的关键点在于，某些缓存（Cache）是基于虚拟地址索引的，而某些则是基于物理地址索引的。</strong></p>
+<ol>
+<li><strong>基于虚拟地址索引的<span><span class="heti-spacing"> </span>Cache</span></strong>：<strong><font style="background-color:#FBDE28;">这类缓存位于<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>之前。</font></strong>即<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>会先查看这类缓存，看是否可以直接获取数据。如果在这类缓存中找到了数据，<span>CPU<span class="heti-spacing"> </span></span>可以直接使用这些数据，无需进行地址翻译。如果未找到，才会进入<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>进行虚拟到物理的地址翻译。</li>
+<li><strong>基于物理地址索引的<span><span class="heti-spacing"> </span>Cache</span></strong>：<strong><font style="background-color:#FBDE28;">这类缓存位于<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>之后。</font></strong>这意味着<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>首先需要通过<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>将虚拟地址转换为物理地址，然后再使用这个物理地址去查询基于物理地址索引的缓存。</li>
+</ol>
+<p>:::</p>
+<h2 id="kernel-page-table">Kernel Page Table<a class="headerlink" href="#kernel-page-table" title="Permanent link">¶</a></h2>
+<p><strong>接下来，我们看一下在<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>中，<span>page table<span class="heti-spacing"> </span></span>是如何工作的？</strong></p>
+<p><strong>首先我们来看一下<span class="heti-skip"><span class="heti-spacing"> </span>kernel page<span class="heti-spacing"> </span></span>的分布。</strong></p>
+<p><strong>下图就是内核中地址的对应关系，左边是内核的虚拟地址空间，右边上半部分是物理内存或者说是<span><span class="heti-spacing"> </span>DRAM</span>，右边下半部分是<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备。接下来我会首先介绍右半部分，然后再介绍左半部分。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/071cd924a12937ad3269179253bb6b2a.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/071cd924a12937ad3269179253bb6b2a.jpeg"/></a></p>
+<h3 id="_5">硬件设计<a class="headerlink" href="#_5" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h3>
+<p><strong>图中的右半部分的结构完全由硬件设计者决定。如你们上节课看到的一样，当操作系统启动时，会从地址<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>开始运行，这个地址其实也是由硬件设计者决定的。具体的来说，如果你们看一个主板，中间是<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>处理器，我们现在知道了处理器中有<span class="heti-skip"><span class="heti-spacing"> </span>4<span class="heti-spacing"> </span></span>个核，每个核都有自己的<span class="heti-skip"><span class="heti-spacing"> </span>MMU<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>TLB</span>。处理器旁边就是<span class="heti-skip"><span class="heti-spacing"> </span>DRAM<span class="heti-spacing"> </span></span>芯片。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/b46196db2b703d3cc557d9ff17c5aa4c.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/b46196db2b703d3cc557d9ff17c5aa4c.jpeg"/></a></p>
+<p><strong>主板的设计人员决定了，在完成了虚拟到物理地址的翻译之后，如果得到的物理地址大于<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>会走向<span class="heti-skip"><span class="heti-spacing"> </span>DRAM<span class="heti-spacing"> </span></span>芯片，如果得到的物理地址低于<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>会走向不同的<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备。这是由这个主板的设计人员决定的物理结构。如果你想要查看这里的物理结构，你可以阅读主板的手册，手册中会一一介绍物理地址对应关系。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/28104bde5163149e6d8eb98e0e7de286.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/28104bde5163149e6d8eb98e0e7de286.jpeg"/></a><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/3b007bab5c013ec6a08a6c4532ab5614.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/3b007bab5c013ec6a08a6c4532ab5614.jpeg"/></a></p>
+<p><strong>首先，地址<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>是保留的，地址<span class="heti-skip"><span class="heti-spacing"> </span>0x10090000<span class="heti-spacing"> </span></span>对应以太网，地址<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>对应<span class="heti-skip"><span class="heti-spacing"> </span>DDR<span class="heti-spacing"> </span></span>内存，处理器外的易失存储（Off-Chip Volatile Memory<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，也就是主板上的<span class="heti-skip"><span class="heti-spacing"> </span>DRAM<span class="heti-spacing"> </span></span>芯片。所以，在你们的脑海里应该要记住这张主板的图片，即使我们接下来会基于你们都知道的<span class="heti-skip"><span class="heti-spacing"> </span>C<span class="heti-spacing"> </span></span>语言程序<span class="heti-skip"><span class="heti-spacing"> </span>---QEMU<span class="heti-spacing"> </span></span>来做介绍，但是最终所有的事情都是由主板硬件决定的。</strong></p>
+<p>学生提问：当你说这里是由硬件决定的，硬件是特指<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>还是说<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>所在的主板？</p>
+<p><span>Frans<span class="heti-spacing"> </span></span>教授：<span>CPU<span class="heti-spacing"> </span></span>所在的主板。<span>CPU<span class="heti-spacing"> </span></span>只是主板的一小部分，<span>DRAM<span class="heti-spacing"> </span></span>芯片位于处理器之外。是主板设计者将处理器，<span>DRAM<span class="heti-spacing"> </span></span>和许多<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备汇总在一起。对于一个操作系统来说，<span>CPU<span class="heti-spacing"> </span></span>只是一个部分，<span>I/O<span class="heti-spacing"> </span></span>设备同样也很重要。所以当你在写一个操作系统时，你需要同时处理<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备，比如你需要向互联网发送一个报文，操作系统需要调用网卡驱动和网卡来实际完成这个工作。</p>
+<h3 id="_6">内核页表<a class="headerlink" href="#_6" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h3>
+<p><strong>回到最初那张图的右侧：物理地址的分布。</strong></p>
+<p><strong>最下面是未被使用的地址，这与主板文档内容是一致的（地址为<span><span class="heti-spacing"> </span>0</span><heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</strong></p>
+<p><strong>地址<span class="heti-skip"><span class="heti-spacing"> </span>0x1000<span class="heti-spacing"> </span></span>是<span class="heti-skip"><span class="heti-spacing"> </span>boot ROM<span class="heti-spacing"> </span></span>的物理地址，当你对主板上电，主板做的第一件事情就是运行存储在<span class="heti-skip"><span class="heti-spacing"> </span>boot ROM<span class="heti-spacing"> </span></span>中的代码，当<span class="heti-skip"><span class="heti-spacing"> </span>boot<span class="heti-spacing"> </span></span>完成之后，会跳转到地址<span><span class="heti-spacing"> </span>0x80000000</span>，操作系统需要确保在地址<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>有一些数据（代码）能够继续启动操作系统。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/9d3bb8872d91c43ce29e6986ecd4ca33.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/9d3bb8872d91c43ce29e6986ecd4ca33.jpeg"/></a></p>
+<p><strong>这里还有一些其他的<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备：</strong></p>
+<ul>
+<li><strong><span>PLIC<span class="heti-spacing"> </span></span>是中断控制器（Platform-Level Interrupt Controller）我们下周的课会讲。</strong></li>
+<li><strong>CLINT（Core Local Interruptor）也是中断的一部分。所以多个设备都能产生中断，需要中断控制器来将这些中断路由到合适的处理函数。</strong></li>
+<li><strong>UART0（Universal Asynchronous Receiver/Transmitter）负责与<span class="heti-skip"><span class="heti-spacing"> </span>Console<span class="heti-spacing"> </span></span>和显示器交互。</strong></li>
+<li><strong>VIRTIO disk，与磁盘进行交互。</strong></li>
+</ul>
+<p><strong>地址<span class="heti-skip"><span class="heti-spacing"> </span>0x02000000<span class="heti-spacing"> </span></span>对应<span><span class="heti-spacing"> </span>CLINT</span>，当你向这个地址执行读写指令，你是向实现了<span class="heti-skip"><span class="heti-spacing"> </span>CLINT<span class="heti-spacing"> </span></span>的芯片执行读写。这里你可以认为你直接在与设备交互，而不是读写物理内存。</strong></p>
+<blockquote>
+<p><strong>学生提问：确认一下，低于<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>的物理地址，不存在于<span class="heti-skip"><span class="heti-spacing"> </span>DRAM<span class="heti-spacing"> </span></span>中，当我们在使用这些地址的时候，指令会直接走向其他的硬件，对吗？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：是的。高于<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>的物理地址对应<span class="heti-skip"><span class="heti-spacing"> </span>DRAM<span class="heti-spacing"> </span></span>芯片，但是对于例如以太网接口，也有一个特定的低于<span class="heti-skip"><span class="heti-spacing"> </span>0x80000000<span class="heti-spacing"> </span></span>的物理地址，我们可以对这个叫做内存映射<span><span class="heti-spacing"> </span>I/O</span>（Memory-mapped I/O）的地址执行读写指令，来完成设备的操作。</strong></p>
+<p><strong>学生提问：为什么物理地址最上面一大块标为未被使用？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：物理地址总共有<span class="heti-skip"><span class="heti-spacing"> </span>2^56<span class="heti-spacing"> </span></span>那么多，但是你不用在主板上接入那么多的内存。所以不论主板上有多少<span class="heti-skip"><span class="heti-spacing"> </span>DRAM<span class="heti-spacing"> </span></span>芯片，总是会有一部分物理地址没有被用到。实际上在<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>中，我们限制了内存的大小是<span><span class="heti-spacing"> </span>128MB</span>。</strong></p>
+<p><strong>学生提问：当读指令从<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>发出后，它是怎么路由到正确的<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备的？比如说，当<span class="heti-skip"><span class="heti-spacing"> </span>CPU<span class="heti-spacing"> </span></span>要发出指令时，它可以发现现在地址是低于<span><span class="heti-spacing"> </span>0x80000000</span>，但是它怎么将指令送到正确的<span class="heti-skip"><span class="heti-spacing"> </span>I/O<span class="heti-spacing"> </span></span>设备？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：你可以认为在<span class="heti-skip"><span class="heti-spacing"> </span>RISC-V<span class="heti-spacing"> </span></span>中有一个多路输出选择器（demultiplexer<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</strong>
+</p>
+</blockquote>
+<p><strong>接下来我会切换到第一张图的左边，这就是<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>的虚拟内存地址空间。</strong></p>
+<p><strong>当机器刚刚启动时，还没有可用的<span><span class="heti-spacing"> </span>page</span>，<span>XV6<span class="heti-spacing"> </span></span>操作系统会设置好内核使用的虚拟地址空间，也就是这张图左边的地址分布。</strong></p>
+<p><strong>因为我们想让<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>尽可能的简单易懂，所以内核的虚拟地址到物理地址的映射，大部分是相等的关系。</strong></p>
+<p><strong>比如说内核会按照这种方式设置<span><span class="heti-spacing"> </span>page table</span>，虚拟地址<span class="heti-skip"><span class="heti-spacing"> </span>0x02000000<span class="heti-spacing"> </span></span>对应物理地址<span><span class="heti-spacing"> </span>0x02000000</span>。这意味着左侧低于<span class="heti-skip"><span class="heti-spacing"> </span>PHYSTOP<span class="heti-spacing"> </span></span>的虚拟地址，与右侧使用的物理地址是一样的。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/2ef6af6b5d68f461f506e0da6d5fdcae.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/2ef6af6b5d68f461f506e0da6d5fdcae.jpeg"/></a></p>
+<p><strong>所以，这里的箭头都是水平的，因为这里是完全相等的映射。</strong></p>
+<p><strong>除此之外，这里还有两件重要的事情：</strong></p>
+<ol>
+<li><strong>第一件事情是，有一些<span class="heti-skip"><span class="heti-spacing"> </span>page<span class="heti-spacing"> </span></span>在虚拟内存中的地址很靠后，比如<span class="heti-skip"><span class="heti-spacing"> </span>kernel stack<span class="heti-spacing"> </span></span>在虚拟内存中的地址就很靠后。这是因为在它之下有一个未被映射的<span><span class="heti-spacing"> </span>Guard page</span>，这个<span class="heti-skip"><span class="heti-spacing"> </span>Guard page<span class="heti-spacing"> </span></span>对应的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>Valid<span class="heti-spacing"> </span></span>标志位没有设置，这样，如果<span class="heti-skip"><span class="heti-spacing"> </span>kernel stack<span class="heti-spacing"> </span></span>耗尽了，它会溢出到<span><span class="heti-spacing"> </span>Guard page</span>，但是因为<span class="heti-skip"><span class="heti-spacing"> </span>Guard page<span class="heti-spacing"> </span></span>的<span class="heti-skip"><span class="heti-spacing"> </span>PTE<span class="heti-spacing"> </span></span>中<span class="heti-skip"><span class="heti-spacing"> </span>Valid<span class="heti-spacing"> </span></span>标志位未设置，会导致立即触发<span><span class="heti-spacing"> </span>page fault</span>，这样的结果好过内存越界之后造成的数据混乱。立即触发一个<span><span class="heti-spacing"> </span>panic</span>（也就是<span><span class="heti-spacing"> </span>page fault</span><heti-adjacent class="heti-adjacent-half">）</heti-adjacent>，你就知道<span class="heti-skip"><span class="heti-spacing"> </span>kernel stack<span class="heti-spacing"> </span></span>出错了。同时我们也又不想浪费物理内存给<span><span class="heti-spacing"> </span>Guard page</span>，所以<span class="heti-skip"><span class="heti-spacing"> </span>Guard page<span class="heti-spacing"> </span></span>不会映射到任何物理内存，它只是占据了虚拟地址空间的一段靠后的地址。</strong></li>
+</ol>
+<p><strong>同时，<span>kernel stack<span class="heti-spacing"> </span></span>被映射了两次，在靠后的虚拟地址映射了一次，在<span class="heti-skip"><span class="heti-spacing"> </span>PHYSTOP<span class="heti-spacing"> </span></span>下的<span class="heti-skip"><span class="heti-spacing"> </span>Kernel data<span class="heti-spacing"> </span></span>中又映射了一次，但是实际使用的时候用的是上面的部分，因为有<span class="heti-skip"><span class="heti-spacing"> </span>Guard page<span class="heti-spacing"> </span></span>会更加安全。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/d08ee996ccad19f887b128177e1fdf46.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/d08ee996ccad19f887b128177e1fdf46.jpeg"/></a></p>
+<p><strong>这是众多你可以通过<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实现的有意思的事情之一。</strong></p>
+<p><strong>你可以向同一个物理地址映射两个虚拟地址，你可以不将一个虚拟地址映射到物理地址。</strong></p>
+<p><strong>可以是一对一的映射，一对多映射，多对一映射。<span>XV6<span class="heti-spacing"> </span></span>至少在<span class="heti-skip"><span class="heti-spacing"> </span>1-2<span class="heti-spacing"> </span></span>个地方用到类似的技巧。这的<span class="heti-skip"><span class="heti-spacing"> </span>kernel stack<span class="heti-spacing"> </span></span>和<span class="heti-skip"><span class="heti-spacing"> </span>Guard page<span class="heti-spacing"> </span></span>就是<span class="heti-skip"><span class="heti-spacing"> </span>XV6<span class="heti-spacing"> </span></span>基于<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>使用的有趣技巧的一个例子。</strong></p>
+<ol start="2">
+<li><strong>第二件事情是权限。例如<span class="heti-skip"><span class="heti-spacing"> </span>Kernel text page<span class="heti-spacing"> </span></span>被标位<span><span class="heti-spacing"> </span>R-X</span>，意味着你可以读它，也可以在这个地址段执行指令，但是你不能向<span class="heti-skip"><span class="heti-spacing"> </span>Kernel text<span class="heti-spacing"> </span></span>写数据。通过设置权限我们可以尽早的发现<span class="heti-skip"><span class="heti-spacing"> </span>Bug<span class="heti-spacing"> </span></span>从而避免<span><span class="heti-spacing"> </span>Bug</span>。对于<span class="heti-skip"><span class="heti-spacing"> </span>Kernel data<span class="heti-spacing"> </span></span>需要能被写入，所以它的标志位是<span><span class="heti-spacing"> </span>RW-</span>，但是你不能在这个地址段运行指令，所以它的<span class="heti-skip"><span class="heti-spacing"> </span>X<span class="heti-spacing"> </span></span>标志位未被设置。</strong></li>
+</ol>
+<p><strong>（注，所以，<span>kernel text<span class="heti-spacing"> </span></span>用来存代码，代码可以读，可以运行，但是不能篡改，<span>kernel data<span class="heti-spacing"> </span></span>用来存数据，数据可以读写，但是不能通过数据伪装代码在<span class="heti-skip"><span class="heti-spacing"> </span>kernel<span class="heti-spacing"> </span></span>中运行）</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/3fdb9d8bc6f055e50cc742b2c2d375ff.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/3fdb9d8bc6f055e50cc742b2c2d375ff.jpeg"/></a></p>
+<blockquote>
+<p><strong>学生提问：对于不同的进程会有不同的<span class="heti-skip"><span class="heti-spacing"> </span>kernel stack<span class="heti-spacing"> </span></span>吗？</strong></p>
+<p><strong>Frans：答案是的。每一个用户进程都有一个对应的<span><span class="heti-spacing"> </span>kernel stack</span></strong>
+</p>
+</blockquote>
+<hr/>
+<h2 id="_7">用户页表<a class="headerlink" href="#_7" title="Permanent link"><span><span class="heti-spacing"> </span>¶</span></a></h2>
+<p>:::success
+<strong>学生提问：用户程序的虚拟内存会映射到未使用的物理地址空间吗？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：在<span class="heti-skip"><span class="heti-spacing"> </span>kernel page table<span class="heti-spacing"> </span></span>中，有一段<span><span class="heti-spacing"> </span>Free Memory</span>，它对应了物理内存中的一段地址。</strong></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/fca2715c3429cefa77ac0eccea153beb.jpeg"><img alt="" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/fca2715c3429cefa77ac0eccea153beb.jpeg"/></a></p>
+<p><strong><span>XV6<span class="heti-spacing"> </span></span>使用这段<span class="heti-skip"><span class="heti-spacing"> </span>free memory<span class="heti-spacing"> </span></span>来存放用户进程的<span><span class="heti-spacing"> </span>page table</span>，<span>text<span class="heti-spacing"> </span></span>和<span><span class="heti-spacing"> </span>data</span>。如果我们运行了非常多的用户进程，某个时间点我们会耗尽这段内存，这个时候<span class="heti-skip"><span class="heti-spacing"> </span>fork<span class="heti-spacing"> </span></span>或者<span class="heti-skip"><span class="heti-spacing"> </span>exec<span class="heti-spacing"> </span></span>会返回错误。</strong></p>
+<p>:::</p>
+<p>:::success
+<strong>同一个学生提问：这就意味着，用户进程的虚拟地址空间会比内核的虚拟地址空间小的多，是吗？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：本质上来说，两边的虚拟地址空间大小是一样的。但是用户进程的虚拟地址空间使用率会更低。</strong></p>
+<p>:::</p>
+<p>:::success
+<strong>学生提问：如果多个进程都将内存映射到了同一个物理位置，这里会优化合并到同一个地址吗？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：<span>XV6<span class="heti-spacing"> </span></span>不会做这样的事情，但是<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实验中有一部分就是做这个事情。真正的操作系统会做这样的工作。当你们完成了<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>实验，你们就会对这些内容更加了解。</strong></p>
+<p>:::</p>
+<blockquote>
+<p><strong>学生提问：每个进程都会有自己的<span class="heti-skip"><span class="heti-spacing"> </span>3<span class="heti-spacing"> </span></span>级树状<span><span class="heti-spacing"> </span>page table</span>，通过这个<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>将虚拟地址翻译成物理地址。所以看起来当我们将内核虚拟地址翻译成物理地址时，我们并不需要<span class="heti-skip"><span class="heti-spacing"> </span>kernel<span class="heti-spacing"> </span></span>的<span><span class="heti-spacing"> </span>page table</span>，因为进程会使用自己的树状<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>并完成地址翻译（注，不太理解这个问题点在哪<heti-adjacent class="heti-adjacent-half">）</heti-adjacent>。</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：当<span class="heti-skip"><span class="heti-spacing"> </span>kernel<span class="heti-spacing"> </span></span>创建了一个进程，针对这个进程的<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>也会从<span class="heti-skip"><span class="heti-spacing"> </span>Free memory<span class="heti-spacing"> </span></span>中分配出来。内核会为用户进程的<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>分配几个<span><span class="heti-spacing"> </span>page</span>，并填入<span><span class="heti-spacing"> </span>PTE</span>。在某个时间点，当内核运行了这个进程，内核会将进程的根<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>的地址加载到<span class="heti-skip"><span class="heti-spacing"> </span>SATP<span class="heti-spacing"> </span></span>中。从那个时间点开始，处理器会使用内核为那个进程构建的虚拟地址空间。</strong></p>
+<p><strong>同一个学生提问：所以内核为进程放弃了一些自己的内存，但是进程的虚拟地址空间理论上与内核的虚拟地址空间一样大，虽然实际中肯定不会这么大。</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：是的，下图是用户进程的虚拟地址空间分布，与内核地址空间一样，它也是从<span class="heti-skip"><span class="heti-spacing"> </span>0<span class="heti-spacing"> </span></span>到<span><span class="heti-spacing"> </span>MAXVA</span>。</strong>
+</p>
+</blockquote>
+<p>（<strong>用户进程的虚拟地址空间分布</strong>）</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="https://raw.githubusercontent.com/ScuDays/MyImg/master/5e3d95bf4363af0ed5c1f04cf38b26a5.jpeg"><img alt="用户进程的虚拟地址空间分布（用户页表）​​​​​​" src="https://raw.githubusercontent.com/ScuDays/MyImg/master/5e3d95bf4363af0ed5c1f04cf38b26a5.jpeg"/></a></p>
+<blockquote>
+<p><strong>它有由内核设置好的，专属于进程的<span class="heti-skip"><span class="heti-spacing"> </span>page table<span class="heti-spacing"> </span></span>来完成地址翻译。</strong></p>
+<p><strong>学生提问：但是我们不能将所有的<span class="heti-skip"><span class="heti-spacing"> </span>MAXVA<span class="heti-spacing"> </span></span>地址都使用吧？</strong></p>
+<p><strong><span>Frans<span class="heti-spacing"> </span></span>教授：是的我们不能，这样我们会耗尽内存。大多数的进程使用的内存都远远小于虚拟地址空间。</strong>
+</p>
+</blockquote>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到页面顶部
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+    
+    
+      Powered by
+      <a href="https://www.mkdocs.org/" rel="noopener" target="_blank">
+        MkDocs
+      </a>
+      with theme
+      <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+        Material
+      </a>
+      modified by
+      <a href="https://github.com/WncFht" rel="noopener" target="_blank">
+        WncFht
+      </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.annotate", "content.action.view", "navigation.tracking", "navigation.indexes", "navigation.top", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+<script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+<script src="../../../js/katex.js"></script>
+<script src="https://cdn.tonycrane.cc/utils/katex.min.js"></script>
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
